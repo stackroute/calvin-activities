@@ -29,7 +29,7 @@ describe('/follow api', () => {
   });
 
   it('it should retrieve list of followers', (done) => {
-    server
+    request(app)
       .get('/follow')
       .expect('Content-type', /json/)
       .end((err, res) => {
