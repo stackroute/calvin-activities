@@ -4,6 +4,8 @@ const app = express();
 
 app.use(require('body-parser').json());
 
-app.use('/cartoons', require('./api/cartoons'));
+
+app.use('/mailbox', require('./api/mailbox'));
+
 
 module.exports = app;
