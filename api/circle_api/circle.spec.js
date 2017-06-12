@@ -1,10 +1,10 @@
-const request = require('supertest');
+const app = require('../../app');
 
-const server = request.agent('http://localhost:3000');
+const request = require('supertest');
 
 describe('/circle api', () => {
   it('it should create a new circle', (done) => {
-    server
+    request(app)
       .post('/circles')
       .end((err, res) => {
         if (err) { done(err); return; }
@@ -14,7 +14,7 @@ describe('/circle api', () => {
   });
 
   it('should return api circle', (done) => {
-    server
+    request(app)
       .get('/circles')
       .expect('Content-type', /json/)
       .end((err, res) => {
@@ -26,7 +26,7 @@ describe('/circle api', () => {
   });
 
   it('should delete a circle', (done) => {
-    server
+    request(app)
       .delete('/circles/1')
       .expect(200)
       .end((err, res) => {
