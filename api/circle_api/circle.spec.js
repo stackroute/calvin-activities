@@ -1,7 +1,3 @@
-const chai = require('chai');
-
-const should = chai.should();
-
 const request = require('supertest');
 
 const server = request.agent('http://localhost:3000');
@@ -31,7 +27,7 @@ describe('/circle api', () => {
 
   it('should delete a circle', (done) => {
     server
-      .delete('/circles/10')
+      .delete('/circles/1')
       .expect(200)
       .end((err, res) => {
         if (err) { done(err); return; }
