@@ -6,9 +6,6 @@ const app = require('../../app');
 
 const request = require('supertest');
 
-const server = request.agent('http://localhost:3000');
-
-
 describe('/follow api', () => {
   const follower = {
     cid: 1,
@@ -29,7 +26,7 @@ describe('/follow api', () => {
   });
 
   it('it should retrieve list of followers', (done) => {
-    server
+    request(app)
       .get('/follow')
       .expect('Content-type', /json/)
       .end((err, res) => {

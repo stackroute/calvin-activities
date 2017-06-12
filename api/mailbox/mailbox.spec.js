@@ -1,10 +1,10 @@
-const request = require('supertest');
+const app = require('../../app');
 
-const server = request.agent('http://localhost:3000');
+const request = require('supertest');
 
 describe('/mailbox api', () => {
   it('it should create a new mailbox', (done) => {
-    server
+    request(app)
       .post('/mailbox')
       .end((err, res) => {
         if (err) { done(err); return; }
@@ -14,7 +14,7 @@ describe('/mailbox api', () => {
   });
 
   it('should return api mailbox', (done) => {
-    server
+    request(app)
       .get('/mailbox')
       .expect('Content-type', /json/)
       .end((err, res) => {
@@ -25,7 +25,7 @@ describe('/mailbox api', () => {
   });
 
   it('should return a particular mailbox', (done) => {
-    server
+    request(app)
       .get('/mailbox/0')
       .expect(200)
       .end((err, res) => {
@@ -36,7 +36,7 @@ describe('/mailbox api', () => {
   });
 
   it('should delete a mailbox', (done) => {
-    server
+    request(app)
       .delete('/mailbox/0')
       .expect(200)
       .end((err, res) => {
