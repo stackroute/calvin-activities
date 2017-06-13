@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node start",
-    "test": "npm run lint && ./node_modules/.bin/mocha **/*.spec.js",
-    "lint": "./node_modules/.bin/eslint *.js api/**/*.js"
+    "start": "nodemon start",
+   "test": "npm run lint && ./node_modules/.bin/mocha **/*.spec.js",
+    "lint": "./node_modules/.bin/eslint '**/*.js'"    
   },
   "author": "",
   "license": "ISC",
