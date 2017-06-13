@@ -1,10 +1,7 @@
 const router = require('express').Router();
 const controller = require('./follow.controller');
 
-router.get('/', controller.retrieveAlldata);
-router.get('/cid/:mid', controller.getCircleName);
-router.get('/mid/:cid', controller.getMailboxId);
-router.delete('/circles/:cid/:mid', controller.unfollow);
-router.post('/', controller.createNewuser);
+router.post('/circle/:circleId/mailbox/:mailboxId', controller.follow);
+router.delete('/circle/:circleId/mailbox/:mailboxId', controller.unfollow);
 
 module.exports = router;

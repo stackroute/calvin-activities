@@ -7,6 +7,6 @@ app.use('/mailbox', require('./api/mailbox'));
 
 app.use('/follow', require('./api/follow'));
 
-app.use('/circles', require('./api/circle_api'));
+app.use('/circle', require('./api/circle_api'));
 
 module.exports = app;

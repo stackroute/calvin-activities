@@ -1,68 +1,64 @@
 const chai = require('chai');
 
-const should = chai.should();
+const should = chai.should(); // eslint-disable-line no-unused-vars
 
 const app = require('../../app');
 
 const request = require('supertest');
 
+const dao = require('../../dao/follow/index.js');
+
 describe('/follow api', () => {
   const follower = {
-    cid: 1,
-    mid: 2,
+    circleId: 1,
+    mailboxId: 2,
   };
 
   it('it should create a new Follower', (done) => {
     request(app)
-      .post('/follow')
+      .post('/follow/circle/1/mailbox/2')
       .send(follower)
       .expect(201)
       .end((err, res) => {
         if (err) { done(err); return; }
-        res.body.cid.should.be.equal(follower.cid);
-        res.body.mid.should.be.equal(follower.mid);
+        dao.checkIfFollowExists(follower.circleId, follower.mailboxId).should.be.equal(false);
         done();
       });
   });
-
-  it('it should retrieve list of followers', (done) => {
+  it('it should not add if follower already exists', (done) => {
     request(app)
-      .get('/follow')
-      .expect('Content-type', /json/)
+      .post('/follow/circle/1/mailbox/2')
+      .send(follower)
+      .expect(405)
       .end((err, res) => {
         if (err) { done(err); return; }
-        res.status.should.equal(200);
-        done();
-      });
-  });
-  it('it should retrieve circle id by mailbox id', (done) => {
-    request(app)
-      .get('/follow/cid/02')
-      .end((err, res) => {
-        if (err) { done(err); return; }
-        should.exist(res.body);
-        done();
-      });
-  });
-
-  it('it should retrieve mailbox id using circle id', (done) => {
-    request(app)
-      .get('/follow/mid/01')
-      .end((err, res) => {
-        if (err) { done(err); return; }
-        should.exist(res.body);
+        dao.checkIfFollowExists(follower.circleId, follower.mailboxId).should.be.equal(false);
         done();
       });
   });
 
   it('it should delete a follower', (done) => {
     request(app)
-      .delete('/follow/circles/01/mailboxes/02')
+      .delete('/follow/circle/1/mailbox/2')
+      .send(follower)
+      .expect(200)
+      .end((err) => {
+        if (err) { done(err); return; }
+        dao.checkIfFollowExists(follower.circleId, follower.mailboxId).should.be.equal(false);
+        done();
+      });
+  });
+
+  it('it should not delete if follower does not exists', (done) => {
+    request(app)
+      .delete('/follow/circle/1/mailbox/2')
       .send(follower)
       .expect(404)
       .end((err) => {
         if (err) { done(err); return; }
+        dao.checkIfFollowExists(follower.circleId, follower.mailboxId).should.be.equal(false);
         done();
       });
   });
 });
+
