@@ -5,8 +5,6 @@ app.use(require('body-parser').json());
 
 app.use('/mailbox', require('./api/mailbox'));
 
-app.use('/follow', require('./api/follow'));
-
-app.use('/circle', require('./api/circle_api'));
+app.use('/circle', require('./api/circle'));
 
 module.exports = app;
