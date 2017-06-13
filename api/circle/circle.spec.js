@@ -2,50 +2,66 @@ require('chai').should();
 
 const app = require('../../app');
 
+const expect = require('chai').expect;
+require('chai').should();
+
 const request = require('supertest');
 
+
 // FIXME: remane followDAO to followDAO
-const followDAO = require('../../dao/follow/'); // FIXME: Dont use index. It is implicit. use require('../../dao/follow')
+const circleDAO = require('../../dao/circle');
+const followDAO = require('../../dao/follow/');
+const mailboxDAO= require('../../dao/mailbox/');
 
 let cid; // FIXME: Use smallest scope possible
 let mid; // FIXME: Use smallest scope possible
 describe('/circle api', () => {
+  let circleId;
   it('it should create a new circle', (done) => {
     request(app)
-      .post('/circle')
-      .end((err, res) => {
-        if (err) { done(err); return; }
-        res.status.should.equal(201);
-        done();
-      });
-  });
-
-  it('should return api circle', (done) => {
-    request(app)
-      .get('/circle')
+      .post('/circle/')
+      .expect(201)
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        res.status.should.equal(200);
+        expect(res.body).to.have.property('id');
+        expect(res.body.id).to.be.a('string');
+        circleId = res.body.id;
+        circleDAO.checkIfCircleExists(circleId).should.be.equal(true);
         done();
       });
   });
 
   it('should delete a circle', (done) => {
     request(app)
-      .delete('/circle/1')
+      .delete(`/circle/${circleId}`)
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        res.status.should.equal(200);
+        circleDAO.checkIfCircleExists(circleId).should.be.equal(false);
+        expect(res.body.id).to.equal(circleId);
+        done();
+      });
+  });
+
+  it('should fail when we try to delete a circle id that does not exist', (done) => {
+    request(app)
+      .delete(`/circle/${circleId}`)
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        circleDAO.checkIfCircleExists(circleId).should.be.equal(false);
+        expect(res.body).to.have.property('message').equal(`Circle id ${circleId} does not exist`);
         done();
       });
   });
 });
 
 before((done) => {
-  cid=followDAO.createCircle().id;
-  mid=followDAO.createMailbox().id;
+  cid=circleDAO.createCircle().id;
+  mid=mailboxDAO.createMailbox().id;
   done();
 });
 
@@ -75,7 +91,7 @@ describe('/follow api', () => {
       .end((err, res) => {
         if (err) { done(err); return; }
         res.body.should.have.property('message').equal(`Circle with id ${randomCId} does not exist`);
-        followDAO.checkIfCircleExists(randomCId).should.be.equal(false); // FIXME: What is this test for? checkIfCircleExists only takes 1 argument. Remove check
+        circleDAO.checkIfCircleExists(randomCId).should.be.equal(false); // FIXME: What is this test for? checkIfCircleExists only takes 1 argument. Remove check
         // TODO: Use follow DAO to assert that the follow between randomCId and mid doesnt exist
         done();
       });
