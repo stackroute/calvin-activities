@@ -4,9 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "nodemon start",
    "test": "npm run lint && ./node_modules/.bin/mocha **/*.spec.js",
     "lint": "./node_modules/.bin/eslint '**/*.js'"    
+=======
+    "start": "node start",
+    "test": "npm run lint && ./node_modules/.bin/mocha **/*.spec.js",
+    "lint": "./node_modules/.bin/eslint *.js '**/*.js'"
+>>>>>>> 46f33a223d92bbeb6a4d89f8dde91f79a6719884
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +22,7 @@
     "eslint": "^4.0.0",
     "express": "^4.15.3",
     "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {
