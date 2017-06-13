@@ -4,20 +4,34 @@ const circle = [];
 let id = 0;
 
 function follow(req, res) {
-  const checkFollow = dao.checkIfFollowExists(req.params.circleId, req.params.mailboxId);
-  if (checkFollow === true) {
-    res.status(405).send('User already Exists');
-  } else {
-    const result = dao.addFollow(req.params.circleId, req.params.mailboxId);
-    res.status(201).json(result);
+  const circleId=req.params.circleId;
+  const mailboxId=req.params.mailboxId;
+
+  if (!dao.checkIfCircleExists(circleId)) {
+    res.status(404).json({ message: `Circle with id ${circleId} does not exist` });
+    return;
   }
+
+  if (!dao.checkIfMailboxExists(mailboxId)) {
+    res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
+    return;
+  }
+
+  if (dao.checkIfFollowExists(circleId, mailboxId)) {
+    res.status(409).json({ message: 'Follow already exists' });
+    return;
+  }
+  const data=dao.addFollow(circleId, mailboxId);
+  res.status(201).json(data);
 }
 function unfollow(req, res) {
-  const checkFollow = dao.checkIfFollowExists(req.params.circleId, req.params.mailboxId);
+  const circleId=parseInt(req.params.circleId);
+  const mailboxId=parseInt(req.params.mailboxId);
+  const checkFollow = dao.checkIfFollowExists(circleId, mailboxId);
   if (checkFollow === false) {
     res.status(404).send('follower does not exist');
   } else {
-    const result = dao.deleteFollow(req.params.circleId, req.params.mailboxId);
+    const result = dao.deconsteFollow(circleId, mailboxId);
     res.status(200).json(result);
   }
 }
@@ -31,7 +45,7 @@ function createNewCircle(req, res) {
   circle.push(newcircle);
   res.status(201).json(newcircle);
 }
-function deleteCircle(req, res) {
+function deconsteCircle(req, res) {
   id = +req.params.id;
   const filteredCircle = circle.filter(circles => circles.id === id);
   if (filteredCircle.length === 0) { res.status(404).send(); return; }
@@ -42,5 +56,5 @@ function deleteCircle(req, res) {
 }
 
 module.exports = {
-  retrieveAllCircles, createNewCircle, deleteCircle, follow, unfollow,
+  retrieveAllCircles, createNewCircle, deconsteCircle, follow, unfollow,
 };
