@@ -14,7 +14,7 @@ function addFollow(circleId, mailboxId) {
 }
 
 function checkIfFollowExists(circleId, mailboxId) {
-  const filteredFollowers = followapi.filter(follow => (follow.circleId === circleId && follow.mailboxId === mailbox));
+  const filteredFollowers = followapi.filter(follow => follow.circleId === circleId && follow.mailboxId === mailboxId);
   return filteredFollowers.length !== 0;
 }
 function deleteFollow(circleId, mailboxId) {

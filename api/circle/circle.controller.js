@@ -51,7 +51,7 @@ function unfollow(req, res) {
     return;
   }
 
-  if (followDAO.checkIfFollowExists(circleId, mailboxId)) {
+  if (!followDAO.checkIfFollowExists(circleId, mailboxId)) {
     res.status(404).json({ message: 'Link does not exists' });
     return;
   }
