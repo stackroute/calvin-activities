@@ -91,7 +91,9 @@ describe('/follow api', () => {
       .end((err, res) => {
         if (err) { done(err); return; }
         res.body.should.have.property('message').equal(`Circle with id ${randomCId} does not exist`);
-        circleDAO.checkIfCircleExists(randomCId).should.be.equal(false); // FIXME: What is this test for? checkIfCircleExists only takes 1 argument. Remove check
+        circleDAO.checkIfCircleExists(randomCId).should.be.equal(false);
+        followDAO.checkIfFollowExists(randomCId, mid).should.be.equal(false);
+        // FIXME: What is this test for? checkIfCircleExists only takes 1 argument. Remove check
         // TODO: Use follow DAO to assert that the follow between randomCId and mid doesnt exist
         done();
       });
@@ -111,22 +113,22 @@ describe('/follow api', () => {
       });
   });
 
-  it('should not add if circle id & mailbox id both do not exist', (done) => { // FIXME: replace "not add" with "fail"
+  it('should fail if circle id & mailbox id both do not exist', (done) => { // FIXME: replace "not add" with "fail"
     const randomCId=Math.floor(Math.random()*65678664467);
+    const randomMId=Math.floor(Math.random()*65678664467);
     request(app)
-      .post(`/circle/${randomCId}/mailbox/${mid}`) // FIXME: Remove spaces from URI
+      .post(`/circle/${randomCId}/mailbox/${randomMId}`) // FIXME: Remove spaces from URI
       .expect('Content-Type', /json/) // TODO: Check for Content-Type
       .expect(404)
       .end((err, res) => {
         if (err) { done(err); return; }
         res.body.should.have.property('message').equal(`Circle with id ${randomCId} does not exist`);
-        followDAO.checkIfFollowExists(randomCId, mid).should.be.equal(false); // FIXME: Should assert that follow between randomCId and mid does not exist.
+        followDAO.checkIfFollowExists(randomCId, randomMId).should.be.equal(false); // FIXME: Should assert that follow between randomCId and mid does not exist.
         done();
       });
   });
 
-  it('should not add if follower exists', (done) => {
-    console.log(followDAO.checkIfFollowExists(cid, mid));
+  it('should fail if follower exists', (done) => {
     request(app)
       .post(`/circle/${cid}/mailbox/${mid}`) // FIXME: Remove spaces from URI
       .expect(409) // FIXME: Failure scenario. Should not return success code
@@ -138,58 +140,72 @@ describe('/follow api', () => {
       });
   });
 
-  // it('it should delete a follower', (done) => {
-  //   request(app)
-  //     .delete(`/circle/ ${cid}'/mailbox/ ${mid}`)
-  //     .expect(200)
-  //     .end((err) => {
-  //       if (err) { done(err); return; }
-  //       followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
-  //       done();
-  //     });
-  // });
+  it('should delete a follower', (done) => {
+    request(app)
+      .delete(`/circle/${cid}/mailbox/${mid}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        res.body.should.have.property('mailboxId');
+        res.body.should.have.property('circleId');
+        followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
+        done();
+      });
+  });
 
-  // it('it should fail if circle id does not exist', (done) => {
-  //   request(app)
-  //     .delete(`/circle/ ${cid}'/mailbox/ ${mid}`)
-  //     .expect(200)
-  //     .end((err) => {
-  //       if (err) { done(err); return; }
-  //       followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
-  //       done();
-  //     });
-  // });
+  it('should fail if circle id does not exist', (done) => {
+    const randomCId=Math.floor(Math.random()*65678664467);
+    request(app)
+      .delete(`/circle/${randomCId}/mailbox/${mid}`)
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        res.body.should.have.property('message').equal(`Circle with id ${randomCId} does not exist`);
+        circleDAO.checkIfCircleExists(randomCId).should.be.equal(false);
+        done();
+      });
+  });
 
-  // it('it should fail if mailbox id does not exist', (done) => {
-  //   request(app)
-  //     .delete(`/circle/ ${cid}'/mailbox/ ${mid}`)
-  //     .expect(200)
-  //     .end((err) => {
-  //       if (err) { done(err); return; }
-  //       followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
-  //       done();
-  //     });
-  // });
+  it('should fail if mailbox id does not exist', (done) => {
+    const randomMId=Math.floor(Math.random()*65678664467);
+    request(app)
+      .delete(`/circle/${cid}/mailbox/${randomMId}`)
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        res.body.should.have.property('message').equal(`Mailbox with id ${randomMId} does not exist`);
+        mailboxDAO.checkIfMailboxExists(randomMId).should.be.equal(false);
+        done();
+      });
+  });
 
-  // it('it should fail if circle id and mailbox id does not exist', (done) => {
-  //   request(app)
-  //     .delete(`/circle/ ${cid}'/mailbox/ ${mid}`)
-  //     .expect(200)
-  //     .end((err) => {
-  //       if (err) { done(err); return; }
-  //       followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
-  //       done();
-  //     });
-  // });
+  it('should fail if circle id and mailbox id does not exist', (done) => {
+    const randomCId=Math.floor(Math.random()*65678664467);
+    const randomMId=Math.floor(Math.random()*65678664467);
+    request(app)
+      .delete(`/circle/${randomCId}/mailbox/ ${randomMId}`)
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        res.body.should.have.property('message').equal(`Circle with id ${randomCId} does not exist`);
+        followDAO.checkIfFollowExists(randomCId, randomMId).should.be.equal(false);
+        done();
+      });
+  });
 
-  // it('it should fail if follower does not exists', (done) => {
-  //   request(app)
-  //     .delete(`/circle/ ${cid}'/mailbox/ ${mid}`)
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       if (err) { done(err); return; }
-  //       followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
-  //       done();
-  //     });
-  // });
+  it('should fail if follower does not exists', (done) => {
+    const randomCId=Math.floor(Math.random()*65678664467);
+    request(app)
+      .delete(`/circle/${randomCId}/mailbox/${mid}`)
+      .expect(404)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        followDAO.checkIfFollowExists(cid, mid).should.be.equal(false);
+        done();
+      });
+  });
 });

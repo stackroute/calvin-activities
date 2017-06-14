@@ -38,15 +38,25 @@ function follow(req, res) {
   res.status(201).json(data);
 }
 function unfollow(req, res) {
-  const circleId=parseInt(req.params.circleId);
-  const mailboxId=parseInt(req.params.mailboxId);
+  const circleId=req.params.circleId;
+  const mailboxId=req.params.mailboxId;
   const checkFollow = followDAO.checkIfFollowExists(circleId, mailboxId);
-  if (checkFollow === false) {
-    res.status(404).send('follower does not exist');
-  } else {
-    const result = followDAO.deleteFollow(circleId, mailboxId);
-    res.status(200).json(result);
+  if (!circleDAO.checkIfCircleExists(circleId)) {
+    res.status(404).json({ message: `Circle with id ${circleId} does not exist` });
+    return;
   }
+
+  if (!mailboxDAO.checkIfMailboxExists(mailboxId)) {
+    res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
+    return;
+  }
+
+  if (followDAO.checkIfFollowExists(circleId, mailboxId)) {
+    res.status(404).json({ message: 'Link does not exists' });
+    return;
+  }
+  const result = followDAO.deleteFollow(circleId, mailboxId);
+  res.status(200).json(result);
 }
 
 module.exports = {
