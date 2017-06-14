@@ -40,7 +40,6 @@ function follow(req, res) {
 function unfollow(req, res) {
   const circleId=req.params.circleId;
   const mailboxId=req.params.mailboxId;
-  const checkFollow = followDAO.checkIfFollowExists(circleId, mailboxId);
   if (!circleDAO.checkIfCircleExists(circleId)) {
     res.status(404).json({ message: `Circle with id ${circleId} does not exist` });
     return;

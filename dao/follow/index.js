@@ -1,8 +1,4 @@
 const followapi = [];
-const circles=[];
-const mailbox=[];
-const idCounter = -1;
-const id=0;
 
 function addFollow(circleId, mailboxId) {
   const newuser = {
