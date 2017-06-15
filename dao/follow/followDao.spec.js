@@ -9,9 +9,7 @@ describe('Follow DAO', () => {
     let circleID;
     let mailboxID;
     before(() => {
-      // TODO: Create Circle, and save circleID
       circleID = circleDAO.createCircle().id;
-      // TODO: Create Mailbox, and save mailboxID
       mailboxID = mailboxDAO.createMailbox().id;
     });
 
