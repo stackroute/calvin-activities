@@ -32,4 +32,5 @@ module.exports = {
   sendToCircleMailbox,
   createPublishActivity,
   checkIfActivityPublished,
+  publishActivityMailbox,
 };

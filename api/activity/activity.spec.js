@@ -38,6 +38,8 @@ describe('/publish to circle and mailbox', () => {
     // TODO: Pre-action should always be present
     expect(mailboxDao.checkIfMailboxExists(circleId)).to.equal(true);
     expect(circleDao.checkIfCircleExists(circleId)).to.equal(true);
+    const arr = activityDao.publishActivityMailbox;
+    expect(arr).to.have.lengthOf(0);
     // TODO: Assert that mailbox has no activities
 
 
@@ -51,8 +53,11 @@ describe('/publish to circle and mailbox', () => {
         // expect(followDAO.checkIfFollowExists({ circleId, mailboxId }).to.equal(true));
         // expect(26).to.equal(26);
         // console.log(`publish${circleId}`);
-        expect(activityDao.createPublishActivity((newactivity).payload)).not.to.be.empty;
+        const passActivity = activityDao.createPublishActivity((newactivity).payload);
+        expect(passActivity).to.have.lengthOf.above(0);
+        console.log(`activity array${activityDao.publishActivityMailbox}`);
         expect(activityDao.checkIfActivityPublished(circleId)).to.equal(true);
+        expect(arr).to.have.lengthOf.above(0);
         done();
       });
   });
