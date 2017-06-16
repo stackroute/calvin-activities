@@ -1,25 +1,37 @@
+const start=require('../../db');
+
+const client=start.client;
+const uuid = start.uuid;
 const circles=[];
-let idCounter = 0;
 
-function createCircle() {
-  const newcircle = {
-    id: JSON.stringify(idCounter += 1),
-  };
-  circles.push(newcircle);
-  return newcircle;
-}
-function deleteCircle(circleId) {
-  const filter = circles.filter(y => y.id === circleId);
-
-  circles.splice(circles.indexOf(filter[0]), 1);
-  return filter[0];
+function createCircle(callback) {
+  const id1 = uuid();
+  const query = ('INSERT INTO circle (id) values( ? )');
+  client.execute(query, [id1], (err, result) => callback(err, id1.toString()));
 }
 
-
-function checkIfCircleExists(circleId) {
-  const filterCircle = circles.filter(circle => circle.id === circleId);
-  return filterCircle.length!==0;
+function checkIfCircleExists(circleId, callback) {
+  const query = (`SELECT * from circle where id = ${circleId}`);
+  client.execute(query, (err, result) => {
+    if (err) { return callback(err); }
+    return callback(null, result.rowLength > 0);
+  });
 }
+
+function deleteCircle(circleId, callback) {
+  checkIfCircleExists(circleId, (err, circleExists) => {
+    if (err) { return callback(err, null); }
+    if (circleExists === false) {
+      return callback(`Circle id ${circleId} does not exist`, null);
+    } else {
+      const query =(`DELETE from circle where id =${circleId}`);
+      client.execute(query, (error, result) => callback(err, circleId));
+      return { circleId };
+    }
+  });
+}
+
+
 module.exports = {
-  createCircle, deleteCircle, checkIfCircleExists,
+  createCircle, checkIfCircleExists, deleteCircle,
 };
