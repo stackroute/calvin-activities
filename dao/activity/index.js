@@ -16,13 +16,13 @@ function retriveMessageFromMailbox(mid) {
 }
 
 function addListnerToMailbox(mid, socket) {
-  socket.on('startListeningToMailBox', (data) => {
-    listners[mid].push(socket);
+  socket.on('startListeningToMailBox',function(data){
+    listeners[mid].push(socket);
   });
 
-  socket.on('stopListeningToMailbox', (data) => {
-    const index=listners[mid].indexOf(socket);
-    listners[mid].splice(index, 1);
+  socket.on('stopListeningToMailbox', function(data){
+    const index=listeners[mid].indexOf(socket);
+    listeners[mid].splice(index,1);
   });
 }
 
@@ -40,7 +40,9 @@ function checkIfActivityPublished(mailboxId) {
 }
 
 module.exports = {
-  sendToCircleMailbox,
+  publishToMailbox,
+  addListnerToMailbox,
+  addListnerToMailbox,
   createPublishActivity,
   checkIfActivityPublished,
   publishActivityMailbox,
