@@ -1,0 +1,20 @@
+---
+  swagger: "2.0"
+  tags:
+    - name: "Circle API"
+      description: "API to create and delete circles"
+  info: 
+    title: "Calvin - Activity Log"
+    version: "v1"
+    category: "Circle"
+  paths: 
+    /circle:
+      post:
+        tags:
+          - "Circle API"
+        summary: "Create Circle"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: Creates a circle. 
