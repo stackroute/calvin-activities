@@ -3,7 +3,6 @@ const followDao = require('../../dao/follow');
 
 
 function createPublishActivity(req, res) {
-  // console.log(`Inside controller followDao${followDao.followapi}`);
   const payload=req.body;
   const newActivity = {
     timestamp: req.timestamp,

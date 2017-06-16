@@ -1,6 +1,6 @@
 const followDao = require('../follow');
 
-const listners = { };
+const listeners = { };
 
 const activities = { }; 
 
@@ -17,12 +17,12 @@ function retriveMessageFromMailbox(mid){
 
 function addListnerToMailbox(mid, socket) {
   socket.on('startListeningToMailBox',function(data){
-    listners[mid].push(socket);
+    listeners[mid].push(socket);
   });
 
   socket.on('stopListeningToMailbox', function(data){
-    const index=listners[mid].indexOf(socket);
-    listners[mid].splice(index,1);
+    const index=listeners[mid].indexOf(socket);
+    listeners[mid].splice(index,1);
   });
 }
 
@@ -40,7 +40,9 @@ function checkIfActivityPublished(mailboxId) {
 }
 
 module.exports = {
-  sendToCircleMailbox,
+  publishToMailbox,
+  addListnerToMailbox,
+  addListnerToMailbox,
   createPublishActivity,
   checkIfActivityPublished,
 };
