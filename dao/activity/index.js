@@ -1,19 +1,30 @@
 const followDao = require('../follow');
 
-let followArr = [];
+const listners = { };
 
-const publishActivityMailbox = [];
+const activities = { }; 
 
-function sendToCircleMailbox(followArray, newActivity) {
-  for (let i = 0; i < followArray.length; i += 1) {
-    const newactivity = {
-      newActivity,
-      receiver: followArray[i].mailboxId,
-    };
-    publishActivityMailbox.push(newactivity);
-  }
+function publishToMailbox(mid, activity) {
+  activities[mid].shift(activities);
+  listeners[mid].forEach(function(socket) {
+    socket.emit('new activity', activity);
+  });
 }
 
+function retriveMessageFromMailbox(mid){
+  return activities[mid];
+}
+
+function addListnerToMailbox(mid, socket) {
+  socket.on('startListeningToMailBox',function(data){
+    listners[mid].push(socket);
+  });
+
+  socket.on('stopListeningToMailbox', function(data){
+    const index=listners[mid].indexOf(socket);
+    listners[mid].splice(index,1);
+  });
+}
 
 function createPublishActivity(newActivity) {
   publishActivityMailbox.push(newActivity);
