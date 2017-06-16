@@ -1,11 +1,11 @@
 const mailboxes = [];
-let idCounter = -1;
+
 
 // Function to create a mailbox which contains id
-
+// let idd =  (parseInt(Math.random()*192)).toString();
 function createMailbox(req, res) {
   const createNewMailBox = {
-    id: (idCounter += 1).toString(),
+    id: (parseInt(Math.random()*192)).toString(),
   };
 
   mailboxes.push(createNewMailBox);

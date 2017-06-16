@@ -9,10 +9,11 @@ const request = require('supertest');
 
 
 const circleDAO = require('../../dao/circle');
+const mailboxDAO= require('../../dao/mailbox/');
 
 describe('/circle api', () => {
   let circleId;
-  it('it should create a new circle', (done) => {
+  it('it should create a new circle and mailbox', (done) => {
     request(app)
       .post('/circle/')
       .expect(201)
@@ -23,6 +24,7 @@ describe('/circle api', () => {
         expect(res.body.id).to.be.a('string');
         circleId = res.body.id;
         circleDAO.checkIfCircleExists(circleId).should.be.equal(true);
+        mailboxDAO.checkIfMailboxExists(circleId).should.be.equal(true);
         done();
       });
   });
