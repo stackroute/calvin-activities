@@ -15,15 +15,14 @@ app.use('/mailbox', require('./api/follow'));
 
 const server = require('http').Server(app);
 
-const io = require('socket.io')(server);
+// const io = require('socket.io')(server);
 
-const socket = io.listen(server);
+// const socket = io.listen(server);
 
-push(socket);
+// push(socket);
 
-<<<<<<< HEAD
-module.exports = {server,socket};
-=======
+module.exports = { server, socket };
+
 // CHANGEME: URI should be same as circle's. Follow the example of lines 11-12
 app.use('/publish', require('./api/publish'));
 
@@ -31,4 +30,3 @@ app.use('/circle', require('./api/activity'));
 
 
 module.exports = app;
->>>>>>> 771141f1672c3d074d09b898f1f22be12a3b56fa

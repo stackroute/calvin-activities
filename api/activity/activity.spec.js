@@ -10,8 +10,6 @@ const circleDao = require('../../dao/circle/');
 
 const followDAO = require('../../dao/follow');
 
-const publishDao = require('../../dao/publish');
-
 const activityDao = require('../../dao/activity');
 
 // CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"

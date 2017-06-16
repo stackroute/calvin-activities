@@ -1,28 +1,28 @@
 const followDao = require('../follow');
 
-const listners = { };
+const listeners = { };
 
-const activities = { }; 
+const activities = { };
 
 function publishToMailbox(mid, activity) {
   activities[mid].shift(activities);
-  listeners[mid].forEach(function(socket) {
+  listeners[mid].forEach((socket) => {
     socket.emit('new activity', activity);
   });
 }
 
-function retriveMessageFromMailbox(mid){
+function retriveMessageFromMailbox(mid) {
   return activities[mid];
 }
 
 function addListnerToMailbox(mid, socket) {
-  socket.on('startListeningToMailBox',function(data){
+  socket.on('startListeningToMailBox', (data) => {
     listners[mid].push(socket);
   });
 
-  socket.on('stopListeningToMailbox', function(data){
+  socket.on('stopListeningToMailbox', (data) => {
     const index=listners[mid].indexOf(socket);
-    listners[mid].splice(index,1);
+    listners[mid].splice(index, 1);
   });
 }
 
