@@ -1,9 +1,11 @@
+const mailboxDAO= require('../mailbox/');
+
 const circles=[];
-let idCounter = 0;
 
 function createCircle() {
+  const mailId=mailboxDAO.createMailbox().id;
   const newcircle = {
-    id: JSON.stringify(idCounter += 1),
+    id: mailId,
   };
   circles.push(newcircle);
   return newcircle;
