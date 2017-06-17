@@ -13,7 +13,15 @@ const socket = io.listen(server);
 
 // app.use(time.init);
 
+const swaggerUi = require('swagger-ui-express');
+
+const req = require('require-yml');
+
+const swaggerDocument = req('./swagger/api.yml');
+
 app.use(require('body-parser').json());
+
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/circle', require('./api/circle'));
 
