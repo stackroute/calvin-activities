@@ -41,9 +41,7 @@ describe('/circle api', () => {
         if (err) { done(err); return; }
         expect(res.body.id).to.equal(circleId);
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
-          console.log('circleExists:', typeof circleExists);
           circleExists.should.be.equal(false);
-          // console.log('circle', circleExists);
           done();
         });
       });
@@ -58,7 +56,6 @@ describe('/circle api', () => {
         if (err) { done(err); } else {
           circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
             if (error) { done(error); return; }
-            console.log('circle', JSON.stringify(circleExists));
             circleExists.should.be.equal(false);
             done();
           });
