@@ -19,7 +19,7 @@ function deleteFollow(follower) {
 
 function splitMailId(circleId) {
   const splitMailIdd = followapi.filter(y => y.circleId === circleId);
-  // console.log(`filetrarr${splitMailIdd}`);
+
   return splitMailIdd;
 }
 

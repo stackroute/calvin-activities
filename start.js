@@ -1,3 +1,4 @@
 const app = require('./app');
-app.server.listen(3000, () => {
+
+app.listen(3000, () => {
 });

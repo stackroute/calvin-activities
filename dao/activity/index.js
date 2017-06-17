@@ -5,10 +5,13 @@ const listeners = { };
 const activities = { };
 
 function publishToMailbox(mid, activity) {
-  activities[mid].shift(activities);
-  listeners[mid].forEach((socket) => {
-    socket.emit('new activity', activity);
-  });
+  if (!activities[mid]) { activities[mid]=[]; }
+  activities[mid].unshift(activity);
+
+  // listeners[mid].forEach((socket) => {mailboxId
+  //   socket.emit('new activity', activity);
+  // });
+  return activities;
 }
 
 function retriveMessageFromMailbox(mid) {
@@ -16,34 +19,56 @@ function retriveMessageFromMailbox(mid) {
 }
 
 function addListnerToMailbox(mid, socket) {
-  socket.on('startListeningToMailBox',function(data){
-    listeners[mid].push(socket);
+  socket.on('startListeningToMailBox', (data) => {
+    listeners[mid].unshift(socket);
   });
 
-  socket.on('stopListeningToMailbox', function(data){
+  socket.on('stopListeningToMailbox', (data) => {
     const index=listeners[mid].indexOf(socket);
-    listeners[mid].splice(index,1);
+    listeners[mid].splice(index, 1);
   });
 }
 
-function createPublishActivity(newActivity) {
-  publishActivityMailbox.push(newActivity);
-  followArr = followDao.splitMailId(newActivity.receiver);
-  sendToCircleMailbox(followArr, newActivity);
-  return newActivity;
+function checkIfMailboxEmpty() {
+  return activities;
 }
 
-function checkIfActivityPublished(mailboxId) {
-  const filterMailBox = publishActivityMailbox.filter(userid => userid.receiver === mailboxId);
 
-  return filterMailBox.length !== 0;
+function createPublishActivity(mid, activity) {
+  publishToMailbox(mid, activity);
+  // sendToCircleMailbox(followDao.splitMailId(mid), activity);
+
+  for (let i = 0; i < followDao.splitMailId(mid).length; i += 1) {
+    // console.log(followArr[i].mailboxId);
+    const mailId = followDao.splitMailId(mid)[i].mailboxId;
+    publishToMailbox(mailId, activity);
+  }
+  // if (!activities[mid]) { activities[mid]=[]; }
+  // activities[mid].shift(activity);
+  // followArr = followDao.splitMailId(mid);
+  // console.log(followArr);
+
+  return activity;
+}
+
+// function checkIfActivityPublished() {
+//   // const filterMailBox = activities.filter(userid => userid.receiver === mailboxId);
+//   // return filterMailBox.length !== 0;
+//   console.log(`activities${JSON.stringify(activities)}`);
+//   return activities;
+// }
+
+function checkActivityPublished(mailId) {
+  console.log(Object.keys(activities).length);
+  console.log(JSON.stringify(activities));
+  return activities[mailId];
 }
 
 module.exports = {
   publishToMailbox,
   addListnerToMailbox,
-  addListnerToMailbox,
   createPublishActivity,
-  checkIfActivityPublished,
-  publishActivityMailbox,
+  retriveMessageFromMailbox,
+  checkIfMailboxEmpty,
+  checkActivityPublished,
 };
