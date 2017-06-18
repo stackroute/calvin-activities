@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  become: true
+  roles:
+    - geerlingguy.docker
+  tasks:
+    - name: copy services docker-compose
+      copy:
+        src: ./files/docker-compose.yml
+        dest: /tmp/docker-compose.yml
+    - name: Start Services
+      shell: docker-compose up -d
+      args:
+        chdir: /tmp/
