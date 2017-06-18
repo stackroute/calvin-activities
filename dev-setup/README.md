@@ -1,6 +1,6 @@
 # Setup Cassandra and Docker for development
 
-After cloning this repository, run ```sudo .dev-setup/dev-setup.sh```
+After cloning this repository, cd into dev-setup directory, and run ```sudo ./dev-setup.sh```
 
 For starting cqlsh, run ```sudo docker exec -it tmp_cassandra_1 cqlsh```
 

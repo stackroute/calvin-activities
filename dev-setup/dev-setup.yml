@@ -4,14 +4,6 @@
   roles:
     - geerlingguy.docker
   tasks:
-    - name: install python-pip
-      package:
-        name: python-pip
-        state: latest
-    - name: install cqlsh
-      pip:
-        name: cqlsh
-        state: latest
     - name: copy services docker-compose
       copy:
         src: ./files/docker-compose.yml
