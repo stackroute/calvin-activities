@@ -1,4 +1,5 @@
 const followapi = [];
+// const splitId = [];
 
 function addFollow(follower) {
   followapi.push(follower);
@@ -16,8 +17,15 @@ function deleteFollow(follower) {
   return filter[0];
 }
 
+function splitMailId(circleId) {
+  const splitMailIdd = followapi.filter(y => y.circleId === circleId);
+
+  return splitMailIdd;
+}
+
 module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
+  splitMailId,
 };

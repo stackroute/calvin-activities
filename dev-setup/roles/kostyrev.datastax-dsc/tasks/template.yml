@@ -1,0 +1,15 @@
+- name: Update the cassandra configuration
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ datastax_dsc_conf_dir }}/{{item}}"
+    owner: "{{ datastax_dsc_cassandra_user }}"
+    group: "{{ datastax_dsc_cassandra_group }}"
+    mode: "{{ datastax_dsc_cassandra_conf_dir_mode }}"
+  with_items:
+    - "cassandra.yaml"
+  notify:
+    - restart cassandra
+    - wait for cassandra
+  tags:
+    - cassandra-config
+    - config

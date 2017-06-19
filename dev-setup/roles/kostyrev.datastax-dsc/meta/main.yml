@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Aleksandr Kostyrev
+  description: Ansible role for installing Datastax community edition of Cassandra
+  license: BSD
+  min_ansible_version: 2.1
+  platforms:
+  - name: EL
+    versions:
+    - 6
+  - name: Ubuntu
+    versions:
+    - trusty
+  categories:
+    - system
+dependencies: []
