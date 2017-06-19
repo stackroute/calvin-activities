@@ -1,9 +1,11 @@
-/* eslint prefer-arrow-callback:0, func-names:0 */
+
 require('chai').should();
 
 const app = require('../../app');
 
 require('chai').should();
+
+const async = require('async');
 
 const request = require('supertest');
 
@@ -11,32 +13,93 @@ const circleDAO = require('../../dao/circle');
 const followDAO = require('../../dao/follow');
 const mailboxDAO= require('../../dao/mailbox/');
 
-// describe('/follow api', function () {
-//   let circleId;
-//   let mailboxId;
+describe('/follow api', () => {
+  let circleId;
+  let mailboxId;
+  let isMailboxExists;
+  let isCircleExists;
+  let isFollowExists;
+  before((done) => {
+      async.waterfall([
 
-//   before(function (done) {
-//     circleId=circleDAO.createCircle().id;
-//     mailboxId=mailboxDAO.createMailbox().id;
-//     done();
-//   });
-//   it('should add if circle id, mailbox id exist and follower does not exist', function (done) {
-//     mailboxDAO.checkIfMailboxExists(mailboxId).should.be.equal(true);
-//     circleDAO.checkIfCircleExists(circleId).should.be.equal(true);
-//     followDAO.checkIfFollowExists({ circleId, mailboxId }).should.be.equal(false);
+      ]);
+    async.parallel([
+      circleDAO.createCircle,
+      mailboxDAO.createMailbox,
+    ], (err, result) => {
+      console.log(result);
+      circleId=result[0];
+      mailboxId=result[1];
+    });
+    async.parallel([
+      mailboxDAO.checkIfMailboxExists.bind(null, '12'),
+      circleDAO.checkIfCircleExists.bind(null, '12')], (err, result) => {
+      console.log(result);
+      isMailboxExists=result[0];
+      isCircleExists=result[1];
+      done();
+    });
 
-//     request(app)
-//       .post(`/mailbox/${mailboxId}/circle/${circleId}`)
-//       .expect(201)
-//       .expect('Content-Type', /json/)
-//       .end(function (err, res) {
-//         if (err) { done(err); return; }
-//         res.body.should.have.property('circleId').equal(circleId).a('string');
-//         res.body.should.have.property('mailboxId').equal(mailboxId).a('string');
-//         followDAO.checkIfFollowExists({ circleId, mailboxId }).should.be.equal(true);
-//         done();
-//       });
-//   });
+
+    // setTimeout(() => {
+    //   console.log(circleId, mailboxId);
+    //   console.log(isMailboxExists, isCircleExists, isFollowExists);
+    //   done();
+    // }, 1800);
+
+
+    // asyn.parallel([circleDAO.createCircle((err, id) => {
+    //   if (err) { return err; }
+    //   circleId = id;
+    //   return circleId;
+    // });
+    // mailboxDAO.createMailbox((err, id) => {
+    //   if (err) { return err; }
+    //   mailboxId = id;
+    //   return mailboxId;
+    // });
+
+
+    // mailboxDAO.checkIfMailboxExists(mailboxId, (err, isExists) => {
+    //   if (err) { return err; }
+    //   console.log('1');
+    //   isMailboxExists=isExists;
+    //   return isMailboxExists;
+    // });
+    // circleDAO.checkIfCircleExists(circleId, (err, isExists) => {
+    //   if (err) { return err; }
+    //   console.log('2');
+    //   isCircleExists=isExists;
+    //   return isMailboxExists;
+    // });
+    // followDAO.checkIfFollowExists({ circleId, mailboxId }, (err, isExists) => {
+    //   if (err) { return err; }
+    //   console.log('3');
+    //   isFollowExists=isExists;
+    //   return isFollowExists;
+    // });
+
+    // setTimeout(() => {
+    //   console.log(mailboxId, circleId, isMailboxExists, isCircleExists, isFollowExists);
+    //   done();
+    // }, 1900);
+  });
+  it('should add if circle id, mailbox id exist and follower does not exist', (done) => {
+    isMailboxExists.should.be.equal(true);
+    isCircleExists.should.be.equal(true);
+    isFollowExists.should.be.equal(false);
+    request(app)
+      .post(`/mailbox/${mailboxId}/circle/${circleId}`)
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        res.body.should.have.property('circleId').equal(circleId).a('string');
+        res.body.should.have.property('mailboxId').equal(mailboxId).a('string');
+        isFollowExists.should.be.equal(true);
+        done();
+      });
+  });
 
 //   it('should fail to add follow if circle does not exist, but mailbox exists', function (done) {
 //     const randomCircleId=Math.floor(Math.random()*65678664467).toString();
@@ -188,4 +251,4 @@ const mailboxDAO= require('../../dao/mailbox/');
 //         done();
 //       });
 //   });
-// });
+});
