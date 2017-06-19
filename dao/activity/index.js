@@ -1,21 +1,34 @@
 const followDao = require('../follow');
 
-const listeners = { };
+const mailboxDao = require('../mailbox');
 
-const activities = { };
+const listeners = {};
+
+const activities = {};
 
 function publishToMailbox(mid, activity) {
-  if (!activities[mid]) { activities[mid]=[]; }
+  if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
-
-  // listeners[mid].forEach((socket) => {mailboxId
-  //   socket.emit('new activity', activity);
-  // });
   return activities;
 }
 
-function retriveMessageFromMailbox(mid) {
-  return activities[mid];
+function checkIfMailboxExists(mid, callback) {
+  const filterMailId = activities[mid];
+  if (filterMailId ===undefined) { return callback(null, false); }
+
+  return callback(null, !filterMailId[mid]);
+}
+
+function retriveMessageFromMailbox(mid, callback) {
+  console.log(`inside dao${mid}`);
+  checkIfMailboxExists(mid, (err, MailIdExists) => {
+    if (err) { console.log(`inside err part${err}`); return callback(err, null); }
+    if (MailIdExists === false) {
+      return callback([], null);
+    } else {
+      return callback(null, activities[mid]);
+    }
+  });
 }
 
 function addListnerToMailbox(mid, socket) {
@@ -23,8 +36,9 @@ function addListnerToMailbox(mid, socket) {
     listeners[mid].unshift(socket);
   });
 
+
   socket.on('stopListeningToMailbox', (data) => {
-    const index=listeners[mid].indexOf(socket);
+    const index = listeners[mid].indexOf(socket);
     listeners[mid].splice(index, 1);
   });
 }
@@ -36,32 +50,21 @@ function checkIfMailboxEmpty() {
 
 function createPublishActivity(mid, activity) {
   publishToMailbox(mid, activity);
-  // sendToCircleMailbox(followDao.splitMailId(mid), activity);
-
   for (let i = 0; i < followDao.splitMailId(mid).length; i += 1) {
-    // console.log(followArr[i].mailboxId);
     const mailId = followDao.splitMailId(mid)[i].mailboxId;
     publishToMailbox(mailId, activity);
   }
-  // if (!activities[mid]) { activities[mid]=[]; }
-  // activities[mid].shift(activity);
-  // followArr = followDao.splitMailId(mid);
-  // console.log(followArr);
-
   return activity;
 }
 
-// function checkIfActivityPublished() {
-//   // const filterMailBox = activities.filter(userid => userid.receiver === mailboxId);
-//   // return filterMailBox.length !== 0;
-//   console.log(`activities${JSON.stringify(activities)}`);
-//   return activities;
-// }
-
 function checkActivityPublished(mailId) {
-  console.log(Object.keys(activities).length);
-  console.log(JSON.stringify(activities));
   return activities[mailId];
+}
+
+function deleteActivity(mailboxId) {
+  delete activities[mailboxId];
+
+  return activities;
 }
 
 module.exports = {
@@ -71,4 +74,5 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
+  deleteActivity,
 };
