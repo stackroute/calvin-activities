@@ -17,8 +17,7 @@ function getActivity(req, res) {
   const isMailboxPresent = activityDao.retriveMessageFromMailbox(mailId);
   if (isMailboxPresent) {
     res.json(activityDao.retriveMessageFromMailbox(mailId));
-  }
-  else {
+  } else {
     res.status(404).json([]);
   }
 }

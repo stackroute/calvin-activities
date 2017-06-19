@@ -28,7 +28,7 @@ describe('/activity API', () => {
     expect(JSON.stringify(activityDao.checkIfMailboxEmpty(mailboxId))).to.equal(JSON.stringify({}));
     done();
   });
-  
+
   it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
     // TODO: Pre-action should always be present
     expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
