@@ -14,7 +14,7 @@ function createPublishActivity(req, res) {
 
 function getActivity(req, res) {
   const mailId = req.params.mailboxId;
-  const isMailboxPresent = activityDao.retriveMessageFromMailbox(mailId, (err, result) => {
+  activityDao.retriveMessageFromMailbox(mailId, (err, result) => {
     if (err) {
       return res.status(404).json([]);
     } else {
