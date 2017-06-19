@@ -13,17 +13,21 @@ const followDAO = require('../../dao/follow');
 const activityDao = require('../../dao/activity');
 
 // CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"
-describe('Publish to circle API', () => {
+describe('/activity API', () => {
   // TODO: Pre assertion should be put inside before block
   let id;
   let circleId;
-  let followDao;
   let mailboxId;
   let newactivity;
 
   before((done) => {
     circleId = circleDao.createCircle().id;
     mailboxId = mailboxDao.createMailbox().id;
+<<<<<<< HEAD
+    followDAO.addFollow({ circleId, mailboxId });
+    expect(JSON.stringify(activityDao.checkIfMailboxEmpty(circleId))).to.equal(JSON.stringify({}));
+    expect(JSON.stringify(activityDao.checkIfMailboxEmpty(mailboxId))).to.equal(JSON.stringify({}));
+=======
     newactivity = {
       payload: {
         link: 'www.google.com',
@@ -31,34 +35,38 @@ describe('Publish to circle API', () => {
       },
     };
     done();
+>>>>>>> a4e0bdda63afb572610f689219b1517d75962ebb
   });
   // after((done) => {
   //   activityDao.deleteActivity(mailboxId);
   //   done();
   // });
 
-  it('should publish message to circle mailbox when we publish activity to circle', (done) => {
+  it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
     // TODO: Pre-action should always be present
+<<<<<<< HEAD
+=======
     expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
     expect(mailboxDao.checkIfMailboxExists(circleId)).to.equal(true);
     expect(circleDao.checkIfCircleExists(circleId)).to.equal(true);
 
+>>>>>>> a4e0bdda63afb572610f689219b1517d75962ebb
     request(app)
-      .post(`/circle/${circleId}/activity`) // CHANGEME: URI from /publish/circle/:cid/activity --> /circle/:cid/activity
+      .post(`/circle/${circleId}/activity`)
+      .send({ link: 'www.google.com' })
       .expect(201)
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
         expect(res.body).to.have.property('payload');
-        // const arr = activityDao.publishToMailbox(circleId, newactivity);
-        expect(activityDao.checkActivityPublished(circleId)).to.have.lengthOf.above(0);
-        // expect(res.body).to.have.property('receiver');
-        // expect(console.log(activityDao.createPublishActivity(newactivity))
-        // const result = activityDao.createPublishActivity(newactivity);
-        // (result.payload).should.have.property('link').a('string');
-        // expect(result.payload).to.have.property('link').a('string');
-        // expect(result.payload).to.not.be.empty;
-        // expect(JSON.stringify(arr)).to.have.property('circleId');
+        const circleActivity = activityDao.checkActivityPublished(circleId);
+        expect(circleActivity).to.have.lengthOf(1);
+        expect(circleActivity[0].payload.link).to.equal('www.google.com');
+
+        const mailboxActivity = activityDao.checkActivityPublished(mailboxId);
+        expect(mailboxActivity).to.have.lengthOf(1);
+        expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
+
         done();
       });
   });
