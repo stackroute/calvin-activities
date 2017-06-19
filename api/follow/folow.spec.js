@@ -8,14 +8,19 @@ require('chai').should();
 const request = require('supertest');
 
 const circleDAO = require('../../dao/circle');
+
 const followDAO = require('../../dao/follow');
+
 const mailboxDAO= require('../../dao/mailbox/');
+
+const authorize = require('../../authorize');
 
 describe('/follow api', function () {
   let circleId;
   let mailboxId;
-
+  let token;
   before(function (done) {
+    token = authorize.generateJWTToken();
     circleId=circleDAO.createCircle().id;
     mailboxId=mailboxDAO.createMailbox().id;
     done();
@@ -27,6 +32,7 @@ describe('/follow api', function () {
 
     request(app)
       .post(`/mailbox/${mailboxId}/circle/${circleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -45,6 +51,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ randomCircleId, mailboxId }).should.be.equal(false);
     request(app)
       .post(`/mailbox/${mailboxId}/circle/${randomCircleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -62,6 +69,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ circleId, randomMailboxId }).should.be.equal(false);
     request(app)
       .post(`/mailbox/${randomMailboxId}/circle/${circleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(404)
       .end(function (err, res) {
@@ -80,6 +88,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ randomCircleId, randomMailboxId }).should.be.equal(false);
     request(app)
       .post(`/mailbox/${randomMailboxId}/circle/${randomCircleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(404)
       .end(function (err, res) {
@@ -96,6 +105,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ circleId, mailboxId }).should.be.equal(true);
     request(app)
       .post(`/mailbox/${mailboxId}/circle/${circleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(409)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -112,6 +122,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ circleId, mailboxId }).should.be.equal(true);
     request(app)
       .delete(`/mailbox/${mailboxId}/circle/${circleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function (err, res) {
@@ -129,6 +140,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ circleId, mailboxId }).should.be.equal(false);
     request(app)
       .delete(`/mailbox/${mailboxId}/circle/${circleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .end(function (err, res) {
         if (err) { done(err); return; }
@@ -144,6 +156,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ randomCircleId, mailboxId }).should.be.equal(false);
     request(app)
       .delete(`/mailbox/${mailboxId}/circle/${randomCircleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -161,6 +174,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ circleId, randomMailboxId }).should.be.equal(false);
     request(app)
       .delete(`/mailbox/${randomMailboxId}/circle/${circleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -179,6 +193,7 @@ describe('/follow api', function () {
     followDAO.checkIfFollowExists({ randomCircleId, randomMailboxId }).should.be.equal(false);
     request(app)
       .delete(`/mailbox/${randomMailboxId}/circle/${randomCircleId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function (err, res) {

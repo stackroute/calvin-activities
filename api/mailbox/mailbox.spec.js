@@ -7,12 +7,20 @@ const request = require('supertest');
 
 const mailboxDao = require('../../dao/mailbox/');
 
+const authorize = require('../../authorize');
 
 describe('/mailbox api', function () {
   let id;
+  let token;
+  before(function (done) {
+    token = authorize.generateJWTToken();
+    done();
+    // TODO: Done is begin called before signing is complete.
+  });
   it('should create a new mailbox', function (done) {
     request(app)
       .post('/mailbox')
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -28,6 +36,7 @@ describe('/mailbox api', function () {
     mailboxDao.checkIfMailboxExists(id).should.be.equal(true);
     request(app)
       .delete(`/mailbox/${id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
@@ -42,6 +51,7 @@ describe('/mailbox api', function () {
     mailboxDao.checkIfMailboxExists(id).should.be.equal(false);
     request(app)
       .delete(`/mailbox/${id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function (err, res) {

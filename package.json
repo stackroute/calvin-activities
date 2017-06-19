@@ -15,8 +15,9 @@
     "chai": "^4.0.2",
     "eslint": "^4.0.0",
     "express": "^4.15.3",
-    "jwt-async": "^1.1.2",
+    "jsonwebtoken": "^7.4.1",
     "mocha": "^3.4.2",
+    "permission": "^1.0.4",
     "winston": "^2.3.1"
   },
   "devDependencies": {

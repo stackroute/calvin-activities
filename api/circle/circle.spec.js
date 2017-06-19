@@ -7,27 +7,21 @@ const request = require('supertest');
 
 const circleDAO = require('../../dao/circle');
 
-const JWT = require('jwt-async');
+const authorize = require('../../authorize');
 
-const jwt = new JWT();
-
-const configFile = require('fs').readFileSync('secret.json');
-
-const config = JSON.parse(configFile);
-
-jwt.setSecret(config.secretKey);
+// TODO: Move the following two lines in a separate file, to make them resuable.
+// TODO: Moreover, discourage using the library directly, by providing convenience functions: e.g: generateJWTToken, verifyToken, etc.
+// TODO: replace the following statements with require('./secret.js');
 
 describe('/circle api', function () {
   let circleId;
   let token;
   before(function (done) {
-    jwt.sign({ someClaim: 'data' }, function (err, data) {
-      if (err) { return err; }
-      token = data;
-      return data;
-    });
+    token = authorize.generateJWTToken();
     done();
+    // TODO: Done is begin called before signing is complete.
   });
+
   it('it should create a new circle', function (done) {
     request(app)
       .post('/circle/')
