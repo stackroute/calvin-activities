@@ -14,12 +14,14 @@ function createPublishActivity(req, res) {
 
 function getActivity(req, res) {
   const mailId = req.params.mailboxId;
-  const isMailboxPresent = activityDao.retriveMessageFromMailbox(mailId);
-  if (isMailboxPresent) {
-    res.json(activityDao.retriveMessageFromMailbox(mailId));
-  } else {
-    res.status(404).json([]);
-  }
+  const isMailboxPresent = activityDao.retriveMessageFromMailbox(mailId, (err, result) => {
+    if (err) {
+      return res.status(404).json([]);
+    } else {
+      res.json(result);
+    }
+    return null;
+  });
 }
 
 

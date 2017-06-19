@@ -13,8 +13,8 @@ function publishToMailbox(mid, activity) {
   return activities;
 }
 
-function retriveMessageFromMailbox(mid) {
-  return activities[mid];
+function retriveMessageFromMailbox(mid, done) {
+  return done(null, activities[mid]);
 }
 
 function addListnerToMailbox(mid, socket) {
