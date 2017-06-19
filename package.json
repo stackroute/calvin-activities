@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node start",
-    "test": "npm run lint && ./node_modules/.bin/mocha **/*.spec.js",
-    "lint": "./node_modules/.bin/eslint *.js '**/*.js'"
+    "test": "npm run eslint && npm run yamllint && ./node_modules/.bin/mocha **/*.spec.js",
+    "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
+    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
   },
   "author": "",
   "license": "ISC",
@@ -21,12 +22,16 @@
     "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "uuid": "^3.0.1",
+    "socket.io": "^2.0.3",
+    "require-yml": "^1.3.1",
+    "swagger-ui-express": "^2.0.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-mocha": "^4.9.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "yaml-lint": "^0.0.4"
   }
 }

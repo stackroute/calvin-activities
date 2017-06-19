@@ -1,5 +1,3 @@
-require('chai').should();
-
 const app = require('../../app');
 
 const expect = require('chai').expect;
@@ -8,13 +6,13 @@ const should = require('chai').should();
 
 const request = require('supertest');
 
-
 const circleDAO = require('../../dao/circle');
+
 
 describe('/circle api', () => {
   // const circleId = '1629d450-5279-11e7-a845-d9c5443eaaa0';
   let circleId;
-  it('it should create a new circle', (done) => {
+  it('it should create a new circle and mailbox', (done) => {
     request(app)
       .post('/circle/')
       .expect(201)
@@ -33,6 +31,7 @@ describe('/circle api', () => {
   });
 
   it('should delete a circle', (done) => {
+    circleDAO.checkIfCircleExists(circleId).should.be.equal(true);
     request(app)
       .delete(`/circle/${circleId}`)
       .expect(200)
@@ -48,6 +47,7 @@ describe('/circle api', () => {
   });
 
   it('should fail when we try to delete a circle id that does not exist', (done) => {
+    circleDAO.checkIfCircleExists(circleId).should.be.equal(false);
     request(app)
       .delete(`/circle/${circleId}`)
       .expect(404)

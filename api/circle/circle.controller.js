@@ -1,6 +1,4 @@
 const circleDAO = require('../../dao/circle');
-const followDAO = require('../../dao/follow/');
-const mailboxDAO= require('../../dao/mailbox/');
 
 // const async= require('async');
 
@@ -17,7 +15,6 @@ function deleteCircle(req, res) {
     res.status(200).json({ id });
   });
 }
-
 
 module.exports = {
   createCircle, deleteCircle,

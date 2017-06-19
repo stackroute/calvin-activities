@@ -4,6 +4,7 @@ const client=start.client;
 const uuid = start.uuid;
 
 const followapi = [];
+// const splitId = [];
 
 function addFollow(follower, callback) {
   const query = ('INSERT INTO follow (id, circle_id, mailbox_id) values(uuid(), ?, ?)');
@@ -27,8 +28,15 @@ function deleteFollow(follower, callback) {
   });
 }
 
+function splitMailId(circleId) {
+  const splitMailIdd = followapi.filter(y => y.circleId === circleId);
+
+  return splitMailIdd;
+}
+
 module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
+  splitMailId,
 };
