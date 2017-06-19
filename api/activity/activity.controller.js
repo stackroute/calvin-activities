@@ -17,8 +17,16 @@ function createPublishActivity(req, res) {
 
 function getActivity(req, res) {
   const mailId = req.params.mailboxId;
-  res.json(activityDao.retriveMessageFromMailbox(mailId));
+  const isMailboxPresent = activityDao.retriveMessageFromMailbox(mailId);
+  if (isMailboxPresent) {
+    res.json(activityDao.retriveMessageFromMailbox(mailId));
+  }
+  else {
+    res.status(404).json([]);
+  }
 }
+
+
 module.exports = {
   createPublishActivity,
   getActivity,
