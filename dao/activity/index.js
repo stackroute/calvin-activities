@@ -42,12 +42,6 @@ function createPublishActivity(mid, activity) {
 }
 
 function checkActivityPublished(mailId) {
-<<<<<<< HEAD
-  console.log(`return check for ${activities[mailId][0].payload.link}`);
-=======
-  console.log(Object.keys(activities).length);
-  // console.log(`checkActivityPublished${JSON.stringify(activities)}`);
->>>>>>> a4e0bdda63afb572610f689219b1517d75962ebb
   return activities[mailId];
 }
 
