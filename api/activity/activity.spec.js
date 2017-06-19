@@ -23,34 +23,17 @@ describe('/activity API', () => {
   before((done) => {
     circleId = circleDao.createCircle().id;
     mailboxId = mailboxDao.createMailbox().id;
-<<<<<<< HEAD
     followDAO.addFollow({ circleId, mailboxId });
     expect(JSON.stringify(activityDao.checkIfMailboxEmpty(circleId))).to.equal(JSON.stringify({}));
     expect(JSON.stringify(activityDao.checkIfMailboxEmpty(mailboxId))).to.equal(JSON.stringify({}));
-=======
-    newactivity = {
-      payload: {
-        link: 'www.google.com',
-        image: 'image.jpg',
-      },
-    };
     done();
->>>>>>> a4e0bdda63afb572610f689219b1517d75962ebb
   });
-  // after((done) => {
-  //   activityDao.deleteActivity(mailboxId);
-  //   done();
-  // });
-
+  
   it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
     // TODO: Pre-action should always be present
-<<<<<<< HEAD
-=======
     expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
     expect(mailboxDao.checkIfMailboxExists(circleId)).to.equal(true);
     expect(circleDao.checkIfCircleExists(circleId)).to.equal(true);
-
->>>>>>> a4e0bdda63afb572610f689219b1517d75962ebb
     request(app)
       .post(`/circle/${circleId}/activity`)
       .send({ link: 'www.google.com' })
