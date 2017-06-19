@@ -48,6 +48,7 @@ describe('/activity API', () => {
         const mailboxActivity = activityDao.checkActivityPublished(mailboxId);
         expect(mailboxActivity).to.have.lengthOf(1);
         expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
+
         done();
       });
   });
@@ -62,6 +63,8 @@ describe('Retrive message from mailbox', () => {
   before(() => {
     circleId = circleDao.createCircle().id;
     mailboxId = mailboxDao.createMailbox().id;
+
+    // console.log('Inside activity', circleId, mailboxId);
     newactivity = {
       payload: {
         link: 'www.google.com',
@@ -70,7 +73,6 @@ describe('Retrive message from mailbox', () => {
     };
     activityDao.publishToMailbox(mailboxId, newactivity);
   });
-
 
   it('should retrieve message from Mailbox', (done) => {
     request(app)

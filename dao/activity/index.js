@@ -30,7 +30,6 @@ function retriveMessageFromMailbox(mid, callback) {
     }
   });
 }
-
 function addListnerToMailbox(mid, socket) {
   socket.on('startListeningToMailBox', (data) => {
     listeners[mid].unshift(socket);
@@ -61,11 +60,6 @@ function checkActivityPublished(mailId) {
   return activities[mailId];
 }
 
-function deleteActivity(mailboxId) {
-  delete activities[mailboxId];
-
-  return activities;
-}
 
 module.exports = {
   publishToMailbox,
@@ -74,5 +68,4 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
-  deleteActivity,
 };
