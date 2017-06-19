@@ -57,6 +57,8 @@ describe('Publish to circle API', () => {
         expect(res.body).to.have.property('payload');
         // const arr = activityDao.publishToMailbox(circleId, newactivity);
         expect(activityDao.checkActivityPublished(circleId)).to.have.lengthOf.above(0);
+        // expect(activityDao.checkActivityPublishedToFollowerMailbox(circleId)).to.have.lengthOf.above(0);
+        // expect(activityDao.publishToMailbox(circleId, newactivity)).to.have.lengthOf.above(1);
         // expect(res.body).to.have.property('receiver');
         // expect(console.log(activityDao.createPublishActivity(newactivity))
         // const result = activityDao.createPublishActivity(newactivity);

@@ -3,7 +3,7 @@ const mailboxes = [];
 
 // Function to create a mailbox which contains id
 // let idd =  (parseInt(Math.random()*192)).toString();
-function createMailbox(req, res) {
+function createMailbox() {
   const createNewMailBox = {
     id: (parseInt(Math.random()*192)).toString(),
   };

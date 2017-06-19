@@ -1,5 +1,7 @@
 const followDao = require('../follow');
 
+const mailboxDao = require('../mailbox');
+
 const listeners = { };
 
 const activities = { };
@@ -59,9 +61,22 @@ function createPublishActivity(mid, activity) {
 // }
 
 function checkActivityPublished(mailId) {
-  console.log(Object.keys(activities).length);
-  console.log(JSON.stringify(activities));
+  // console.log(Object.keys(activities).length);
+  // console.log(JSON.stringify(activities));
   return activities[mailId];
+}
+
+function checkActivityPublishedToFollowerMailbox(mid) {
+  let mailbox = [];
+  const passMailboxId = mailboxDao.createMailbox();
+  // followDao.addFollow({ mid, passMailboxId });
+
+  for (let i = 0; i < followDao.splitMailId(mid).length; i += 1) {
+    const mailId = followDao.splitMailId(mid)[i].mailboxId;
+    console.log(`Publishing to followers mailboxID${JSON.stringify(checkActivityPublished(mailId))}`);
+    mailbox = checkActivityPublished(mailId);
+  }
+  return mailbox;
 }
 
 module.exports = {
@@ -71,4 +86,5 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
+  checkActivityPublishedToFollowerMailbox,
 };
