@@ -20,23 +20,29 @@ describe('/follow api', () => {
   let isCircleExists;
   let isFollowExists;
   before((done) => {
-      async.waterfall([
-
-      ]);
-    async.parallel([
-      circleDAO.createCircle,
-      mailboxDAO.createMailbox,
+    function one() {
+      async.parallel([
+        circleDAO.createCircle,
+        mailboxDAO.createMailbox,
+      ], (err, result) => {
+        circleId=result[0];
+        mailboxId=result[1];
+      });
+    }
+    function two() {
+      async.parallel([
+        mailboxDAO.checkIfMailboxExists.bind(null, mailboxId)],
+        // circleDAO.checkIfCircleExists.bind(null, circleId)],
+      (err, result) => {
+        console.log(result);
+        isMailboxExists=result[0];
+        // isCircleExists=result[1];
+      });
+    }
+    async.series([
+      one, two,
     ], (err, result) => {
-      console.log(result);
-      circleId=result[0];
-      mailboxId=result[1];
-    });
-    async.parallel([
-      mailboxDAO.checkIfMailboxExists.bind(null, '12'),
-      circleDAO.checkIfCircleExists.bind(null, '12')], (err, result) => {
-      console.log(result);
-      isMailboxExists=result[0];
-      isCircleExists=result[1];
+      console.log('done');
       done();
     });
 
