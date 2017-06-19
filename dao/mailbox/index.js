@@ -1,31 +1,42 @@
+const start = require('../../db');
+
+const client = start.client;
+const uuid = start.uuid;
 const mailboxes = [];
 
 
 // Function to create a mailbox which contains id
-// let idd =  (parseInt(Math.random()*192)).toString();
-function createMailbox(req, res) {
-  const createNewMailBox = {
-    id: (parseInt(Math.random()*192)).toString(),
-  };
 
-  mailboxes.push(createNewMailBox);
-  return createNewMailBox;
+function createMailbox(callback) {
+  const id1 = uuid();
+  const query = ('INSERT INTO mailbox (id) values( ? )');
+  client.execute(query, [id1], (err, result) => callback(err, id1.toString()));
 }
 
-function checkIfMailboxExists(id) {
-  const filteruserid = mailboxes.filter(userid => userid.id === id);
-  return filteruserid.length!==0;
+function checkIfMailboxExists(mailboxId, callback) {
+  const query = (`SELECT * from mailbox where id = ${mailboxId}`);
+  client.execute(query, (err, result) => {
+    if (err) { return callback(err); }
+    return callback(null, result.rowLength > 0);
+  });
 }
 // Function to delete the mailbox with id. If id not exists returns no mailbox error
-function deleteMailbox(id) {
-  const filteruserid = mailboxes.filter(userid => userid.id === id);
-  const mailBoxIndex = mailboxes.indexOf(filteruserid[0]);
-  const x = mailboxes.splice(mailBoxIndex, 1);
-  return x[0];
+function deleteMailbox(mailboxId, callback) {
+  checkIfMailboxExists(mailboxId, (err, mailboxExists) => {
+    if (err) { return callback(err, null); }
+    if (mailboxExists === false) {
+      return callback(`Mailbox id ${mailboxId} does not exist`, null);
+    } else {
+      const query = (`DELETE from  mailbox where id =${mailboxId}`);
+      client.execute(query, (error, result) => callback(err, mailboxId));
+      return { mailboxId };
+    }
+  });
 }
+
 
 module.exports = {
   createMailbox,
-  deleteMailbox,
   checkIfMailboxExists,
+  deleteMailbox,
 };

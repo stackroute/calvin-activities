@@ -1,4 +1,3 @@
-
 const model = require('cassandra-driver');
 const connection=require('./config/config');
 
