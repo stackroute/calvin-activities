@@ -1,5 +1,7 @@
 const app = require('../../app');
 
+const expect = require('chai').expect;
+
 require('chai').should();
 
 const request = require('supertest');
@@ -36,12 +38,12 @@ describe('/mailbox api', () => {
         if (err) { done(err); return; }
         expect(res.body).to.have.property('id');
         mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
-        mailboxExists.should.be.equal(false);
-        done();
+          mailboxExists.should.be.equal(false);
+          done();
+        });
       });
   });
-  });
- 
+
 
   it('should return an error when we try to delete a mailbox that does not exist', (done) => {
     request(app)
