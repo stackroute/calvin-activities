@@ -42,10 +42,30 @@ function createPublishActivity(mid, activity) {
 }
 
 function checkActivityPublished(mailId) {
+<<<<<<< HEAD
   console.log(`return check for ${activities[mailId][0].payload.link}`);
+=======
+  console.log(Object.keys(activities).length);
+  // console.log(`checkActivityPublished${JSON.stringify(activities)}`);
+>>>>>>> a4e0bdda63afb572610f689219b1517d75962ebb
   return activities[mailId];
 }
 
+function deleteActivity(mailboxId) {
+  console.log(` Before deleteActivity${JSON.stringify(activities)}`);
+
+  delete activities[mailboxId];
+  // activities = null;delete myObject['regex'];
+  // delete activities;
+  console.log(`deleteActivity${JSON.stringify(activities)}`);
+  // console.log(`inside deleteActivity${JSON.stringify(act)}`);
+
+  return activities;
+}
+// function createAnActivity(mid, newActivity) {
+//   console.log(`createactivity${publishToMailbox(mid, newActivity)}`);
+//   return JSON.stringify(publishToMailbox(mid, newActivity));
+// }
 module.exports = {
   publishToMailbox,
   addListnerToMailbox,
@@ -53,4 +73,5 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
+  deleteActivity,
 };
