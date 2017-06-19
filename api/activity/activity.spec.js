@@ -13,59 +13,39 @@ const followDAO = require('../../dao/follow');
 const activityDao = require('../../dao/activity');
 
 // CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"
-describe('Publish to circle API', () => {
+describe('/activity API', () => {
   // TODO: Pre assertion should be put inside before block
   let id;
   let circleId;
-  let followDao;
   let mailboxId;
   let newactivity;
 
   before(() => {
     circleId = circleDao.createCircle().id;
     mailboxId = mailboxDao.createMailbox().id;
-    newactivity = {
-      payload: {
-        link: 'www.google.com',
-        image: 'image.jpg',
-      },
-    };
+    followDAO.addFollow({ circleId, mailboxId });
+    expect(JSON.stringify(activityDao.checkIfMailboxEmpty(circleId))).to.equal(JSON.stringify({}));
+    expect(JSON.stringify(activityDao.checkIfMailboxEmpty(mailboxId))).to.equal(JSON.stringify({}));
   });
 
-  it('should publish message to circle mailbox when we publish activity to circle', (done) => {
+  it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
     // TODO: Pre-action should always be present
-    expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
-    expect(mailboxDao.checkIfMailboxExists(circleId)).to.equal(true);
-    expect(circleDao.checkIfCircleExists(circleId)).to.equal(true);
-    // expect(activityDao.getAllMessages()).to.have.lengthOf(0);
-    // const arr = activityDao.publishToMailbox(circleId, newactivity); // TODO: write a method (getAllMessages) in activity DAO for checking number of messages in mailbox.
-    // console.log(`arr${JSON.stringify(arr)}`);
-    // console.log(`arrlength${JSON.stringify(arr.length())}`);
-    // console.log(`arrpay${JSON.stringify(arr[circleId].payload)}`);
-    // expect(arr).to.have.property('payload');
-    // expect(arr).not.to.be.empty;
-    // expect(activityDao.checkIfMailboxEmpty()).to.equal();
-    // TODO: Assert that mailbox has no activities
-
-
     request(app)
-      .post(`/circle/${circleId}/activity`) // CHANGEME: URI from /publish/circle/:cid/activity --> /circle/:cid/activity
+      .post(`/circle/${circleId}/activity`)
+      .send({ link: 'www.google.com' })
       .expect(201)
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
         expect(res.body).to.have.property('payload');
-        // const arr = activityDao.publishToMailbox(circleId, newactivity);
-        expect(activityDao.checkActivityPublished(circleId)).to.have.lengthOf.above(0);
-        // expect(activityDao.checkActivityPublishedToFollowerMailbox(circleId)).to.have.lengthOf.above(0);
-        // expect(activityDao.publishToMailbox(circleId, newactivity)).to.have.lengthOf.above(1);
-        // expect(res.body).to.have.property('receiver');
-        // expect(console.log(activityDao.createPublishActivity(newactivity))
-        // const result = activityDao.createPublishActivity(newactivity);
-        // (result.payload).should.have.property('link').a('string');
-        // expect(result.payload).to.have.property('link').a('string');
-        // expect(result.payload).to.not.be.empty;
-        // expect(JSON.stringify(arr)).to.have.property('circleId');
+        const circleActivity = activityDao.checkActivityPublished(circleId);
+        expect(circleActivity).to.have.lengthOf(1);
+        expect(circleActivity[0].payload.link).to.equal('www.google.com');
+
+        const mailboxActivity = activityDao.checkActivityPublished(mailboxId);
+        expect(mailboxActivity).to.have.lengthOf(1);
+        expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
+
         done();
       });
   });
