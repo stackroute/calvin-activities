@@ -1,0 +1,39 @@
+---
+  swagger: "2.0"
+  tags:
+    - name: "Mailbox API"
+      description: "API to create and delete mailbox"
+  info: 
+    title: "Calvin - Activity Log"
+    version: "v1"
+    category: "Mailbox"
+
+  paths: 
+    /mailbox:
+      post:
+        tags:
+          - "Mailbox API"
+        summary: "Create Mailbox"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: Creates a mailbox. 
+    /mailbox/{mailboxId}:
+      delete:
+        tags:
+          - "Mailbox API"
+        summary: "Delete Mailbox"
+
+        produces:
+          -"application/json"
+        parameters:
+        - name: "mailboxId"
+          in: "path"
+          description: "Mailbox id to delete"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: Deletes a mailbox

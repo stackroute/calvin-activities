@@ -1,11 +1,12 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 const app = require('../../app');
 
+const expect = require('chai').expect;
 require('chai').should();
 
 const request = require('supertest');
 
-const mailboxDao = require('../../dao/mailbox/');
+const mailboxDao = require('../../dao').mailbox;
 
 const authorize = require('../../authorize');
 
@@ -25,40 +26,56 @@ describe('/mailbox api', function () {
       .expect('Content-Type', /json/)
       .end(function (err, res) {
         if (err) { done(err); return; }
-        res.body.should.have.property('id').equal(res.body.id).a('string');
-        id = res.body.id;
-        mailboxDao.checkIfMailboxExists(id).should.be.equal(true);
-        done();
+        expect(res.body).to.be.a('string');
+        mailboxId = res.body;
+        mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
+          if (err) { done(err); return; }
+          mailboxExists.should.be.equal(true);
+          done();
+        });
       });
   });
 
-  it('should delete a mailbox', function (done) {
-    mailboxDao.checkIfMailboxExists(id).should.be.equal(true);
-    request(app)
-      .delete(`/mailbox/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) { done(err); return; }
-        res.body.should.have.property('id').equal(res.body.id).a('string');
-        mailboxDao.checkIfMailboxExists(id).should.be.equal(false);
-        done();
-      });
+  it('should delete a mailbox', (done) => {
+    mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+      if (err) { done(err); return; }
+      doesMailboxExists.should.be.equal(true);
+      request(app)
+        .delete(`/mailbox/${mailboxId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err1, res) => {
+          if (err1) { done(err1); return; }
+          expect(res.body).to.equal(mailboxId);
+          mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
+            if (error) { done(error); return; }
+            mailboxExists.should.be.equal(false);
+            done();
+          });
+        });
+    });
   });
 
-  it('should return an error when we try to delete a mailbox that does not exist', function (done) {
-    mailboxDao.checkIfMailboxExists(id).should.be.equal(false);
-    request(app)
-      .delete(`/mailbox/${id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(404)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) { done(err); return; }
-        res.body.should.have.property('message').equal(`Mailbox with id ${id} does not exist`);
-        mailboxDao.checkIfMailboxExists(id).should.be.equal(false);
-        done();
-      });
+
+  it('should return an error when we try to delete a mailbox that does not exist', (done) => {
+    mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+      if (err) { done(err); return; }
+      doesMailboxExists.should.be.equal(false);
+      request(app)
+        .delete(`/mailbox/${mailboxId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .end((err1, res) => {
+          if (err1) { done(err1); } else {
+            mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
+              if (error) { done(error); return; }
+              mailboxExists.should.be.equal(false);
+              done();
+            });
+          }
+        });
+    });
   });
 });
