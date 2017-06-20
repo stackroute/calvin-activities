@@ -3,7 +3,7 @@ const mailboxDao = require('../../dao').mailbox;
 
 function createMailbox(req, res) {
   mailboxDao.createMailbox((err, id) => {
-    if (err) { res.status(404).json({ message: `${err}` }); return; }
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
     res.status(201).json(id);
   });
 }
@@ -19,3 +19,4 @@ module.exports = {
   createMailbox,
   deleteMailbox,
 };
+

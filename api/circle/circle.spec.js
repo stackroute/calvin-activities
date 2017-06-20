@@ -7,9 +7,10 @@ const request = require('supertest');
 
 const circleDAO = require('../../dao').circle;
 
+
 describe('/circle api', () => {
   let circleId;
-  it('it should create a new circle', (done) => {
+  it('it should create a new circle and mailbox', (done) => {
     request(app)
       .post('/circle/')
       .expect(201)

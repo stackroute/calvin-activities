@@ -3,10 +3,15 @@
   tags:
     - name: "Circle API"
       description: "API to create and delete circles"
+    - name : "Mailbox API"
+      description: "API to create and delete mailbox"
+    - name: "Follow API"
+      description: "API to unfollow and follow circles"   
   info: 
     title: "Calvin - Activity Log"
     version: "v1"
     category: "Circle"
+
   paths: 
     /circle:
       post:
@@ -17,4 +22,100 @@
           - "application/json"
         responses: 
           201: 
-            description: Creates a circle. 
+            description: Creates a circle.           
+    /circle/{circleId}:
+      delete:
+        tags:
+          - "Circle API"
+        summary: "Delete Circle"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "circleId"
+          in: "path"
+          description: "Circle id to delete"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: Deletes a circle.
+    /mailbox:
+      post:
+        tags:
+          - "Mailbox API"
+        summary: "Create Mailbox"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: Creates a mailbox. 
+    /mailbox/{mailboxId}:
+      delete:
+        tags:
+          - "Mailbox API"
+        summary: "Delete Mailbox"
+        produces:
+          -"application/json"
+        parameters:
+        - name: "mailboxId"
+          in: "path"
+          description: "Mailbox id to delete"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: Deletes a mailbox.             
+    /mailbox/{mailboxId}/circle/{circleId}:
+      post:
+        tags:
+          - "Follow API"
+        summary: "Follow a circle"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: Follow a circle. 
+        parameters:
+        - name: "mailboxId"
+          in: "path"
+          description: "Mailbox id to add"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "Circle id to add"
+          required: true
+          type: "string"
+          format: "int64"
+      delete:
+        tags:
+          - "Follow API"
+        summary: "Unfollow a circle"
+        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "mailboxId"
+          in: "path"
+          description: "Circle id to delete"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "Circle id to add"
+          required: true
+          type: "string"
+          format: "int64"  
+        responses:
+          200:
+            description: Unfollow a circle.
+ 
+
+        
+    
+        
+

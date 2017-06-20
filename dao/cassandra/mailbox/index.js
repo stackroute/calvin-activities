@@ -30,6 +30,7 @@ function deleteMailbox(mailboxId, callback) {
       return { mailboxId };
     }
   });
+  return (mailboxId);
 }
 
 
