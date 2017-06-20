@@ -4,13 +4,13 @@ const expect = require('chai').expect;
 
 const request = require('supertest');
 
-const mailboxDao = require('../../dao/mailbox/');
+const mailboxDao = require('../../dao').mailbox;
 
-const circleDao = require('../../dao/circle/');
+const circleDao = require('../../dao').circle;
 
-const followDAO = require('../../dao/follow');
+const followDAO = require('../../dao').follow;
 
-const activityDao = require('../../dao/activity');
+const activityDao = require('../../dao').activity;
 
 // CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"
 describe('/activity API', () => {
@@ -21,17 +21,19 @@ describe('/activity API', () => {
   let newactivity;
 
   before((done) => {
-    circleId = circleDao.createCircle().id;
-    mailboxId = mailboxDao.createMailbox().id;
-    followDAO.addFollow({ circleId, mailboxId });
-    expect(JSON.stringify(activityDao.checkIfMailboxEmpty(circleId))).to.equal(JSON.stringify({}));
-    expect(JSON.stringify(activityDao.checkIfMailboxEmpty(mailboxId))).to.equal(JSON.stringify({}));
-    done();
+    circleDao.createCircle((err, result) => {
+      circleId = result;
+      console.log(`Circle${circleId}`);
+      mailboxDao.createMailbox((error, result1) => {
+        mailboxId = result1;
+        console.log(`Mailbox${mailboxId}`);
+        done();
+      });
+    });
   });
 
   it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
-    // TODO: Pre-action should always be present
-    expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
+    // expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
     expect(mailboxDao.checkIfMailboxExists(circleId)).to.equal(true);
     expect(circleDao.checkIfCircleExists(circleId)).to.equal(true);
     request(app)
