@@ -9,6 +9,7 @@
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
     "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
+
   },
   "author": "",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "eslint-plugin-mocha": "^4.9.0",
     "mocha": "^3.4.2",
     "supertest": "^3.0.0",
-    "yaml-lint": "^0.0.4"
+    "yaml-lint": "^0.0.4",
+    "supertest": "^3.0.0"
   }
 }
