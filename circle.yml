@@ -4,5 +4,5 @@ machine:
     version: 8.0.0
   services:
     - cassandra
-  database:
-    - ./setup-DB.sh
+database:
+  - ./setup-DB.sh
