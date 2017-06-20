@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const secretKey = require('./secret.js');
 
-const circlePermissions=['circle-write', 'circle-delete', 'circle-all'];
+const circlePermissions=['circle-write','circle-delete', 'circle-all'];
 
 const generateJWTToken = () => {
   const token = jwt.sign({ username: 'Mayank Sethi', permission: 'circle-write' }, secretKey);
@@ -26,11 +26,12 @@ const permit = (req, res, next) => {
   if (!auth) { return res.status(404).send('Authorization Required'); } else if (!auth.includes('Bearer')) { return res.status(401).send('Invalid Authorization'); }
   const token = auth.split(' ').pop().toString();
   const decoded = jwt.decode(token, { complete: true });
-
-  if (decoded.payload.permission !== 'circle-write') { return res.status(404).send('Not Permitted'); }
+  const permission = decoded.payload.permission;
+  if (circlePermissions.indexOf(permission)) { return res.status(404).send('Not Permitted'); }
   next();
   return 'Permitting';
 };
+
 
 module.exports = {
   generateJWTToken,
