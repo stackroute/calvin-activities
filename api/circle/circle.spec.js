@@ -28,6 +28,7 @@ describe('/circle api', () => {
 
   it('should delete a circle', (done) => {
     circleDAO.checkIfCircleExists(circleId, (err, doesCircleExists) => {
+      if (err) { done(err); return; }
       doesCircleExists.should.be.equal(true);
       request(app)
         .delete(`/circle/${circleId}`)
@@ -37,6 +38,7 @@ describe('/circle api', () => {
           if (err1) { done(err1); return; }
           expect(res.body).to.equal(circleId);
           circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
+            if (err) { done(err); return; }
             circleExists.should.be.equal(false);
             done();
           });
@@ -46,6 +48,7 @@ describe('/circle api', () => {
 
   it('should fail when we try to delete a circle id that does not exist', (done) => {
     circleDAO.checkIfCircleExists(circleId, (err, doesCircleExists) => {
+      if (err) { done(err); return; }
       doesCircleExists.should.be.equal(false);
       request(app)
         .delete(`/circle/${circleId}`)
