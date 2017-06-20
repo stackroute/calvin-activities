@@ -8,7 +8,7 @@ function createCircle(callback) {
 }
 function checkIfCircleExists(circleId, callback) {
   const filterCircle = circles.filter(circle => circle === circleId);
-  return callback(null, filterCircle.length!==0);
+  callback(null, filterCircle.length!==0);
 }
 function deleteCircle(circleId, callback) {
   checkIfCircleExists(circleId, (err, circleExists) => {

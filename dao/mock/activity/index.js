@@ -9,6 +9,7 @@ const activities = {};
 function publishToMailbox(mid, activity) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
+  // console.log(activities);
   return activities;
 }
 
@@ -24,7 +25,7 @@ function createPublishActivity(mid, activity, callback) {
 
 function checkIfMailboxExists(mid, callback) {
   const filterMailId = activities[mid];
-  if (filterMailId ===undefined) { return callback(null, false); }
+  if (!filterMailId) { return callback(null, false); }
   return callback(null, filterMailId);
 }
 

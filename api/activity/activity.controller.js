@@ -1,6 +1,6 @@
 const activityDao = require('../../dao').activity;
 const followDao = require('../../dao').follow;
-const circleDAO =require('../../dao').circle;
+const circleDAO = require('../../dao').circle;
 
 function createPublishActivity(req, res) {
   const payload = req.body;
@@ -9,14 +9,14 @@ function createPublishActivity(req, res) {
     payload: req.body,
     timestamp: new Date(),
   };
-  circleDAO.checkIfCircleExists(receiver, (error, data) => {
-    if (error) { res.status(404).json(error); return; }
-
+  circleDAO.checkIfCircleExists(receiver, (data, circleExists) => {
+    if (!circleExists) { res.status(404).send('Circle Id does not exists'); return; }
     activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
       if (error1) { res.status(404).json(error1); return; }
       res.status(201).json(data1);
     });
   });
+
   // activityDao.createPublishActivity(receiver, newActivity, (err, data) => {
   //   if (err) { res.status(404).json(err); return; }
   //   res.status(201).json(data);

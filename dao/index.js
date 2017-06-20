@@ -3,7 +3,6 @@
 
 const config = require('../config');
 
-console.log(process.env.DAO);
 module.exports = {
   get circle() {
     return require(`./${config.dao}/circle`);
