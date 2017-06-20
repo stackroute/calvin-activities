@@ -9,9 +9,8 @@ function createPublishActivity(req, res) {
     payload: req.body,
     timestamp: new Date(),
   };
-  // res.status(201).json(activityDao.createPublishActivity(receiver, newActivity));
   activityDao.createPublishActivity(receiver, newActivity, (err, data) => {
-    if (err) { res.status(404).json(err); return; }
+    // if (err) { res.status(404).json(err); return; }
     res.status(201).json(data);
   });
 }
@@ -21,12 +20,11 @@ function getActivity(req, res) {
   const mailId = req.params.mailboxId;
   activityDao.retriveMessageFromMailbox(mailId, (err, result) => {
     if (err) {
-      return res.status(404).json([]);
-    } else {
-      res.json(result);
+      res.status(404).json([]); return;
     }
-    return null;
+    res.json(result);
   });
+  return null;
 }
 
 

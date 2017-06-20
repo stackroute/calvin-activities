@@ -44,7 +44,6 @@ describe('/activity API', () => {
         expect(res.body).to.have.property('payload');
         const circleActivity = activityDao.checkActivityPublished(circleId, (error, activityPublished) => {
           if (error) { done(error); return; }
-          activityPublished.should.be.equal(true);
           done();
         });
         expect(circleActivity).to.have.lengthOf(1);
@@ -52,51 +51,25 @@ describe('/activity API', () => {
 
         const mailboxActivity = activityDao.checkActivityPublished(mailboxId, (error, activityPublished) => {
           if (error) { done(error); return; }
-          activityPublished.should.be.equal(true);
           done();
         });
 
-        const mailboxActivity = activityDao.checkActivityPublished(mailboxId);
         expect(mailboxActivity).to.have.lengthOf(1);
         expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
         done();
       });
   });
-});
-
-describe('Retrive message from mailbox', () => {
-  let id;
-  let circleId;
-  let mailboxId;
-  let newactivity;
-
-  before(() => {
-    circleId = circleDao.createCircle().id;
-    mailboxId = mailboxDao.createMailbox().id;
-    newactivity = {
-      payload: {
-        link: 'www.google.com',
-        image: 'image.jpg',
-      },
-    };
-    activityDao.publishToMailbox(mailboxId, newactivity, (err, activityPublished) => {
-      if (err) { done(err); return; }
-      activityPublished.should.be.equal(true);
-      done();
-    });
-  });
 
 
   it('should retrieve message from Mailbox', (done) => {
     request(app)
-      .get(`/circle/${mailboxId}/activity`)
+      .get(`/circle/${circleId}/activity`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
         expect(res.body).to.have.lengthOf(1);
         expect(JSON.stringify(res.body[0].payload.link)).to.equal('"www.google.com"');
-        expect(JSON.stringify(res.body[0].payload.image)).to.equal('"image.jpg"');
         done();
       });
   });
