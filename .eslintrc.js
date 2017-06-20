@@ -10,5 +10,9 @@ module.exports = {
       "space-infix-ops": 0,
       "no-unused-vars": [1, {"vars": "local", "args": "none"}],
       "no-else-return": 0
-    }
+    },
+    "env" : {
+  "node": true,
+  "mocha": true,
+}
 };
