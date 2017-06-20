@@ -5,9 +5,9 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 
-const io = require('socket.io')(server);
+// const io = require('socket.io')(server);
 
-const socket = io.listen(server);
+// const socket = io.listen(server);
 
 // const time = require('express-timestamp');
 

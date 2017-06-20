@@ -6,11 +6,10 @@ const listeners = {};
 
 const activities = {};
 
-function publishToMailbox(mid, activity) {
+function publishToMailbox(mid, activity, callback) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
-  console.log(JSON.stringify(activities));
-  return activities;
+  return callback(null, { mid, activity });
 }
 
 function retriveMessageFromMailbox(mid, done) {
@@ -33,17 +32,17 @@ function checkIfMailboxEmpty() {
 }
 
 
-function createPublishActivity(mid, activity) {
-  publishToMailbox(mid, activity);
+function createPublishActivity(mid, activity, callback) {
+  publishToMailbox(mid, activity, callback);
   for (let i = 0; i < followDao.splitMailId(mid).length; i += 1) {
     const mailId = followDao.splitMailId(mid)[i].mailboxId;
-    publishToMailbox(mailId, activity);
+    publishToMailbox(mid, activity, callback);
   }
-  return activity;
+  return callback(null, { mid, activity });
 }
 
-function checkActivityPublished(mailId) {
-  return activities[mailId];
+function checkActivityPublished(mailId, callback) {
+  return callback(null, activities[mailId]);
 }
 
 function deleteActivity(mailboxId) {
@@ -57,10 +56,7 @@ function deleteActivity(mailboxId) {
 
   return activities;
 }
-// function createAnActivity(mid, newActivity) {
-//   console.log(`createactivity${publishToMailbox(mid, newActivity)}`);
-//   return JSON.stringify(publishToMailbox(mid, newActivity));
-// }
+
 module.exports = {
   publishToMailbox,
   addListnerToMailbox,

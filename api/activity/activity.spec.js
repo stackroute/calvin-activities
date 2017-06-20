@@ -42,11 +42,19 @@ describe('/activity API', () => {
       .end((err, res) => {
         if (err) { done(err); return; }
         expect(res.body).to.have.property('payload');
-        const circleActivity = activityDao.checkActivityPublished(circleId);
+        const circleActivity = activityDao.checkActivityPublished(circleId, (error, activityPublished) => {
+          if (error) { done(error); return; }
+          activityPublished.should.be.equal(true);
+          done();
+        });
         expect(circleActivity).to.have.lengthOf(1);
         expect(circleActivity[0].payload.link).to.equal('www.google.com');
 
-        const mailboxActivity = activityDao.checkActivityPublished(mailboxId);
+        const mailboxActivity = activityDao.checkActivityPublished(mailboxId, (error, activityPublished) => {
+          if (error) { done(error); return; }
+          activityPublished.should.be.equal(true);
+          done();
+        });
         expect(mailboxActivity).to.have.lengthOf(1);
         expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
 
@@ -72,7 +80,11 @@ describe('Retrive message from mailbox', () => {
         image: 'image.jpg',
       },
     };
-    activityDao.publishToMailbox(mailboxId, newactivity);
+    activityDao.publishToMailbox(mailboxId, newactivity, (err, activityPublished) => {
+      if (err) { done(err); return; }
+      activityPublished.should.be.equal(true);
+      done();
+    });
   });
   // after(() => {
 
