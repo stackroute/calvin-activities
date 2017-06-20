@@ -28,6 +28,7 @@ describe('/circle api', () => {
 
   it('should delete a circle', (done) => {
     circleDAO.checkIfCircleExists(circleId, (err, doesCircleExists) => {
+      if (err) { done(err); return; }
       doesCircleExists.should.be.equal(true);
       request(app)
         .delete(`/circle/${circleId}`)
