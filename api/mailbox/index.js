@@ -2,6 +2,6 @@ const router = require('express').Router();
 const controller = require('./mailbox.controller');
 
 router.post('', controller.createMailbox);
-router.delete('/:id', controller.deleteMailbox);
+router.delete('/:mailboxId', controller.deleteMailbox);
 
 module.exports = router;
