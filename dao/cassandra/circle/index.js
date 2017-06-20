@@ -20,12 +20,11 @@ function checkIfCircleExists(circleId, callback) {
 function deleteCircle(circleId, callback) {
   checkIfCircleExists(circleId, (err, circleExists) => {
     if (err) { return callback(err, null); }
-    if (circleExists === false) { return callback(`Circle id ${circleId} does not exist`, null); }
+    if (circleExists === false) { return callback(null, `Circle id ${circleId} does not exist`); }
     const query =(`DELETE from circle where id =${circleId}`);
     client.execute(query, (error, result) => callback(err, circleId));
-    return (circleId);
+    return true;
   });
-  return (circleId);
 }
 
 

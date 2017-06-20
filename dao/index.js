@@ -8,6 +8,9 @@ module.exports = {
     return require(`./${config.dao}/circle`);
   },
   get mailbox() {
-    return require(`./${config.dao}/circle`);
+    return require(`./${config.dao}/mailbox`);
+  },
+  get follow() {
+    return require(`./${config.dao}/follow`);
   },
 };
