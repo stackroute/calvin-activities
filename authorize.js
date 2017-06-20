@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-const secretKey = require('./secret.js'); // FIXME: Move secret.js into config
+const config=require('./config');
 
 const generateJWTToken = () => {
-  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] }, secretKey);
+  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] }, config.secretKey);
   return token;
 };
 
@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
   const token = auth.split(' ').pop().toString();
   const decodeToken = jwt.decode(token, { complete: true });
   const scopes = decodeToken.payload.scopes;
-  jwt.verify(token, secretKey, (err, decoded) => {
+  jwt.verify(token, config.secretKey, (err, decoded) => {
     if (err) { return res.status(404).send('Invalid Authorization'); }
     req.claims = scopes;
     next();

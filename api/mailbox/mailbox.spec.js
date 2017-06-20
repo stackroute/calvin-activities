@@ -17,24 +17,27 @@ describe('/mailbox api', function () {
     token = authorize.generateJWTToken();
     done();
   });
-  it('should create a new mailbox', function (done) {
-    request(app)
-      .post('/mailbox')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(201)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) { done(err); return; }
-        expect(res.body).to.be.a('string');
-        mailboxId = res.body;
-        mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
-          if (err) { done(err); return; }
-          mailboxExists.should.be.equal(true);
-          done();
+  it('should create a new mailbox', (done) => {
+    mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+      if (err) { done(err); return; }
+      doesMailboxExists.should.be.equal(false);
+      request(app)
+        .post('/mailbox')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(201)
+        .expect('Content-Type', /json/)
+        .end((err1, res) => {
+          if (err1) { done(err1); return; }
+          expect(res.body).to.be.a('string');
+          mailboxId = res.body;
+          mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
+            if (error) { done(error); return; }
+            mailboxExists.should.be.equal(true);
+            done();
+          });
         });
-      });
+    });
   });
-
   it('should delete a mailbox', (done) => {
     mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
       if (err) { done(err); return; }
