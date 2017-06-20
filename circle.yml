@@ -5,4 +5,5 @@ machine:
   services:
     - cassandra
 database:
-  - ./setup-DB.sh
+  override:
+    - ./setup-DB.sh
