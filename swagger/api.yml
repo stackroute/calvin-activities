@@ -6,7 +6,11 @@
     - name : "Mailbox API"
       description: "API to create and delete mailbox"
     - name: "Follow API"
-      description: "API to unfollow and follow circles"   
+      description: "API to unfollow and follow circles" 
+    - name: "Publish API"
+      description: "API to Publish Activity" 
+    - name: "Receive Notification"
+      description: "API to receive the notification"
   info: 
     title: "Calvin - Activity Log"
     version: "v1"
@@ -113,9 +117,59 @@
         responses:
           200:
             description: Unfollow a circle.
- 
+    /circle/{circleId}/activity:
+       post:
+        tags:
+          - "Publish Activity API"
+        summary: "Publish activity"
+        produces: 
+          - "application/json"
+          - "application/xml"
+        consumes: 
+          - "application/json"
+          - "application/xml"
+        responses: 
+          201: 
+            description: Published Activity. 
+        parameters:
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to publish an activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "Publish any activity"
+          required: "true"
+          paramType: "body"
+          type: "string"
+          format: "int64"
+          schema:
+            type: object
+            required:
+              - payload
+            properties:
+              - type: string
+    /circle/{mailboxId}/activity:
+       get:
+        tags:
+          - "Activity API"
+        summary: "GET Activity"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: Get Activity from Mailbox.
+        parameters:
+        - name: "circleId"
+          in: "path"
+          description: "mailboxId to get activity"
+          required: true
+          type: "string"
+          format: "int64"  
 
-        
-    
-        
+
+         
+
 
