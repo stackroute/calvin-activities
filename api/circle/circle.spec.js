@@ -5,13 +5,8 @@ require('chai').should();
 
 const request = require('supertest');
 
-<<<<<<< HEAD
 const circleDAO = require('../../dao').circle;
-=======
 
-const circleDAO = require('../../dao/circle');
-const mailboxDAO= require('../../dao/mailbox/');
->>>>>>> publish_activity
 
 describe('/circle api', () => {
   let circleId;
@@ -22,7 +17,6 @@ describe('/circle api', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-<<<<<<< HEAD
         expect(res.body).to.be.a('string');
         circleId = res.body;
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
@@ -30,13 +24,6 @@ describe('/circle api', () => {
           circleExists.should.be.equal(true);
           done();
         });
-=======
-        res.body.should.have.property('id').equal(res.body.id).a('string');
-        circleId=res.body.id;
-        circleDAO.checkIfCircleExists(circleId).should.be.equal(true);
-        mailboxDAO.checkIfMailboxExists(circleId).should.be.equal(true);
-        done();
->>>>>>> publish_activity
       });
   });
 
