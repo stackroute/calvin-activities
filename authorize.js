@@ -19,7 +19,7 @@ const verifyToken = (req, res, next) => {
     next();
     return 'Authorized';
   });
-  return next();
+  return 'Authorizing';
 };
 
 const permit = (...allowed) =>

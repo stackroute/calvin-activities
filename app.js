@@ -2,11 +2,18 @@ const express = require('express');
 
 const app = express();
 
+const swaggerUi = require('swagger-ui-express');
+
+const req = require('require-yml');
+
+const swaggerDocument = req('./swagger/api.yml');
+
 app.use(require('body-parser').json());
 
-// TODO: Move this authorize middleware as a separate file. Require to use it.
 const authorize = require('./authorize');
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use('/circle', require('./api/circle'));
 // TODO: Instead of using it in this fashion, provide the user an option to use it only when necessary.
 app.use('/circle', authorize.verifyToken, require('./api/circle'));
 
