@@ -1,7 +1,3 @@
-const circleDAO = require('../circle');
-const mailboxDAO = require('../mailbox');
-const followDAO = require('.');
-
 require('chai').should();
 
 // describe('Follow DAO', () => {

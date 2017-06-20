@@ -1,4 +1,4 @@
-const circleDAO = require('../../dao_mock/circle');
+const circleDAO = require('../../dao').circle;
 
 function createCircle(req, res) {
   circleDAO.createCircle((err, id) => {

@@ -2,16 +2,12 @@ const circles=[];
 let idCounter = 0;
 
 function createCircle(callback) {
-  const newcircle = {
-    id: JSON.stringify(idCounter += 1),
-  };
-  circles.push(newcircle);
-
-  return callback(null, newcircle);
+  idCounter += 1;
+  circles.push(idCounter.toString());
+  return callback(null, idCounter.toString());
 }
 function checkIfCircleExists(circleId, callback) {
-  const filterCircle = circles.filter(circle => circle.id === circleId);
-
+  const filterCircle = circles.filter(circle => circle === circleId);
   return callback(null, filterCircle.length!==0);
 }
 function deleteCircle(circleId, callback) {
@@ -20,7 +16,7 @@ function deleteCircle(circleId, callback) {
     if (circleExists === false) {
       return callback(`Circle id ${circleId} does not exist`, null);
     } else {
-      const filter = circles.filter(y => y.id === circleId);
+      const filter = circles.filter(y => y === circleId);
 
       circles.splice(circles.indexOf(filter[0]), 1);
       return callback(null, filter[0]);

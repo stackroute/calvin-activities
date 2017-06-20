@@ -1,15 +1,5 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
-require('chai').should();
 
-const app = require('../../app');
-
-require('chai').should();
-
-const request = require('supertest');
-
-const circleDAO = require('../../dao/circle');
-const followDAO = require('../../dao/follow');
-const mailboxDAO= require('../../dao/mailbox/');
 
 // describe('/follow api', function () {
 //   let circleId;

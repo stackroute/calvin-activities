@@ -1,8 +1,7 @@
-const start=require('../../db');
+const start=require('../../../db');
 
 const client=start.client;
 const uuid = start.uuid;
-const circles=[];
 
 function createCircle(callback) {
   const id1 = uuid();
@@ -21,14 +20,12 @@ function checkIfCircleExists(circleId, callback) {
 function deleteCircle(circleId, callback) {
   checkIfCircleExists(circleId, (err, circleExists) => {
     if (err) { return callback(err, null); }
-    if (circleExists === false) {
-      return callback(`Circle id ${circleId} does not exist`, null);
-    } else {
-      const query =(`DELETE from circle where id =${circleId}`);
-      client.execute(query, (error, result) => callback(err, circleId));
-      return { circleId };
-    }
+    if (circleExists === false) { return callback(`Circle id ${circleId} does not exist`, null); }
+    const query =(`DELETE from circle where id =${circleId}`);
+    client.execute(query, (error, result) => callback(err, circleId));
+    return (circleId);
   });
+  return (circleId);
 }
 
 

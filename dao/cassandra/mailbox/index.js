@@ -1,9 +1,7 @@
-const start = require('../../db');
+const start = require('../../../db');
 
 const client = start.client;
 const uuid = start.uuid;
-const mailboxes = [];
-
 
 // Function to create a mailbox which contains id
 

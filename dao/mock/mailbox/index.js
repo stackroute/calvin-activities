@@ -6,7 +6,7 @@ let idCounter = 0;
 function createMailbox(callback) {
   const createNewMailBox = {
     id: (idCounter += 1).toString(),
-  };ago￼ago￼ago￼
+  };
 
   mailboxes.push(createNewMailBox);
   return callback(null, createNewMailBox);

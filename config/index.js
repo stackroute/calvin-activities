@@ -5,4 +5,5 @@ module.exports = {
     contact: '127.0.0.1',
     port: '9042',
   },
+  dao: process.env.DAO,
 };

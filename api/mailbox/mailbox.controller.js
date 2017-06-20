@@ -1,5 +1,5 @@
 
-const mailboxDao = require('../../dao_mock/mailbox');
+const mailboxDao = require('../../dao').mailbox;
 
 function createMailbox(req, res) {
   mailboxDao.createMailbox((err, id) => {
