@@ -12,14 +12,30 @@ function publishToMailbox(mid, activity, callback) {
   return callback(null, { mid, activity });
 }
 
-function retriveMessageFromMailbox(mid, done) {
-  return done(null, activities[mid]);
+function checkIfMailboxExists(mid, callback) {
+  const filterMailId = activities[mid];
+  if (filterMailId ===undefined) { return callback(null, false); }
+
+  return callback(null, filterMailId);
+}
+
+function retriveMessageFromMailbox(mid, callback) {
+  console.log(`inside dao${mid}`);
+  checkIfMailboxExists(mid, (err, MailIdExists) => {
+    if (err) { console.log(`inside err part${err}`); return callback(err, null); }
+    if (MailIdExists === false) {
+      return callback([], null);
+    } else {
+      return callback(null, activities[mid]);
+    }
+  });
 }
 
 function addListnerToMailbox(mid, socket) {
   socket.on('startListeningToMailBox', (data) => {
     listeners[mid].unshift(socket);
   });
+
 
   socket.on('stopListeningToMailbox', (data) => {
     const index = listeners[mid].indexOf(socket);
@@ -45,17 +61,9 @@ function checkActivityPublished(mailId, callback) {
   return callback(null, activities[mailId]);
 }
 
-function deleteActivity(mailboxId) {
-  console.log(` Before deleteActivity${JSON.stringify(activities)}`);
 
-  delete activities[mailboxId];
-  // activities = null;delete myObject['regex'];
-  // delete activities;
-  console.log(`deleteActivity${JSON.stringify(activities)}`);
-  // console.log(`inside deleteActivity${JSON.stringify(act)}`);
 
-  return activities;
-}
+
 
 module.exports = {
   publishToMailbox,
@@ -64,5 +72,4 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
-  deleteActivity,
 };
