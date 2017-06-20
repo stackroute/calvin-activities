@@ -8,7 +8,7 @@ app.use(require('body-parser').json());
 const authorize = require('./authorize');
 
 // TODO: Instead of using it in this fashion, provide the user an option to use it only when necessary.
-app.use('/circle', authorize.verifyToken, authorize.permit, require('./api/circle'));
+app.use('/circle', authorize.verifyToken, require('./api/circle'));
 
 app.use('/mailbox', authorize.verifyToken, require('./api/mailbox'));
 
