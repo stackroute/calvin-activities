@@ -19,9 +19,17 @@ const server = require('http').Server(app);
 
 // const swaggerDocument = req('./swagger/api.yml');
 
+// const swaggerDocumentMailbox = req('./swagger/apiMailbox.yml');
+
+// const swaggerDocumentMailbox = req('./swagger/apifollow.yml');
+
 app.use(require('body-parser').json());
 
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocumentMailbox));
+
+// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocumentfollow));
 
 app.use('/circle', require('./api/circle'));
 

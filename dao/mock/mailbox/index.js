@@ -21,11 +21,9 @@ function deleteMailbox(mailboxId, callback) {
     if (MailboxExists === false) {
       return callback(`Mailbox id ${mailboxId} does not exist`, null);
     } else {
-      const filteruserid = mailboxes.filter(userid => userid.id === mailboxId);
-      const mailBoxIndex = mailboxes.indexOf(filteruserid[0]);
-      const x = mailboxes.splice(mailBoxIndex, 1);
-
-      return callback(null, x[0]);
+      const filter = mailboxes.filter(y => y ===mailboxId);
+      mailboxes.splice(mailboxes.indexOf(filter[0]), 1);
+      return callback(null, filter[0]);
     }
   });
 }
