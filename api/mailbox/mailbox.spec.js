@@ -11,12 +11,11 @@ const mailboxDao = require('../../dao').mailbox;
 const authorize = require('../../authorize');
 
 describe('/mailbox api', function () {
-  let id;
+  let mailboxId;
   let token;
   before(function (done) {
     token = authorize.generateJWTToken();
     done();
-    // TODO: Done is begin called before signing is complete.
   });
   it('should create a new mailbox', function (done) {
     request(app)

@@ -1,4 +1,4 @@
- /* eslint prefer-arrow-callback:0, func-names:0 */
+/* eslint prefer-arrow-callback:0, func-names:0 */
 // require('chai').should();
 
 // const app = require('../../app');
