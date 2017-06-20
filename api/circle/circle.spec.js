@@ -1,13 +1,15 @@
 const app = require('../../app');
 
+const expect = require('chai').expect;
 require('chai').should();
 
 const request = require('supertest');
 
 
-const circleDAO = require('../../dao/circle');
+const circleDAO = require('../../dao_mock/circle');
 
 describe('/circle api', () => {
+  // const circleId = '1629d450-5279-11e7-a845-d9c5443eaaa0';
   let circleId;
   it('it should create a new circle', (done) => {
     request(app)
@@ -16,10 +18,14 @@ describe('/circle api', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        res.body.should.have.property('id').equal(res.body.id).a('string');
-        circleId=res.body.id;
-        circleDAO.checkIfCircleExists(circleId).should.be.equal(true);
-        done();
+        expect(res.body).to.have.property('id');
+        expect(res.body.id).to.be.a('string');
+        circleId = res.body.id;
+        circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
+          if (err) { done(err); return; }
+          circleExists.should.be.equal(true);
+          done();
+        });
       });
   });
 
@@ -31,9 +37,11 @@ describe('/circle api', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        res.body.should.have.property('id').equal(res.body.id).a('string');
-        circleDAO.checkIfCircleExists(circleId).should.be.equal(false);
-        done();
+        expect(res.body.id).to.equal(circleId);
+        circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
+          circleExists.should.be.equal(false);
+          done();
+        });
       });
   });
 
@@ -44,10 +52,13 @@ describe('/circle api', () => {
       .expect(404)
       .expect('Content-Type', /json/)
       .end((err, res) => {
-        if (err) { done(err); return; }
-        res.body.should.have.property('message').equal(`Circle id ${circleId} does not exist`);
-        circleDAO.checkIfCircleExists(circleId).should.be.equal(false);
-        done();
+        if (err) { done(err); } else {
+          circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
+            if (error) { done(error); return; }
+            circleExists.should.be.equal(false);
+            done();
+          });
+        }
       });
   });
 });
