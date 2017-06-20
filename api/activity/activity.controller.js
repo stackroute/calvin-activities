@@ -16,11 +16,6 @@ function createPublishActivity(req, res) {
       res.status(201).json(data1);
     });
   });
-
-  // activityDao.createPublishActivity(receiver, newActivity, (err, data) => {
-  //   if (err) { res.status(404).json(err); return; }
-  //   res.status(201).json(data);
-  // });
 }
 
 
