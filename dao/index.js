@@ -13,4 +13,7 @@ module.exports = {
   get activity() {
     return require(`./${config.dao}/activity`);
   },
+  get follow() {
+    return require(`./${config.dao}/follow`);
+  },
 };

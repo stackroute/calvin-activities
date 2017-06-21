@@ -27,6 +27,10 @@ app.use('/mailbox', require('./api/mailbox'));
 /** Follow URI is for /mailbox/:mailboxId/circle/:circleId */
 app.use('/mailbox', require('./api/follow'));
 
+// Publish activity to mailbox
+app.use('/mailbox', require('./api/activity'));
+
+// Publish activity to circle
 app.use('/circle', require('./api/activity'));
 
 module.exports = app;

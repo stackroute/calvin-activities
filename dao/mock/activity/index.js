@@ -9,7 +9,6 @@ const activities = {};
 function publishToMailbox(mid, activity) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
-  // console.log(activities);
   return activities;
 }
 

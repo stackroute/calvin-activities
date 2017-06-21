@@ -4,9 +4,9 @@ let idCounter = 0;
 // Function to create a mailbox which contains id
 
 function createMailbox(callback) {
-  idCounter += 1;
-  mailboxes.push(idCounter.toString());
-  return callback(null, idCounter.toString());
+  idCounter = (parseInt(Math.random()*192)).toString();
+  mailboxes.push(idCounter);
+  return callback(null, idCounter);
 }
 
 function checkIfMailboxExists(mailboxId, callback) {
