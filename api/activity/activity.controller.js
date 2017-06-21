@@ -15,7 +15,7 @@ function createPublishActivity(req, res) {
     if (!circleExists) { res.status(404).send('Circle Id does not exists'); return; }
     activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
       if (error1) { res.status(404).json(error1); return; }
-      res.status(201).json(data1);
+      res.status(201).json(newActivity);
     });
   });
 }
@@ -30,7 +30,7 @@ function createPublishActivityToMailbox(req, res) {
   };
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
     if (!mailboxExists) { res.status(404).send('Mailbox Id does not exists'); return; }
-    activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
+    activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
       if (error1) { res.status(404).json(error1); return; }
       res.status(201).json(data1);
     });

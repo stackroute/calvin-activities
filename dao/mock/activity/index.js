@@ -6,19 +6,24 @@ const listeners = {};
 
 const activities = {};
 
-function publishToMailbox(mid, activity) {
+function publishToMailbox(mid, activity, callback) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
-  return activities;
+  return callback(null, activity);
 }
 
 function createPublishActivity(mid, activity, callback) {
-  publishToMailbox(mid, activity);
-  for (let i = 0; i < followDao.splitMailId(mid).length; i += 1) {
-    const mailId = followDao.splitMailId(mid)[i].mailboxId;
-    publishToMailbox(mailId, activity);
-  }
-  return callback(null, (mid, activity));
+  publishToMailbox(mid, activity, (error, result) => {
+    followDao.splitMailId(mid, (error1, followersMailboxId) => {
+      if (!followersMailboxId) { console.log('1'); return callback(null, activity); } else {
+        for (let i = 0; i < followersMailboxId.length; i += 1) {
+          const mailboxId = followersMailboxId[i].mailboxId;
+          publishToMailbox(mailboxId, activity, (err, data) => { if (err) callback(err, null); });
+        }
+      }
+      return callback(null, activity);
+    });
+  });
 }
 
 
@@ -29,10 +34,10 @@ function checkIfMailboxExists(mid, callback) {
 }
 
 function retriveMessageFromMailbox(mid, callback) {
-  checkIfMailboxExists(mid, (err, MailIdExists) => {
+  checkIfMailboxExists(mid, (err, mailIdExists) => {
     if (err) { console.log(`inside err part${err}`); return callback(err, null); }
-    if (MailIdExists === false) {
-      return callback([], null);
+    if (mailIdExists === false) {
+      return callback(null, []);
     } else {
       return callback(null, activities[mid]);
     }

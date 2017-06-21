@@ -25,21 +25,20 @@ describe('/activity API', () => {
       circleId = result;
       mailboxDao.createMailbox((error, result1) => {
         mailboxId = result1;
-        done();
+        followDAO.addFollow({ circleId, mailboxId }, (error1, result2) => {
+          done();
+        });
       });
     });
   });
 
   it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
-    // expect(JSON.stringify(activityDao.checkIfMailboxEmpty())).to.equal(JSON.stringify({}));
-    // expect(mailboxDao.checkIfMailboxExists(circleId)).to.equal(true);
     mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(true);
     });
     circleDao.checkIfCircleExists(circleId, (err, doesCircleExists) => {
       doesCircleExists.should.be.equal(true);
     });
-    //  expect(circleDao.checkIfCircleExists(circleId)).to.equal(true);
     request(app)
       .post(`/circle/${circleId}/activity`)
       .send({ link: 'www.google.com' })
@@ -48,21 +47,38 @@ describe('/activity API', () => {
       .end((err, res) => {
         if (err) { done(err); return; }
         expect(res.body).to.have.property('payload');
-        const circleActivity = activityDao.checkActivityPublished(circleId, (error, activityPublished) => {
+        activityDao.checkActivityPublished(circleId, (error, circleActivity) => {
           if (error) { done(error); return; }
+          expect(circleActivity).to.have.lengthOf(1);
+          expect(circleActivity[0].payload.link).to.equal('www.google.com');
+          activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
+            if (error1) { done(error1); return; }
+            expect(mailboxActivity).to.have.lengthOf(1);
+            expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
+            done();
+          });
+        });
+      });
+  });
+
+  it('should publish message to mailbox when we publish activity to mailbox', (done) => {
+    mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+      doesMailboxExists.should.be.equal(true);
+    });
+    request(app)
+      .post(`/mailbox/${mailboxId}/activitytomailbox`)
+      .send({ link: 'www.facebook.com' })
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        expect(res.body).to.have.property('payload');
+        activityDao.checkActivityPublished(mailboxId, (error, mailboxActivity) => {
+          if (error) { done(error); return; }
+          expect(mailboxActivity).to.have.lengthOf(2);
+          expect(mailboxActivity[0].payload.link).to.equal('www.facebook.com');
           done();
         });
-        expect(circleActivity).to.have.lengthOf(1);
-        expect(circleActivity[0].payload.link).to.equal('www.google.com');
-
-        const mailboxActivity = activityDao.checkActivityPublished(mailboxId, (error, activityPublished) => {
-          if (error) { done(error); return; }
-          done();
-        });
-
-        expect(mailboxActivity).to.have.lengthOf(1);
-        expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
-        done();
       });
   });
 
