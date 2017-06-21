@@ -16,7 +16,7 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/circle', authorize.verifyToken, require('./api/circle'));
 
-app.use('/mailbox', require('./api/mailbox'));
+app.use('/mailbox', authorize.verifyToken, require('./api/mailbox'));
 
 /** Follow URI is for /mailbox/:mailboxId/circle/:circleId */
 app.use('/mailbox/', authorize.verifyToken, require('./api/follow'));
