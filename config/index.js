@@ -1,3 +1,4 @@
+const secret = require('../secret.js');
 
 module.exports = {
   connectionString: {
@@ -5,5 +6,6 @@ module.exports = {
     contact: '127.0.0.1',
     port: '9042',
   },
-  dao: process.env.DAO || 'cassandra',
+  secretKey: secret,
+  dao: process.env.DAO,
 };

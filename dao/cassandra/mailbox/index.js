@@ -8,7 +8,10 @@ const uuid = start.uuid;
 function createMailbox(callback) {
   const id1 = uuid();
   const query = ('INSERT INTO mailbox (id) values( ? )');
-  client.execute(query, [id1], (err, result) => callback(err, id1.toString()));
+  client.execute(query, [id1], (err, result) => {
+    if (err) { return callback(err, null); }
+    return callback(null, id1.toString());
+  });
 }
 
 function checkIfMailboxExists(mailboxId, callback) {
@@ -20,19 +23,12 @@ function checkIfMailboxExists(mailboxId, callback) {
 }
 // Function to delete the mailbox with id. If id not exists returns no mailbox error
 function deleteMailbox(mailboxId, callback) {
-  checkIfMailboxExists(mailboxId, (err, mailboxExists) => {
-    if (err) { return callback(err, null); }
-    if (mailboxExists === false) {
-      return callback(`Mailbox id ${mailboxId} does not exist`, null);
-    } else {
-      const query = (`DELETE from  mailbox where id =${mailboxId}`);
-      client.execute(query, (error, result) => callback(err, mailboxId));
-      return { mailboxId };
-    }
+  const query = (`DELETE from  mailbox where id =${mailboxId}`);
+  client.execute(query, (error, result) => {
+    if (error) { return callback(error, null); }
+    return callback(null, mailboxId);
   });
-  return (mailboxId);
 }
-
 
 module.exports = {
   createMailbox,
