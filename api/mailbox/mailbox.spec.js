@@ -10,7 +10,7 @@ const mailboxDao = require('../../dao').mailbox;
 
 const authorize = require('../../authorize');
 
-describe('/mailbox api', function () {
+describe('/mailbox api', () => {
   let mailboxId;
   let token;
   before(function (done) {
@@ -18,29 +18,26 @@ describe('/mailbox api', function () {
     done();
   });
   it('should create a new mailbox', (done) => {
-    mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
-      if (err) { done(err); return; }
-      doesMailboxExists.should.be.equal(false);
-      request(app)
-        .post('/mailbox')
-        .set('Authorization', `Bearer ${token}`)
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end((err1, res) => {
-          if (err1) { done(err1); return; }
-          expect(res.body).to.be.a('string');
-          mailboxId = res.body;
-          mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
-            if (error) { done(error); return; }
-            mailboxExists.should.be.equal(true);
-            done();
-          });
+    request(app)
+      .post('/mailbox')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) { done(err); return; }
+        expect(res.body).to.have.property('id').a('string');
+        mailboxId = res.body.id;
+        mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
+          if (err) { done(err); return; }
+          mailboxExists.should.be.equal(true);
+          done();
         });
-    });
+      });
   });
+
+
   it('should delete a mailbox', (done) => {
     mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
-      if (err) { done(err); return; }
       doesMailboxExists.should.be.equal(true);
       request(app)
         .delete(`/mailbox/${mailboxId}`)
@@ -49,9 +46,8 @@ describe('/mailbox api', function () {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          expect(res.body).to.equal(mailboxId);
+          expect(res.body.id).to.equal(mailboxId);
           mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
-            if (error) { done(error); return; }
             mailboxExists.should.be.equal(false);
             done();
           });
@@ -81,3 +77,4 @@ describe('/mailbox api', function () {
     });
   });
 });
+

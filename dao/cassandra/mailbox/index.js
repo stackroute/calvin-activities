@@ -23,12 +23,18 @@ function checkIfMailboxExists(mailboxId, callback) {
 }
 // Function to delete the mailbox with id. If id not exists returns no mailbox error
 function deleteMailbox(mailboxId, callback) {
-  const query = (`DELETE from  mailbox where id =${mailboxId}`);
-  client.execute(query, (error, result) => {
-    if (error) { return callback(error, null); }
-    return callback(null, mailboxId);
+  checkIfMailboxExists(mailboxId, (err, mailboxExists) => {
+    if (err) { return callback(err, null); }
+    if (mailboxExists===false) {
+      return callback(`circle id ${mailboxId} does not exis`, null);
+    } else {
+      const query = (`DELETE from  mailbox where id =${mailboxId}`);
+      client.execute(query, (error, result) => callback(error, mailboxId));
+      return { mailboxId };
+    }
   });
 }
+
 
 module.exports = {
   createMailbox,

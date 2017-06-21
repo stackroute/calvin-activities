@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken');
 
-const config=require('./config');
+const config = require('./config');
 
 const generateJWTToken = () => {
-  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] }, config.secretKey);
+  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] },
+    config.secretKey);
   return token;
 };
 
 const verifyToken = (req, res, next) => {
   const auth = req.get('Authorization');
-  if (!auth) { return res.status(404).send('Authorization Required'); } else if (!auth.includes('Bearer')) { return res.status(401).send('Invalid Authorization'); }
+  if (!auth) { return res.status(404).send('Authorization Required'); } else if (!auth.includes('Bearer')) { return res.status(404).send('Invalid Authorization'); }
   const token = auth.split(' ').pop().toString();
   const decodeToken = jwt.decode(token, { complete: true });
   const scopes = decodeToken.payload.scopes;

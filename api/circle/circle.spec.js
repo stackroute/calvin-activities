@@ -26,8 +26,8 @@ describe('/circle api', function () {
       .expect('Content-Type', /json/)
       .end(function (err, res) {
         if (err) { done(err); return; }
-        expect(res.body).to.be.a('string');
-        circleId = res.body;
+        expect(res.body).to.have.property('id').a('string');
+        circleId = res.body.id;
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }
           circleExists.should.be.equal(true);
@@ -48,7 +48,8 @@ describe('/circle api', function () {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          expect(res.body).to.equal(circleId);
+          expect(res.body.id).to.equal(circleId);
+          // expect(res.body).to.equal(circleId);
           circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
             if (err) { done(err); return; }
             circleExists.should.be.equal(false);
