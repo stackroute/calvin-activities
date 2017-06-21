@@ -25,7 +25,8 @@ describe('/mailbox api', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        mailboxId = res.body;
+        expect(res.body).to.have.property('id').a('string');
+        mailboxId = res.body.id;
         mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
           if (err) { done(err); return; }
           mailboxExists.should.be.equal(true);
@@ -45,7 +46,7 @@ describe('/mailbox api', () => {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          expect(res.body).to.equal(mailboxId);
+          expect(res.body.id).to.equal(mailboxId);
           mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
             mailboxExists.should.be.equal(false);
             done();
