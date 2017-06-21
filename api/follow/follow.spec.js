@@ -16,10 +16,12 @@ const followDAO = require('../../dao').follow;
 
 const uuid = start.uuid;
 
+const authorize = require('../../authorize');
+
 describe('/follow api', function () {
   let circleId;
   let mailboxId;
-
+  let token;
   before(function (done) {
     circleDAO.createCircle((err, result) => {
       circleId = result;
@@ -27,6 +29,7 @@ describe('/follow api', function () {
     mailboxDAO.createMailbox((err, result) => {
       mailboxId = result;
     });
+    token = authorize.generateJWTToken();
     setTimeout(() => {
       done();
     }, 400);
@@ -41,6 +44,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .post(`/mailbox/${mailboxId}/circle/${circleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(201)
             .expect('Content-Type', /json/)
             .end(function (err4, res) {
@@ -67,6 +71,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .post(`/mailbox/${mailboxId}/circle/${randomCircleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(404)
             .expect('Content-Type', /json/)
             .end(function (err3, res) {
@@ -93,6 +98,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .post(`/mailbox/${randomMailboxId}/circle/${circleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect('Content-Type', /json/)
             .expect(404)
             .end(function (err3, res) {
@@ -121,6 +127,7 @@ describe('/follow api', function () {
             doesFollowExistsBefore.should.be.equal(false);
             request(app)
               .post(`/mailbox/${randomMailboxId}/circle/${randomCircleId}`)
+              .set('Authorization', `Bearer ${token}`)
               .expect('Content-Type', /json/)
               .expect(404)
               .end(function (err3, res) {
@@ -147,6 +154,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(true);
           request(app)
             .post(`/mailbox/${mailboxId}/circle/${circleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(409)
             .expect('Content-Type', /json/)
             .end(function (err3, res) {
@@ -172,6 +180,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(true);
           request(app)
             .delete(`/mailbox/${mailboxId}/circle/${circleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function (err3, res) {
@@ -198,6 +207,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .delete(`/mailbox/${mailboxId}/circle/${circleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(404)
             .end(function (err3, res) {
               if (err3) { done(err3); return; }
@@ -222,6 +232,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .delete(`/mailbox/${mailboxId}/circle/${randomCircleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(404)
             .expect('Content-Type', /json/)
             .end(function (err3, res) {
@@ -248,6 +259,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .delete(`/mailbox/${randomMailboxId}/circle/${circleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(404)
             .expect('Content-Type', /json/)
             .end(function (err3, res) {
@@ -275,6 +287,7 @@ describe('/follow api', function () {
           doesFollowExistsBefore.should.be.equal(false);
           request(app)
             .delete(`/mailbox/${randomMailboxId}/circle/${randomCircleId}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(404)
             .expect('Content-Type', /json/)
             .end(function (err3, res) {
