@@ -99,7 +99,7 @@ describe('/activity API', () => {
   it('should not retrieve message if mailbox is not-exists', (done) => {
     const mailboxIdd = 'xx3456';
     request(app)
-      .get(`/circle/${mailboxIdd}/activity`)
+      .get(`/mailbox/${mailboxIdd}/activity`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end((err, res) => {

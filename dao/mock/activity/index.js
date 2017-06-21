@@ -34,10 +34,10 @@ function checkIfMailboxExists(mid, callback) {
 }
 
 function retriveMessageFromMailbox(mid, callback) {
-  checkIfMailboxExists(mid, (err, mailIdExists) => {
+  checkIfMailboxExists(mid, (err, MailIdExists) => {
     if (err) { console.log(`inside err part${err}`); return callback(err, null); }
-    if (mailIdExists === false) {
-      return callback(null, []);
+    if (MailIdExists === false) {
+      return callback([], null);
     } else {
       return callback(null, activities[mid]);
     }

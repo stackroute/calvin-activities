@@ -49,7 +49,6 @@ function getActivity(req, res) {
   return null;
 }
 
-
 module.exports = {
   createPublishActivity,
   getActivity,
