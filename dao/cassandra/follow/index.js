@@ -20,8 +20,8 @@ function checkIfFollowExists(follower, callback) {
 }
 
 function deleteFollow(follower, callback) {
-  const deleteQuery =(`DELETE FROM follow where id =${follower.circleId} AND mailbox=${follower.mailboxId}`);
-  client.execute(deleteQuery, (err) => {
+  const deleteQuery =(`DELETE FROM follow where circleid =${follower.circleId} AND mailboxid=${follower.mailboxId}`);
+  client.execute(deleteQuery, (err, result) => {
     if (err) { return callback(err); }
     return callback(null, follower);
   });

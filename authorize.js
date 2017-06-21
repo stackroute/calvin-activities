@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const config = require('./config');
 
 const generateJWTToken = () => {
-  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] }, config.secretKey);
+  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] },
+    config.secretKey);
   return token;
 };
 
