@@ -9,13 +9,21 @@ const activities = {};
 function publishToMailbox(mid, activity, callback) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
+  publishActivityToListeners(mid, activity);
   return callback(null, activity);
+}
+
+function publishActivityToListeners(mid, activity) {
+  if(!listeners.hasOwnProperty(mid)) { return; }
+  listeners[mid].forEach((socket) => {
+    socket.emit('newActivity', activity);
+  });
 }
 
 function createPublishActivity(mid, activity, callback) {
   publishToMailbox(mid, activity, (error, result) => {
     followDao.splitMailId(mid, (error1, followersMailboxId) => {
-      if (!followersMailboxId) { console.log('1'); return callback(null, activity); } else {
+      if (!followersMailboxId) { return callback(null, activity); } else {
         for (let i = 0; i < followersMailboxId.length; i += 1) {
           const mailboxId = followersMailboxId[i].mailboxId;
           publishToMailbox(mailboxId, activity, (err, data) => { if (err) callback(err, null); });
@@ -35,7 +43,7 @@ function checkIfMailboxExists(mid, callback) {
 
 function retriveMessageFromMailbox(mid, callback) {
   checkIfMailboxExists(mid, (err, MailIdExists) => {
-    if (err) { console.log(`inside err part${err}`); return callback(err, null); }
+    if (err) { return callback(err, null); }
     if (MailIdExists === false) {
       return callback([], null);
     } else {
@@ -48,8 +56,9 @@ function addListnerToMailbox(mid, socket) {
   socket.on('startListeningToMailBox', (data) => {
     listeners[mid].unshift(socket);
   });
+}
 
-
+function removeListnerFromMailbox(mid,socket){
   socket.on('stopListeningToMailbox', (data) => {
     const index = listeners[mid].indexOf(socket);
     listeners[mid].splice(index, 1);
