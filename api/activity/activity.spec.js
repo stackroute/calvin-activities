@@ -15,10 +15,8 @@ const activityDao = require('../../dao').activity;
 // CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"
 describe('/activity API', () => {
   // TODO: Pre assertion should be put inside before block
-  let id;
   let circleId;
   let mailboxId;
-  let newactivity;
 
   before((done) => {
     circleDao.createCircle((err, result) => {

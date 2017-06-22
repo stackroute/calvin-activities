@@ -1,23 +1,21 @@
 const followDao = require('../follow');
 
-const mailboxDao = require('../mailbox');
-
 const listeners = {};
 
 const activities = {};
+
+function publishActivityToListeners(mid, activity) {
+  if (!activities[mid]) { return; }
+  listeners[mid].forEach((socket) => {
+    socket.emit('newActivity', activity);
+  });
+}
 
 function publishToMailbox(mid, activity, callback) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
   publishActivityToListeners(mid, activity);
   return callback(null, activity);
-}
-
-function publishActivityToListeners(mid, activity) {
-  if(!listeners.hasOwnProperty(mid)) { return; }
-  listeners[mid].forEach((socket) => {
-    socket.emit('newActivity', activity);
-  });
 }
 
 function createPublishActivity(mid, activity, callback) {
@@ -58,7 +56,7 @@ function addListnerToMailbox(mid, socket) {
   });
 }
 
-function removeListnerFromMailbox(mid,socket){
+function removeListnerFromMailbox(mid, socket) {
   socket.on('stopListeningToMailbox', (data) => {
     const index = listeners[mid].indexOf(socket);
     listeners[mid].splice(index, 1);
@@ -79,6 +77,7 @@ module.exports = {
   publishToMailbox,
   addListnerToMailbox,
   createPublishActivity,
+  removeListnerFromMailbox,
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,

@@ -14,7 +14,6 @@ function deleteFollow(follower, callback) {
   const filter = followapi.filter(y => y.circleId === follower.circleId && y.mailboxId === follower.mailboxId);
   followapi.splice(followapi.indexOf(filter[0]), 1);
   return callback(null, filter[0]);
-
 }
 
 function splitMailId(circleId, callback) {

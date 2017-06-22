@@ -1,11 +1,9 @@
 const activityDao = require('../../dao').activity;
-const followDao = require('../../dao').follow;
 const circleDAO = require('../../dao').circle;
 const mailboxDAO = require('../../dao').mailbox;
 
 // Publish to circle and followers mailbox
 function createPublishActivity(req, res) {
-  const payload = req.body;
   const receiver = req.params.circleId;
   const newActivity = {
     payload: req.body,
@@ -22,7 +20,6 @@ function createPublishActivity(req, res) {
 
 // Publish to mailbox
 function createPublishActivityToMailbox(req, res) {
-  const payload = req.body;
   const receiver = req.params.mailboxId;
   const newActivity = {
     payload: req.body,

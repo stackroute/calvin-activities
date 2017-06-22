@@ -8,12 +8,6 @@ const request = require('supertest');
 
 const circleDAO = require('../../dao').circle;
 
-<<<<<<< HEAD
-
-describe('/circle api', () => {
-  let circleId;
-  it('it should create a new circle and mailbox', (done) => {
-=======
 const authorize = require('../../authorize');
 
 describe('/circle api', function () {
@@ -25,7 +19,6 @@ describe('/circle api', function () {
   });
 
   it('it should create a circle', function (done) {
->>>>>>> api-release
     request(app)
       .post('/circle/')
       .set('Authorization', `Bearer ${token}`)
