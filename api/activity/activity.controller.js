@@ -4,11 +4,13 @@ const mailboxDAO = require('../../dao').mailbox;
 
 // Publish to circle and followers mailbox
 function createPublishActivity(req, res) {
+  console.log('Activity', req.params.circleId);
   const receiver = req.params.circleId;
   const newActivity = {
     payload: req.body,
     timestamp: new Date(),
   };
+
   circleDAO.checkIfCircleExists(receiver, (data, circleExists) => {
     if (!circleExists) { res.status(404).send('Circle Id does not exists'); return; }
     activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {

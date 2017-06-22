@@ -12,13 +12,16 @@ const followDAO = require('../../dao').follow;
 
 const activityDao = require('../../dao').activity;
 
+const authorize = require('../../authorize');
+
 // CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"
 describe('/activity API', () => {
   // TODO: Pre assertion should be put inside before block
   let circleId;
   let mailboxId;
-
+  let token;
   before((done) => {
+    token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
       circleId = result;
       mailboxDao.createMailbox((error, result1) => {
@@ -30,34 +33,37 @@ describe('/activity API', () => {
     });
   });
 
-  it('should publish message to circle mailbox and its followers mailbox when we publish activity to circle', (done) => {
-    mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
-      doesMailboxExists.should.be.equal(true);
-    });
-    circleDao.checkIfCircleExists(circleId, (err, doesCircleExists) => {
-      doesCircleExists.should.be.equal(true);
-    });
-    request(app)
-      .post(`/circle/${circleId}/activity`)
-      .send({ link: 'www.google.com' })
-      .expect(201)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) { done(err); return; }
-        expect(res.body).to.have.property('payload');
-        activityDao.checkActivityPublished(circleId, (error, circleActivity) => {
-          if (error) { done(error); return; }
-          expect(circleActivity).to.have.lengthOf(1);
-          expect(circleActivity[0].payload.link).to.equal('www.google.com');
-          activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
-            if (error1) { done(error1); return; }
-            expect(mailboxActivity).to.have.lengthOf(1);
-            expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
-            done();
+
+  it(`should publish message to circle mailbox and its followers mailbox,
+   when we publish activity to circle`, (done) => {
+      mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+        doesMailboxExists.should.be.equal(true);
+      });
+      circleDao.checkIfCircleExists(circleId, (err, doesCircleExists) => {
+        doesCircleExists.should.be.equal(true);
+      });
+      request(app)
+        .post(`/circle/${circleId}/activity`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ link: 'www.google.com' })
+        .expect(201)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) { done(err); return; }
+          expect(res.body).to.have.property('payload');
+          activityDao.checkActivityPublished(circleId, (error, circleActivity) => {
+            if (error) { done(error); return; }
+            expect(circleActivity).to.have.lengthOf(1);
+            expect(circleActivity[0].payload.link).to.equal('www.google.com');
+            activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
+              if (error1) { done(error1); return; }
+              expect(mailboxActivity).to.have.lengthOf(1);
+              expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
+              done();
+            });
           });
         });
-      });
-  });
+    });
 
   it('should publish message to mailbox when we publish activity to mailbox', (done) => {
     mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
@@ -65,6 +71,7 @@ describe('/activity API', () => {
     });
     request(app)
       .post(`/mailbox/${mailboxId}/activitytomailbox`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ link: 'www.facebook.com' })
       .expect(201)
       .expect('Content-Type', /json/)
@@ -84,6 +91,7 @@ describe('/activity API', () => {
   it('should retrieve message from Mailbox', (done) => {
     request(app)
       .get(`/circle/${circleId}/activity`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err, res) => {
@@ -98,6 +106,7 @@ describe('/activity API', () => {
     const mailboxIdd = 'xx3456';
     request(app)
       .get(`/mailbox/${mailboxIdd}/activity`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
       .expect('Content-Type', /json/)
       .end((err, res) => {

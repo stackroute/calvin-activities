@@ -10,12 +10,12 @@ const generateJWTToken = () => {
 
 const verifyToken = (req, res, next) => {
   const auth = req.get('Authorization');
-  if (!auth) { return res.status(404).send('Authorization Required'); } else if (!auth.includes('Bearer')) { return res.status(404).send('Invalid Authorization'); }
+  if (!auth) { return res.status(404).json({ message: 'Authorization Required' }); } else if (!auth.includes('Bearer')) { return res.status(404).json({ message: 'Invalid Authorization' }); }
   const token = auth.split(' ').pop().toString();
   const decodeToken = jwt.decode(token, { complete: true });
   const scopes = decodeToken.payload.scopes;
   jwt.verify(token, config.secretKey, (err, decoded) => {
-    if (err) { return res.status(404).send('Invalid Authorization'); }
+    if (err) { return res.status(404).json({ message: 'Invalid Authorization' }); }
     req.claims = scopes;
     next();
     return 'Authorized';
@@ -31,7 +31,7 @@ const permit = (...allowed) =>
     scopes.forEach((element) => {
       if ((allowed.indexOf(element) > -1)) { isAllowed = true; }
     });
-    if (!isAllowed) { return res.status(404).send('Not Permitted'); }
+    if (!isAllowed) { return res.status(404).json({ message: 'Invalid Permission' }); }
     return next();
   };
 

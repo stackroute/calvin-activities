@@ -4,8 +4,10 @@ const listeners = {};
 
 const activities = {};
 
+
 function publishActivityToListeners(mid, activity) {
   if (!listeners[mid]) { return; }
+  console.log(listeners);
   listeners[mid].forEach((socket) => {
     socket.emit('newActivity', activity);
   });
