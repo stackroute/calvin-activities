@@ -4,9 +4,9 @@ const client=start.client;
 const uuid = start.uuid;
 
 const followapi = [];
-// const splitId = [];
 
 function addFollow(follower, callback) {
+<<<<<<< HEAD:dao/follow/index.js
   const query = ('INSERT INTO follow (id, circle_id, mailbox_id) values(uuid(), ?, ?)');
   client.execute(query, follower.circleId, follower.mailboxId, (err, result) => callback(err, follower));
 }
@@ -26,12 +26,26 @@ function deleteFollow(follower, callback) {
     if (err) { return callback(err); }
     return callback(null, result.rowLength > 0);
   });
+=======
+  followapi.push(follower);
+  return callback(null, follower);
 }
 
-function splitMailId(circleId) {
-  const splitMailIdd = followapi.filter(y => y.circleId === circleId);
+function checkIfFollowExists(follower, callback) {
+  const filterData = follow => follow.circleId === follower.circleId && follow.mailboxId === follower.mailboxId;
+  const filteredFollowers = followapi.filter(filterData);
+  return callback(null, filteredFollowers.length !== 0);
+}
+function deleteFollow(follower, callback) {
+  const filter = followapi.filter(y => y.circleId === follower.circleId && y.mailboxId === follower.mailboxId);
+  followapi.splice(followapi.indexOf(filter[0]), 1);
+  return callback(null, filter[0]);
+>>>>>>> api-release:dao/mock/follow/index.js
+}
 
-  return splitMailIdd;
+function splitMailId(circleId, callback) {
+  const splitMailIdd = followapi.filter(y => y.circleId === circleId);
+  return callback(null, splitMailIdd);
 }
 
 module.exports = {

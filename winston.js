@@ -1,5 +1,5 @@
 const winston = require('winston');
 
-winston.level = 'debug';
+winston.level = 'silly';
 
 module.exports = winston;

@@ -1,4 +1,4 @@
-const circleDAO = require('../../dao/circle');
+const circleDAO = require('../../dao').circle;
 
 // const async= require('async');
 
@@ -10,9 +10,17 @@ function createCircle(req, res) {
 }
 
 function deleteCircle(req, res) {
-  circleDAO.deleteCircle(req.params.circleId, (err, id) => {
-    if (err) { res.status(404).json({ message: `${err}` }); return; }
-    res.status(200).json({ id });
+
+  circleDAO.checkIfCircleExists(req.params.circleId, (error, doesCircleExists) => {
+    if (error) { res.status(500).json({ message: `${error}` }); return; }
+    if (!doesCircleExists) {
+      res.status(404).json({ message: 'Not found' });
+      return;
+    }
+    circleDAO.deleteCircle(req.params.circleId, (err, id) => {
+      if (err) { res.status(500).json({ message: `${err}` }); return; }
+      res.status(200).json({ id });
+    });
   });
 }
 
