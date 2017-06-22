@@ -10,6 +10,9 @@ module.exports = {
   get mailbox() {
     return require(`./${config.dao}/mailbox`);
   },
+  get activity() {
+    return require(`./${config.dao}/activity`);
+  },
   get follow() {
     return require(`./${config.dao}/follow`);
   },

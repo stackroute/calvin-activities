@@ -2,7 +2,6 @@ const circleDAO = require('../../dao').circle;
 const followDAO = require('../../dao/').follow;
 const mailboxDAO= require('../../dao/').mailbox;
 
-
 function follow(req, res) {
   const { circleId, mailboxId } = req.params;
 
@@ -40,7 +39,6 @@ function follow(req, res) {
     });
   });
 }
-
 function unfollow(req, res) {
   const { circleId, mailboxId } = req.params;
 
@@ -79,7 +77,6 @@ function unfollow(req, res) {
     });
   });
 }
-
 module.exports = {
   follow, unfollow,
 };

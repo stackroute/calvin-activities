@@ -2,13 +2,13 @@ const circles=[];
 let idCounter = 0;
 
 function createCircle(callback) {
-  idCounter += 1;
-  circles.push(idCounter.toString());
-  return callback(null, idCounter.toString());
+  idCounter = (parseInt(Math.random()*192)).toString();
+  circles.push(idCounter);
+  return callback(null, idCounter);
 }
 function checkIfCircleExists(circleId, callback) {
   const filterCircle = circles.filter(circle => circle === circleId);
-  return callback(null, filterCircle.length!==0);
+  callback(null, filterCircle.length!==0);
 }
 function deleteCircle(circleId, callback) {
   const filter = circles.filter(y => y === circleId);

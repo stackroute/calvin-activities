@@ -2,9 +2,9 @@ const mailboxes = [];
 let idCounter = 0;
 
 function createMailbox(callback) {
-  idCounter += 1;
-  mailboxes.push(idCounter.toString());
-  return callback(null, idCounter.toString());
+  idCounter = (parseInt(Math.random()*192)).toString();
+  mailboxes.push(idCounter);
+  return callback(null, idCounter);
 }
 function checkIfMailboxExists(mailboxId, callback) {
   const filterMailbox = mailboxes.filter(mailbox => mailbox === mailboxId);

@@ -16,8 +16,14 @@ function deleteFollow(follower, callback) {
   return callback(null, filter[0]);
 }
 
+function splitMailId(circleId, callback) {
+  const splitMailIdd = followapi.filter(y => y.circleId === circleId);
+  return callback(null, splitMailIdd);
+}
+
 module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
+  splitMailId,
 };
