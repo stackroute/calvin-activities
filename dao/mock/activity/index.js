@@ -7,6 +7,7 @@ const activities = {};
 
 function publishActivityToListeners(mid, activity) {
   if (!listeners[mid]) { return; }
+  console.log(listeners);
   listeners[mid].forEach((socket) => {
     socket.emit('newActivity', activity);
   });
@@ -15,7 +16,7 @@ function publishActivityToListeners(mid, activity) {
 function publishToMailbox(mid, activity, callback) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
-  // publishActivityToListeners(mid, activity);
+  publishActivityToListeners(mid, activity);
   return callback(null, activity);
 }
 
