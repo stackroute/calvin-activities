@@ -1,23 +1,29 @@
 const followapi = [];
 
-function addFollow(follower) {
+function addFollow(follower, callback) {
   followapi.push(follower);
-  return follower;
+  return callback(null, follower);
 }
 
-function checkIfFollowExists(follower) {
+function checkIfFollowExists(follower, callback) {
   const filterData = follow => follow.circleId === follower.circleId && follow.mailboxId === follower.mailboxId;
   const filteredFollowers = followapi.filter(filterData);
-  return filteredFollowers.length !== 0;
+  return callback(null, filteredFollowers.length !== 0);
 }
-function deleteFollow(follower) {
+function deleteFollow(follower, callback) {
   const filter = followapi.filter(y => y.circleId === follower.circleId && y.mailboxId === follower.mailboxId);
   followapi.splice(followapi.indexOf(filter[0]), 1);
-  return filter[0];
+  return callback(null, filter[0]);
+}
+
+function splitMailId(circleId, callback) {
+  const splitMailIdd = followapi.filter(y => y.circleId === circleId);
+  return callback(null, splitMailIdd);
 }
 
 module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
+  splitMailId,
 };
