@@ -8,7 +8,6 @@ function createMailbox(req, res) {
 }
 
 function deleteMailbox(req, res) {
-
   mailboxDao.checkIfMailboxExists(req.params.mailboxId, (error, doesMailboxExists) => {
     if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesMailboxExists) {

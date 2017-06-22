@@ -1,0 +1,94 @@
+const followDao = require('../follow');
+
+const start=require('../../../db');
+
+const client=start.client;
+
+function publishActivityToListeners(mid, activity) {
+  const query = (`SELECT * from activity where mailboxId = ${mid}`);
+  client.execute(query, (err, result) => {
+    // result.rows.forEach((socket) => {
+    //   socket.emit('newActivity', activity);
+    // });
+    return 0;
+  });
+}
+
+function publishToMailbox(mid, activity, callback) {
+  const payload = JSON.stringify(activity);
+  const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
+  client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
+    if (err) { return callback(err); }
+    //  publishActivityToListeners(mid, activity);
+    return callback(err, activity);
+  });
+}
+
+function createPublishActivity(mid, activity, callback) {
+  publishToMailbox(mid, activity, (error, result) => {
+    followDao.splitMailId(mid, (error1, followersMailboxId) => {
+      followersMailboxId.forEach((follower) => {
+        publishToMailbox(mid, activity, (err, data) => {
+          if (err) { callback(err, null); }
+        });
+      });
+    });
+    return callback(null, activity);
+  });
+}
+
+function checkIfMailboxExists(mid, callback) {
+  const query = (`SELECT * from activity where mailboxId= ${mid}`);
+  client.execute(query, (err, result) => {
+    if (err) { return callback(err); }
+    return callback(err, result.rows.length>0);
+  });
+}
+
+function retriveMessageFromMailbox(mid, callback) {
+  checkIfMailboxExists(mid, (err, MailIdExists) => {
+    if (err) { return callback(err, null); }
+    if (MailIdExists) {
+      const query = (`SELECT * from activity where mailboxId= ${mid}`);
+      client.execute(query, (err1, result) => {
+        if (err1) { return callback(err1); }
+        return callback(null, result.rows);
+      });
+    }
+    return true;
+  });
+}
+
+function addListnerToMailbox(mid, socket) {
+  const query = ('INSERT INTO listenerstable (mailboxid,listeners) values( ?,? )');
+  client.execute(query, [mid, socket], (err, result) => {
+    if (err) { return err; }
+    return true;
+  });
+}
+
+function removeListnerFromMailbox(mid, socket) {
+  const query =(`DELETE from listeners where mailboxid =${mid} AND listeners=${socket}`);
+  client.execute(query, (error, result) => {
+    if (error) { return error; }
+    return true;
+  });
+}
+
+function checkActivityPublished(mid, callback) {
+  const query = (`SELECT * from activity where mailboxId= ${mid}`);
+  client.execute(query, (err, result) => {
+    if (err) { return callback(err); }
+    return callback(null, result.rows);
+  });
+}
+
+
+module.exports = {
+  publishToMailbox,
+  addListnerToMailbox,
+  createPublishActivity,
+  removeListnerFromMailbox,
+  retriveMessageFromMailbox,
+  checkActivityPublished,
+};

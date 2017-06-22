@@ -58,10 +58,8 @@ function addListnerToMailbox(mid, socket) {
 }
 
 function removeListnerFromMailbox(mid, socket) {
-  socket.on('stopListeningToMailbox', (data) => {
-    const index = listeners[mid].indexOf(socket);
-    listeners[mid].splice(index, 1);
-  });
+  const index = listeners[mid].indexOf(socket);
+  listeners[mid].splice(index, 1);
 }
 
 function checkIfMailboxEmpty() {

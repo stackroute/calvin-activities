@@ -12,7 +12,6 @@ const circleDAO = require('../../dao').circle;
 const authorize = require('../../authorize');
 
 describe('/circle api', function () {
-
   let circleId;
   let token;
   before(function (done) {
@@ -40,7 +39,6 @@ describe('/circle api', function () {
 
 
   it('should delete a circle', (done) => {
-
     circleDAO.checkIfCircleExists(circleId, (err, doesCircleExists) => {
       if (err) { done(err); return; }
       doesCircleExists.should.be.equal(true);
