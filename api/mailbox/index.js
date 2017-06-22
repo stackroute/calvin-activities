@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const controller = require('./mailbox.controller');
 
-router.post('', controller.createMailbox);
-router.delete('/:mailboxId', controller.deleteMailbox);
+const authorize = require('../../authorize');
+
+router.post('', authorize.permit('mailbox:all', 'mailbox:create'), controller.createMailbox);
+router.delete('/:mailboxId', authorize.permit('mailbox:all', 'mailbox:delete'), controller.deleteMailbox);
 
 module.exports = router;
