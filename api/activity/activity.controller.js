@@ -4,6 +4,7 @@ const mailboxDAO = require('../../dao').mailbox;
 
 // Publish to circle and followers mailbox
 function createPublishActivity(req, res) {
+  console.log('Activity', req.params.circleId);
   const receiver = req.params.circleId;
   const newActivity = {
     payload: req.body,

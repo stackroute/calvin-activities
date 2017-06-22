@@ -33,6 +33,7 @@ describe('/activity API', () => {
     });
   });
 
+
   it(`should publish message to circle mailbox and its followers mailbox,
    when we publish activity to circle`, (done) => {
       mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
