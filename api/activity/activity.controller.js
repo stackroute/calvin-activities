@@ -11,10 +11,10 @@ function createPublishActivity(req, res) {
   };
 
   circleDAO.checkIfCircleExists(receiver, (data, circleExists) => {
-    if (!circleExists) { res.status(404).json({message:'Circle Id does not exists'}); return; }
+    if (!circleExists) { res.status(404).json({ message: 'Circle Id does not exists' }); return; }
     activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
       if (error1) { res.status(404).json(error1); return; }
-       res.status(201).json(newActivity);
+      res.status(201).json(newActivity);
     });
   });
 }

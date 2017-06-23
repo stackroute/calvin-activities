@@ -39,5 +39,5 @@ module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
-  splitMailId
+  splitMailId,
 };

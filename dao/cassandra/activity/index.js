@@ -7,10 +7,9 @@ const client=start.client;
 function publishActivityToListeners(mid, activity) {
   const query = (`SELECT * from activity where mailboxId = ${mid}`);
   client.execute(query, (err, result) => {
-    // result.rows.forEach((socket) => {
-    //   socket.emit('newActivity', activity);
-    // });
-    return 0;
+    result.rows.forEach((socket) => {
+      socket.emit('newActivity', activity);
+    });
   });
 }
 
@@ -19,7 +18,7 @@ function publishToMailbox(mid, activity, callback) {
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
     if (err) { return callback(err); }
-    //  publishActivityToListeners(mid, activity);
+    publishActivityToListeners(mid, activity);
     return callback(err, activity);
   });
 }

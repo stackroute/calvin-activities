@@ -1,9 +1,9 @@
 const EventEmitter = require('events');
-const authorize = require('../authorize');
-const mailboxDao = require('../dao').mailbox;
-const circleDao = require('../dao').circle;
-const followDao = require('../dao').follow;
-const activityDao = require('../dao').activity;
+const authorize = require('../../authorize');
+const mailboxDao = require('../../dao').mailbox;
+const circleDao = require('../../dao').circle;
+const followDao = require('../../dao').follow;
+const activityDao = require('../../dao').activity;
 const expect = require('chai').expect;
 const bootstrapSocketServer = require('./socketserver');
 require('chai').should();

@@ -1,5 +1,5 @@
-const activityDAO = require('../dao').activity;
-const authorize = require('../authorize');
+const activityDAO = require('../../dao').activity;
+const authorize = require('../../authorize');
 
 function bootstrapSocketServer(io) {
   io.on('connection', (socket) => {
