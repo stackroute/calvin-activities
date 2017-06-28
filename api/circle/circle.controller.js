@@ -2,8 +2,12 @@ const circleDAO = require('../../dao').circle;
 
 function createCircle(req, res) {
   circleDAO.createCircle((err, id) => {
+    const circle = {
+      circleid: id,
+      mailboxid: id,
+    };
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({ id });
+    res.status(201).json(circle);
   });
 }
 // function createCircle(req, res) {
