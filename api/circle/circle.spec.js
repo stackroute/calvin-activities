@@ -13,6 +13,7 @@ const authorize = require('../../authorize');
 
 describe('/circle api', function () {
   let circleId;
+  let mailboxId;
   let token;
   before(function (done) {
     token = authorize.generateJWTToken();
@@ -28,6 +29,7 @@ describe('/circle api', function () {
       .end(function (err, res) {
         if (err) { done(err); return; }
         expect(res.body.newCircle).to.have.property('id').a('string');
+        expect(res.body.newCircle).to.have.property('mailboxid').a('string');
         circleId = (res.body.newCircle.id).toString();
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }
@@ -36,7 +38,6 @@ describe('/circle api', function () {
         });
       });
   });
-
 
   it('should delete a circle', (done) => {
     circleDAO.checkIfCircleExists(circleId, (err, doesCircleExists) => {
