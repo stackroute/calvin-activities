@@ -1,0 +1,40 @@
+---
+# tasks file for kostyrev.datastax-dsc
+
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - always
+
+- include: "install-{{ ansible_os_family }}.yml"
+
+- name: Install package
+  package:
+    name: "{{ item }}"
+  with_items: "{{ datastax_dsc_packages }}"
+
+- name: Fix permissions on {{ datastax_dsc_conf_dir }}
+  file:
+    path: "{{ datastax_dsc_conf_dir }}"
+    owner: "{{ datastax_dsc_cassandra_user }}"
+    group: "{{ datastax_dsc_cassandra_group }}"
+    mode: "{{ datastax_dsc_cassandra_conf_dir_mode }}"
+    recurse: yes
+    state: directory
+
+- include: template.yml
+
+- name: enable cassandra service
+  service:
+    name: cassandra
+    enabled: "{{ datastax_dsc_enable_cassandra_service }}"
+
+# Flush handlers now, so we avoid starting the process and then
+# restarting it immediately after notifications are flushed.
+- meta: flush_handlers
+
+- name: start cassandra service
+  service:
+    name: cassandra
+    state: started
+  when: datastax_dsc_manage_cassandra_service
