@@ -3,7 +3,6 @@
 const app = require('../../app');
 
 const expect = require('chai').expect;
-
 require('chai').should();
 
 const request = require('supertest');
@@ -25,7 +24,6 @@ describe('/follow api', () => {
   let mailboxId;
   let token;
   before((done) => {
-    token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
       circleId = result.id;
     });
