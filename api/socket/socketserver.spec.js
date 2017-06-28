@@ -26,9 +26,9 @@ describe('/push notifications', () => {
     io.emit('connection', socket);
 
     circleDao.createCircle((err, result) => {
-      circleId = result;
+      circleId = result.id;
       mailboxDao.createMailbox((error, result1) => {
-        mailboxId = result1;
+        mailboxId = result1.id;
         followDao.addFollow({ circleId, mailboxId }, (error1, result2) => {
           done();
         });
