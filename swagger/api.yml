@@ -15,7 +15,6 @@
     title: "Calvin - Activity Log"
     version: "v1"
     category: "Circle"
-
   paths: 
     /circle:
       post:
@@ -24,6 +23,12 @@
         summary: "Create Circle"
         produces: 
           - "application/json"
+        parameters:
+          - name: "Authorization"
+            in: "header"
+            description: "Authentication key"
+            required: false
+            type: "string"
         responses: 
           201: 
             description: Creates a circle.           
@@ -41,6 +46,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
         responses:
           200:
             description: Deletes a circle.
@@ -51,6 +61,12 @@
         summary: "Create Mailbox"
         produces: 
           - "application/json"
+        parameters:
+          - name: "Authorization"
+            in: "header"
+            description: "Authentication key"
+            required: false
+            type: "string"
         responses: 
           201: 
             description: Creates a mailbox. 
@@ -68,6 +84,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
         responses:
           200:
             description: Deletes a mailbox.             
@@ -94,6 +115,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
       delete:
         tags:
           - "Follow API"
@@ -113,7 +139,12 @@
           description: "Circle id to add"
           required: true
           type: "string"
-          format: "int64"  
+          format: "int64" 
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string" 
         responses:
           200:
             description: Unfollow a circle.
@@ -151,7 +182,12 @@
               - payload
             properties:
               - type: string
-    /circle/{mailboxId}/activity:
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /mailbox/{mailboxId}/activity:
        get:
         tags:
           - "Activity API"
@@ -162,14 +198,14 @@
           200:
             description: Get Activity from Mailbox.
         parameters:
-        - name: "circleId"
+        - name: "mailboxId"
           in: "path"
           description: "mailboxId to get activity"
           required: true
           type: "string"
-          format: "int64"  
-
-
-         
-
-
+          format: "int64" 
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"

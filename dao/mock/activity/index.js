@@ -15,7 +15,7 @@ function publishActivityToListeners(mid, activity) {
 function publishToMailbox(mid, activity, callback) {
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
-  // publishActivityToListeners(mid, activity);
+  publishActivityToListeners(mid, activity);
   return callback(null, activity);
 }
 
