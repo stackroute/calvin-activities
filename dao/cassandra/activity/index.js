@@ -2,17 +2,16 @@ const followDao = require('../follow');
 
 const start=require('../../../db');
 
+const listeners = {};
+
 const client=start.client;
 
 function publishActivityToListeners(mid, activity) {
-  const query = (`SELECT * from activity where mailboxId = ${mid}`);
-  client.execute(query, (err, result) => {
-    result.rows.forEach((socket) => {
-      socket.emit('newActivity', activity);
-    });
+  if (!listeners[mid]) { return; }
+  listeners[mid].forEach((socket) => {
+    socket.emit('newActivity', activity);
   });
 }
-
 function publishToMailbox(mid, activity, callback) {
   const payload = JSON.stringify(activity);
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
@@ -59,20 +58,15 @@ function retriveMessageFromMailbox(mid, callback) {
 }
 
 function addListnerToMailbox(mid, socket) {
-  const query = ('INSERT INTO listenerstable (mailboxid,listeners) values( ?,? )');
-  client.execute(query, [mid, socket], (err, result) => {
-    if (err) { return err; }
-    return true;
-  });
+  if (!listeners[mid]) { listeners[mid] = []; }
+  listeners[mid].unshift(socket);
 }
 
 function removeListnerFromMailbox(mid, socket) {
-  const query =(`DELETE from listeners where mailboxid =${mid} AND listeners=${socket}`);
-  client.execute(query, (error, result) => {
-    if (error) { return error; }
-    return true;
-  });
+  const index = listeners[mid].indexOf(socket);
+  listeners[mid].splice(index, 1);
 }
+
 
 function checkActivityPublished(mid, callback) {
   const query = (`SELECT * from activity where mailboxId= ${mid}`);
