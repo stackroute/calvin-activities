@@ -1,8 +1,8 @@
 const mailboxes = [];
-let idCounter = 0;
+const uuidv4 = require('uuid/v4');
 
 function createMailbox(callback) {
-  idCounter = (parseInt(Math.random()*192)).toString();
+  idCounter = uuidv4();
   mailboxes.push(idCounter);
   return callback(null, idCounter);
 }
