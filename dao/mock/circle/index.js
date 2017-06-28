@@ -1,17 +1,23 @@
-const circles=[];
 const start=require('../../../db');
 
+const mailboxDao = require('../mailbox');
+
+const circles=[];
 const uuid = start.uuid;
 
 function createCircle(callback) {
+  let circleMailbox;
+  mailboxDao.createMailbox((err, newMailbox) => {
+    circleMailbox = newMailbox.id;
+  });
   const newCircle = {
     id: uuid().toString(),
+    mailboxid: circleMailbox,
     createdOn: Date.now(),
     lastActivity: Date.now(),
   };
   circles.push(newCircle);
   return callback(null, newCircle);
-
 }
 
 function checkIfCircleExists(circleId, callback) {

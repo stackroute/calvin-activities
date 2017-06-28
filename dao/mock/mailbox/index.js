@@ -1,17 +1,21 @@
 const mailboxes = [];
-const uuidv4 = require('uuid/v4');
+const start=require('../../../db');
+
+const uuid = start.uuid;
 
 function createMailbox(callback) {
-  idCounter = uuidv4();
-  mailboxes.push(idCounter);
-  return callback(null, idCounter);
+  const newMailbox = {
+    id: uuid().toString(),
+  };
+  mailboxes.push(newMailbox);
+  return callback(null, newMailbox);
 }
 function checkIfMailboxExists(mailboxId, callback) {
-  const filterMailbox = mailboxes.filter(mailbox => mailbox === mailboxId);
+  const filterMailbox = mailboxes.filter(mailbox => mailbox.id === mailboxId);
   return callback(null, filterMailbox.length!==0);
 }
 function deleteMailbox(mailboxId, callback) {
-  const filter = mailboxes.filter(y => y === mailboxId);
+  const filter = mailboxes.filter(mailbox => mailbox.id === mailboxId);
   mailboxes.splice(mailboxes.indexOf(filter[0]), 1);
   return callback(null, filter[0]);
 }

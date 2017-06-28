@@ -25,10 +25,10 @@ describe('/follow api', function () {
   let token;
   before(function (done) {
     circleDAO.createCircle((err, result) => {
-      circleId = result;
+      circleId = result.id;
     });
     mailboxDAO.createMailbox((err, result) => {
-      mailboxId = result;
+      mailboxId = result.id;
     });
     token = authorize.generateJWTToken();
     setTimeout(() => {

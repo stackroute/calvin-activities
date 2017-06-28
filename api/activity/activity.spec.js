@@ -23,9 +23,9 @@ describe('/activity API', () => {
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
-      circleId = result;
+      circleId = result.id;
       mailboxDao.createMailbox((error, result1) => {
-        mailboxId = result1;
+        mailboxId = result1.id;
         followDAO.addFollow({ circleId, mailboxId }, (error1, result2) => {
           done();
         });
