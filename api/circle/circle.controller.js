@@ -16,9 +16,9 @@ function deleteCircle(req, res) {
       res.status(404).json({ message: 'Not found' });
       return;
     }
-    circleDAO.deleteCircle(req.params.circleId, (err, id) => {
+    circleDAO.deleteCircle(req.params.circleId, (err, deletedCircle) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
-      res.status(200).json({ id });
+      res.status(200).json({ deletedCircle });
     });
   });
 }

@@ -7,9 +7,8 @@ function createCircle(callback) {
   const id1 = uuid();
   const query = ('INSERT INTO circle (id) values( ? )');
   client.execute(query, [id1], (err, result) => {
-    // if (err) { return callback(err, null); }
-    // return
-    callback(err, id1.toString());
+    if (err) { return callback(err, null); }
+    return callback(err, id1.toString());
   });
 }
 
