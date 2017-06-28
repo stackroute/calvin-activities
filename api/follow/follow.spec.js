@@ -3,6 +3,7 @@
 const app = require('../../app');
 
 const expect = require('chai').expect;
+
 require('chai').should();
 
 const request = require('supertest');
@@ -24,16 +25,14 @@ describe('/follow api', function () {
   let mailboxId;
   let token;
   before(function (done) {
+    token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
       circleId = result;
+      mailboxDAO.createMailbox((err1, result1) => {
+        mailboxId = result1;
+        done();
+      });
     });
-    mailboxDAO.createMailbox((err, result) => {
-      mailboxId = result;
-    });
-    token = authorize.generateJWTToken();
-    setTimeout(() => {
-      done();
-    }, 400);
   });
 
   it('should add if circle id, mailbox id exist and follower does not exist', function (done) {
