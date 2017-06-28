@@ -1,10 +1,18 @@
 const circles=[];
 let idCounter = 0;
+const start=require('../../../db');
+
+const uuid = start.uuid;
 
 function createCircle(callback) {
   idCounter = (parseInt(Math.random()*192)).toString();
-  circles.push(idCounter);
-  return callback(null, idCounter);
+  const newCircle = {
+    id:uuid(),
+    createdOn:Date.now(),
+    lastActivity:Date.now(),
+  }
+  circles.push(newCircle);
+  return callback(null, newCircle);
 }
 function checkIfCircleExists(circleId, callback) {
   const filterCircle = circles.filter(circle => circle === circleId);
