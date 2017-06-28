@@ -2,8 +2,14 @@
 // /* eslint prefer-arrow-callback:0, func-names:0 */
 // const app = require('../../app');
 
+<<<<<<< HEAD
 // const expect = require('chai').expect;
 // require('chai').should();
+=======
+const expect = require('chai').expect;
+
+require('chai').should();
+>>>>>>> eec3d1e52576325673558fc5e9bd2e40b25621c3
 
 // const request = require('supertest');
 
@@ -19,6 +25,7 @@
 
 // const authorize = require('../../authorize');
 
+<<<<<<< HEAD
 // describe('/follow api', function () {
 //   let circleId;
 //   let mailboxId;
@@ -35,6 +42,25 @@
 //       done();
 //     }, 400);
 //   });
+=======
+describe('/follow api', function () {
+  let circleId;
+  let mailboxId;
+  let token;
+  before(function (done) {
+    token = authorize.generateJWTToken();
+    circleDAO.createCircle((err, result) => {
+      circleId = result.id;
+    });
+    mailboxDAO.createMailbox((err, result) => {
+      mailboxId = result.id;
+    });
+    token = authorize.generateJWTToken();
+    setTimeout(() => {
+      done();
+    }, 400);
+  });
+>>>>>>> eec3d1e52576325673558fc5e9bd2e40b25621c3
 
 //   it('should add if circle id, mailbox id exist and follower does not exist', function (done) {
 //     mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {

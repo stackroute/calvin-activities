@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node start",
-    "test": "npm run eslint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js && DAO=cassandra ./node_modules/.bin/mocha **/*.spec.js",
+    "test": "npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
     "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
