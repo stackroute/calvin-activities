@@ -27,12 +27,15 @@ describe('/follow api', function () {
   before(function (done) {
     token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
-      circleId = result;
-      mailboxDAO.createMailbox((err1, result1) => {
-        mailboxId = result1;
-        done();
-      });
+      circleId = result.id;
     });
+    mailboxDAO.createMailbox((err, result) => {
+      mailboxId = result.id;
+    });
+    token = authorize.generateJWTToken();
+    setTimeout(() => {
+      done();
+    }, 400);
   });
 
   it('should add if circle id, mailbox id exist and follower does not exist', function (done) {
