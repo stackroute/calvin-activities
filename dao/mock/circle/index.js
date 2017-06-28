@@ -11,6 +11,7 @@ function createCircle(callback) {
   };
   circles.push(newCircle);
   return callback(null, newCircle);
+
 }
 
 function checkIfCircleExists(circleId, callback) {
