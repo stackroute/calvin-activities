@@ -78,6 +78,7 @@ describe('/activity API', () => {
       .end((err, res) => {
         if (err) { done(err); return; }
         expect(res.body).to.have.property('payload');
+
         activityDao.checkActivityPublished(mailboxId, (error, mailboxActivity) => {
           if (error) { done(error); return; }
           expect(mailboxActivity).to.have.lengthOf(2);
@@ -86,7 +87,6 @@ describe('/activity API', () => {
         });
       });
   });
-
 
   it('should retrieve message from Mailbox', (done) => {
     request(app)

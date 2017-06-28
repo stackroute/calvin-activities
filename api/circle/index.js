@@ -7,4 +7,5 @@ const authorize = require('../../authorize');
 router.post('/', authorize.permit('circle:all', 'circle:create'), controller.createCircle);
 router.delete('/:circleId', authorize.permit('circle:all', 'circle:delete'), controller.deleteCircle);
 
+
 module.exports = router;

@@ -7,5 +7,5 @@ module.exports = {
     port: '9042',
   },
   secretKey: secret,
-  dao: process.env.DAO || 'cassandra',
+  dao: process.env.DAO || 'mock',
 };

@@ -84,7 +84,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(circleId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1700);
     });
   });
 

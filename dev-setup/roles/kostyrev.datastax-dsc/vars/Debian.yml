@@ -1,0 +1,9 @@
+---
+datastax_dsc_pkg_name: "cassandra={{ datastax_dsc_major }}.{{ datastax_dsc_minor }}.{{ datastax_dsc_patch }}"
+datastax_dsc_packages:
+  - "{{ datastax_dsc_pkg_name }}"
+  - libjemalloc1
+
+datastax_dsc_conf_dir: /etc/cassandra
+
+cassandra_log_name: system.log
