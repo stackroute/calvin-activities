@@ -11,7 +11,7 @@ function createCircle(req, res) {
 
 function deleteCircle(req, res) {
   circleDAO.checkIfCircleExists(req.params.circleId, (error, doesCircleExists) => {
-    if (error) { res.status(500).json({ message: `${error.message}` }); return; }
+    if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesCircleExists) {
       res.status(404).json({ message: 'circle does not exist' });
       return;
