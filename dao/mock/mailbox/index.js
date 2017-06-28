@@ -2,7 +2,7 @@ const mailboxes = [];
 const uuidv4 = require('uuid/v4');
 
 function createMailbox(callback) {
-  idCounter = uuidv4();
+  const idCounter = uuidv4();
   mailboxes.push(idCounter);
   return callback(null, idCounter);
 }
