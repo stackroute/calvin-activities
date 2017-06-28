@@ -5,7 +5,7 @@ const circleDAO = require('../../dao').circle;
 function createCircle(req, res) {
   circleDAO.createCircle((err, newCircle) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({ newCircle });
+    res.status(201).json(newCircle);
   });
 }
 
@@ -18,7 +18,7 @@ function deleteCircle(req, res) {
     }
     circleDAO.deleteCircle(req.params.circleId, (err, deletedCircle) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
-      res.status(200).json({ deletedCircle });
+      res.status(200).json(deletedCircle);
     });
   });
 }

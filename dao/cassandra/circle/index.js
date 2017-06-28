@@ -4,11 +4,13 @@ const client=start.client;
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  const id1 = uuid();
+  const newCircle = {
+    id: uuid().toString(),
+  };
   const query = ('INSERT INTO circle (id) values( ? )');
-  client.execute(query, [id1], (err, result) => {
+  client.execute(query, [newCircle.id], (err, result) => {
     if (err) { return callback(err, null); }
-    return callback(err, id1.toString());
+    return callback(err, newCircle);
   });
 }
 
@@ -21,15 +23,10 @@ function checkIfCircleExists(circleId, callback) {
 }
 
 function deleteCircle(circleId, callback) {
-  checkIfCircleExists(circleId, (err, circleExists) => {
-    if (err) { return callback(err, null); }
-    if (circleExists===false) {
-      return callback(`circle id ${circleId} does not exis`, null);
-    } else {
-      const query =(`DELETE from circle where id =${circleId}`);
-      client.execute(query, (error, result) => callback(error, circleId));
-      return { circleId };
-    }
+  const query =(`DELETE from circle where id =${circleId}`);
+  client.execute(query, (error, result) => {
+    if (error) { return callback(error, null); }
+    return callback(null, { id: circleId });
   });
 }
 

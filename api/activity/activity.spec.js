@@ -23,11 +23,15 @@ describe('/activity API', () => {
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
+      if (err) { throw err; }
       circleId = result.id;
       mailboxDao.createMailbox((error, result1) => {
+        if (error) { throw error; }
         mailboxId = result1.id;
         followDAO.addFollow({ circleId, mailboxId }, (error1, result2) => {
-          done();
+          setTimeout(() => {
+            done();
+          }, 1500);
         });
       });
     });
@@ -38,31 +42,31 @@ describe('/activity API', () => {
    when we publish activity to circle`, (done) => {
       mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
         doesMailboxExists.should.be.equal(true);
-      });
-      circleDao.checkIfCircleExists(circleId, (err, doesCircleExists) => {
-        doesCircleExists.should.be.equal(true);
-      });
-      request(app)
-        .post(`/circle/${circleId}/activity`)
-        .set('Authorization', `Bearer ${token}`)
-        .send({ link: 'www.google.com' })
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) { done(err); return; }
-          expect(res.body).to.have.property('payload');
-          activityDao.checkActivityPublished(circleId, (error, circleActivity) => {
-            if (error) { done(error); return; }
-            expect(circleActivity).to.have.lengthOf(1);
-            expect(circleActivity[0].payload.link).to.equal('www.google.com');
-            activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
-              if (error1) { done(error1); return; }
-              expect(mailboxActivity).to.have.lengthOf(1);
-              expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
-              done();
+        circleDao.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
+          doesCircleExists.should.be.equal(true);
+          request(app)
+            .post(`/circle/${circleId}/activity`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ link: 'www.google.com' })
+            .expect(201)
+            .expect('Content-Type', /json/)
+            .end((err2, res) => {
+              if (err2) { done(err2); return; }
+              expect(res.body).to.have.property('payload');
+              activityDao.checkActivityPublished(circleId, (error, circleActivity) => {
+                if (error) { done(error); return; }
+                expect(circleActivity).to.have.lengthOf(1);
+                expect(circleActivity[0].payload.link).to.equal('www.google.com');
+                activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
+                  if (error1) { done(error1); return; }
+                  expect(mailboxActivity).to.have.lengthOf(1);
+                  expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
+                  done();
+                });
+              });
             });
-          });
         });
+      });
     });
 
   it('should publish message to mailbox when we publish activity to mailbox', (done) => {
