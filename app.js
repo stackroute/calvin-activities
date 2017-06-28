@@ -18,13 +18,13 @@ app.use('/circle', authorize.verifyToken, require('./api/circle'));
 
 app.use('/mailbox', authorize.verifyToken, require('./api/mailbox'));
 
-// Publish activity to mailbox
-app.use('/mailbox', require('./api/activity'));
-
-// Publish activity to circle
-app.use('/circle', require('./api/activity'));
 /** Follow URI is for /mailbox/:mailboxId/circle/:circleId */
 app.use('/mailbox/', authorize.verifyToken, require('./api/follow'));
 
+// Publish activity to mailbox
+app.use('/mailbox', authorize.verifyToken, require('./api/activity'));
+
+// Publish activity to circle
+app.use('/circle', authorize.verifyToken, require('./api/activity'));
 
 module.exports = app;

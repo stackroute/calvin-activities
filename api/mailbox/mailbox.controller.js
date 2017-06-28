@@ -11,7 +11,7 @@ function deleteMailbox(req, res) {
   mailboxDao.checkIfMailboxExists(req.params.mailboxId, (error, doesMailboxExists) => {
     if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesMailboxExists) {
-      res.status(404).json({ message: 'Not found' });
+      res.status(404).json({ message: `${error}` });
       return;
     }
     mailboxDao.deleteMailbox(req.params.mailboxId, (err, id) => {
