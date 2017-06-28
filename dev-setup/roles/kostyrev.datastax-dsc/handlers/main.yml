@@ -1,0 +1,14 @@
+---
+# handlers file for kostyrev.datastax-dsc
+- name: restart cassandra
+  service:
+    name: cassandra
+    state: restarted
+  when: datastax_dsc_manage_cassandra_service
+
+- name: wait for cassandra
+  wait_for:
+    host: "{{ cassandra_listen_address }}"
+    port: 9042
+    delay: 10
+  when: datastax_dsc_manage_cassandra_service

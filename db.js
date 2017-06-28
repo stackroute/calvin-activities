@@ -1,4 +1,5 @@
 const model = require('cassandra-driver');
+
 const connection=require('./config');
 
 const client = new model.Client({

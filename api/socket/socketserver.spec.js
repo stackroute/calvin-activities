@@ -26,9 +26,9 @@ describe('/push notifications', () => {
     io.emit('connection', socket);
 
     circleDao.createCircle((err, result) => {
-      circleId = result;
+      circleId = result.id;
       mailboxDao.createMailbox((error, result1) => {
-        mailboxId = result1;
+        mailboxId = result1.id;
         followDao.addFollow({ circleId, mailboxId }, (error1, result2) => {
           done();
         });
@@ -84,7 +84,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(circleId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1700);
     });
   });
 

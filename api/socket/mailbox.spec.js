@@ -2,6 +2,7 @@
 const app = require('../../app');
 
 const expect = require('chai').expect;
+
 require('chai').should();
 
 const request = require('supertest');
@@ -25,8 +26,8 @@ describe('/mailbox api', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        expect(res.body).to.have.property('id').a('string');
-        mailboxId = res.body.id;
+        expect(res.body.newMailbox).to.have.property('id').a('string');
+        mailboxId = (res.body.newMailbox.id).toString();
         mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
           if (err) { done(err); return; }
           mailboxExists.should.be.equal(true);
@@ -46,7 +47,7 @@ describe('/mailbox api', () => {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          expect(res.body.id).to.equal(mailboxId);
+          expect(res.body.deletedMailbox.id).to.equal(mailboxId);
           mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
             mailboxExists.should.be.equal(false);
             done();

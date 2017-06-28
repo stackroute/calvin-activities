@@ -1,7 +1,9 @@
+
 /* eslint prefer-arrow-callback:0, func-names:0 */
 const app = require('../../app');
 
 const expect = require('chai').expect;
+
 require('chai').should();
 
 const request = require('supertest');
@@ -23,11 +25,12 @@ describe('/follow api', function () {
   let mailboxId;
   let token;
   before(function (done) {
+    token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
-      circleId = result;
+      circleId = result.id;
     });
     mailboxDAO.createMailbox((err, result) => {
-      mailboxId = result;
+      mailboxId = result.id;
     });
     token = authorize.generateJWTToken();
     setTimeout(() => {

@@ -1,17 +1,32 @@
+const start=require('../../../db');
+
+const mailboxDao = require('../mailbox');
+
 const circles=[];
-let idCounter = 0;
+const uuid = start.uuid;
 
 function createCircle(callback) {
-  idCounter = (parseInt(Math.random()*192)).toString();
-  circles.push(idCounter);
-  return callback(null, idCounter);
+  let circleMailbox;
+  mailboxDao.createMailbox((err, newMailbox) => {
+    circleMailbox = newMailbox.id;
+  });
+  const newCircle = {
+    id: uuid().toString(),
+    mailboxid: circleMailbox,
+    createdOn: Date.now(),
+    lastActivity: Date.now(),
+  };
+  circles.push(newCircle);
+  return callback(null, newCircle);
 }
+
 function checkIfCircleExists(circleId, callback) {
-  const filterCircle = circles.filter(circle => circle === circleId);
+  const filterCircle = circles.filter(circle => circle.id === circleId);
   callback(null, filterCircle.length!==0);
 }
+
 function deleteCircle(circleId, callback) {
-  const filter = circles.filter(y => y === circleId);
+  const filter = circles.filter(circle => circle.id === circleId);
   circles.splice(circles.indexOf(filter[0]), 1);
   return callback(null, filter[0]);
 }

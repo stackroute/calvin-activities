@@ -2,6 +2,7 @@
 const app = require('../../app');
 
 const expect = require('chai').expect;
+
 require('chai').should();
 
 const request = require('supertest');
@@ -12,6 +13,7 @@ const authorize = require('../../authorize');
 
 describe('/circle api', function () {
   let circleId;
+  let mailboxId;
   let token;
   before(function (done) {
     token = authorize.generateJWTToken();
@@ -26,8 +28,9 @@ describe('/circle api', function () {
       .expect('Content-Type', /json/)
       .end(function (err, res) {
         if (err) { done(err); return; }
-        expect(res.body).to.have.property('id').a('string');
-        circleId = res.body.id;
+        expect(res.body.newCircle).to.have.property('id').a('string');
+        expect(res.body.newCircle).to.have.property('mailboxid').a('string');
+        circleId = (res.body.newCircle.id).toString();
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }
           circleExists.should.be.equal(true);
@@ -35,7 +38,6 @@ describe('/circle api', function () {
         });
       });
   });
-
 
   it('should delete a circle', (done) => {
     circleDAO.checkIfCircleExists(circleId, (err, doesCircleExists) => {
@@ -48,8 +50,7 @@ describe('/circle api', function () {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          expect(res.body.id).to.equal(circleId);
-          // expect(res.body).to.equal(circleId);
+          expect(res.body.deletedCircle.id).to.equal(circleId);
           circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
             if (err) { done(err); return; }
             circleExists.should.be.equal(false);

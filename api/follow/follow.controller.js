@@ -16,7 +16,6 @@ function follow(req, res) {
       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
         if (err2) { res.status(404).json({ message: `${err2}` }); return; }
         const isFollowExists=isExists;
-
         if (!isMailboxExists) {
           res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
           return;

@@ -27,8 +27,17 @@ function deleteFollow(follower, callback) {
   });
 }
 
+function splitMailId(circleId, callback) {
+  const query = (`SELECT * from follow where circleid = ${circleId}`);
+  client.execute(query, (err, result) => {
+    if (err) { return callback(err); }
+    return callback(null, result.rows);
+  });
+}
+
 module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
+  splitMailId,
 };
