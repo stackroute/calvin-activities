@@ -76,6 +76,10 @@ function checkActivityPublished(mid, callback) {
   });
 }
 
+function getUsersOnline(callback){
+  const users = Object.keys(listeners);
+  return callback(null, users); 
+}
 
 module.exports = {
   publishToMailbox,
@@ -84,4 +88,5 @@ module.exports = {
   removeListnerFromMailbox,
   retriveMessageFromMailbox,
   checkActivityPublished,
+  getUsersOnline,
 };
