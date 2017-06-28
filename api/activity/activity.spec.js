@@ -84,8 +84,8 @@ describe('/activity API', () => {
             done();
           });
         });
-      });
     });
+  });
 
   it('should retrieve message from Mailbox', (done) => {
     request(app)
