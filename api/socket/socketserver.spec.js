@@ -4,7 +4,6 @@ const mailboxDao = require('../../dao').mailbox;
 const circleDao = require('../../dao').circle;
 const followDao = require('../../dao').follow;
 const activityDao = require('../../dao').activity;
-const expect = require('chai').expect;
 const bootstrapSocketServer = require('./socketserver');
 require('chai').should();
 
@@ -49,7 +48,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.publishToMailbox(mailboxId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(true); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(true); done(); }, 100);
     });
   });
 
@@ -60,7 +59,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(circleId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(true); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(true); done(); }, 100);
     });
   });
 
@@ -72,7 +71,7 @@ describe('/push notifications', () => {
     });
     followDao.deleteFollow({ circleId, mailboxId }, (err, res) => {
       activityDao.createPublishActivity(circleId, payload, (error, result) => {
-        setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1500);
+        setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 100);
       });
     });
   });
@@ -84,7 +83,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(circleId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1700);
+      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 100);
     });
   });
 
@@ -94,7 +93,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(mailboxId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 100);
     });
   });
 
@@ -105,7 +104,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(mailboxId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(true); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(true); done(); }, 100);
     });
   });
 
@@ -115,7 +114,7 @@ describe('/push notifications', () => {
       if (activity && activity.name === 'Tester') validEventEmitted = true;
     });
     activityDao.createPublishActivity(mailboxId, payload, (err, result) => {
-      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 1500);
+      setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 100);
     });
   });
 });

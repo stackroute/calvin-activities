@@ -13,7 +13,6 @@ const authorize = require('../../authorize');
 
 describe('/circle api', function () {
   let circleId;
-  let mailboxId;
   let token;
   before(function (done) {
     token = authorize.generateJWTToken();

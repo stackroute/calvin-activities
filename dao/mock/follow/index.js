@@ -1,8 +1,3 @@
-const start=require('../../../db');
-
-const client=start.client;
-const uuid = start.uuid;
-
 const followapi = [];
 
 function addFollow(follower, callback) {
