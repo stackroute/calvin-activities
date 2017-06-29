@@ -1,9 +1,9 @@
 const bulkDao = require('../../dao').bulk;
 
-function getOnlineUsers(req, res) {
+function getOpenMailboxes(req, res) {
   const offset = req.params.offset;
   const count = req.params.count;
-  bulkDao.getUsersOnline({ offset, count }, (err, users) => {
+  bulkDao.getOpenMailboxes({ offset, count }, (err, users) => {
     if (err) { res.status(404).json([]); return; }
     res.json(users);
   });
@@ -29,7 +29,7 @@ function getAllFollowersOfACircle(req, res) {
 }
 
 module.exports = {
-  getOnlineUsers,
+  getOpenMailboxes,
   getAllCircles,
   getAllFollowersOfACircle,
 };
