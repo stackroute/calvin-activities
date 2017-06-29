@@ -5,7 +5,6 @@ const circleDAO = require('../../index').circle;
 function getOpenMailboxes(range, callback) {
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
-
   const users = (Object.keys(activityDAO.listeners)).slice(offset, (offset+count));
   return callback(null, users);
 }

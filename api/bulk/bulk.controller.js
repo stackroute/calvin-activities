@@ -6,7 +6,7 @@ function getOpenMailboxes(req, res) {
   const count = req.params.count;
   bulkDao.getOpenMailboxes({ offset, count }, (err, users) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
-    res.status(200).json({ users });
+    if (users.length) { res.status(200).json({ users }); } else { res.status(404).json({ message: 'Not found' }); }
   });
 }
 

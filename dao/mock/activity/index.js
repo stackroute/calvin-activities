@@ -1,6 +1,6 @@
 const followDao = require('../follow');
 
-const listeners = { 1: [1, 2] };
+const listeners = { };
 
 const activities = {};
 
