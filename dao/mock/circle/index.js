@@ -1,6 +1,6 @@
 const start=require('../../../db');
 
-const mailboxDao = require('../mailbox');
+const mailboxDao = require('../../index').mailbox;
 
 const circles=[];
 const uuid = start.uuid;

@@ -23,11 +23,15 @@ describe('/activity API', () => {
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
+      if (err) { throw err; }
       circleId = result.id;
       mailboxDao.createMailbox((error, result1) => {
+        if (error) { throw error; }
         mailboxId = result1.id;
         followDAO.addFollow({ circleId, mailboxId }, (error1, result2) => {
-          done();
+          setTimeout(() => {
+            done();
+          }, 1500);
         });
       });
     });
