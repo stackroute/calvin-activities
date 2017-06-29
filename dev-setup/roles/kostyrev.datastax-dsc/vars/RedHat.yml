@@ -1,0 +1,10 @@
+---
+datastax_dsc_pkg_name: "dsc{{ datastax_dsc_major }}{{ datastax_dsc_minor }}-{{ datastax_dsc_major }}.{{ datastax_dsc_minor }}.{{ datastax_dsc_patch }}"
+datastax_dsc_packages:
+  - "{{ datastax_dsc_pkg_name }}"
+  - jemalloc
+  - libselinux-python
+
+datastax_dsc_conf_dir: /etc/cassandra/default.conf
+
+cassandra_log_name: cassandra.log
