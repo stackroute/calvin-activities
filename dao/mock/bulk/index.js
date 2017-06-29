@@ -2,7 +2,7 @@ const activityDAO = require('../../index').activity;
 const followDAO = require('../../index').follow;
 const circleDAO = require('../../index').circle;
 
-function getUsersOnline(range, callback) {
+function getOpenMailboxes(range, callback) {
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
 
@@ -29,7 +29,7 @@ function getAllFollowersOfACircle(circleId, range, callback) {
 }
 
 module.exports = {
-  getUsersOnline,
+  getOpenMailboxes,
   getAllCircles,
   getAllFollowersOfACircle,
 };
