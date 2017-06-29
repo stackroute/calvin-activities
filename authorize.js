@@ -10,7 +10,8 @@ const generateJWTToken = () => {
 
 const verifyToken = (req, res, next) => {
   const auth = req.get('Authorization');
-  if (!auth) { return res.status(404).json({ message: 'Authorization Required' }); } else if (!auth.includes('Bearer')) { return res.status(404).json({ message: 'Invalid Authorization' }); }
+  if (!auth) { return res.status(404).json({ message: 'Authorization Required' }); }
+  if (!auth.includes('Bearer')) { return res.status(404).json({ message: 'Invalid Authorization' }); }
   const token = auth.split(' ').pop().toString();
   const decodeToken = jwt.decode(token, { complete: true });
   const scopes = decodeToken.payload.scopes;

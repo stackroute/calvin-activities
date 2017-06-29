@@ -13,7 +13,7 @@ function createPublishActivity(req, res) {
   circleDAO.checkIfCircleExists(receiver, (data, circleExists) => {
     if (!circleExists) { res.status(404).json({ message: 'Circle Id does not exists' }); return; }
     activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
-      if (error1) { res.status(404).json(error1); return; }
+      if (error1) { res.status(404).json({ message: `${error1}` }); return; }
       res.status(201).json(newActivity);
     });
   });
@@ -29,7 +29,7 @@ function createPublishActivityToMailbox(req, res) {
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
     if (!mailboxExists) { res.status(404).send('Mailbox Id does not exists'); return; }
     activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
-      if (error1) { res.status(404).json(error1); return; }
+      if (error1) { res.status(404).json({ message: `${error1}` }); return; }
       res.status(201).json(data1);
     });
   });

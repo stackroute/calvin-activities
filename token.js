@@ -4,13 +4,15 @@ const config = require('./config');
 
 const permissions = process.argv[2].split(',');
 
+const winston = require('./winston');
+
 const generateJWTToken = () => {
   const token = jwt.sign({ scopes: permissions },
     config.secretKey);
-  console.log(token);
+  winston.log('info', `token generated with permissions : ${permissions} \n\n${token}`);
   return token;
 };
 
-const myToken = generateJWTToken(permissions);
+generateJWTToken(permissions);
 
 module.exports = generateJWTToken;

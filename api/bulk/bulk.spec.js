@@ -18,18 +18,16 @@ const activityDao = require('../../dao').activity;
 
 const bulkDao = require('../../dao').bulk;
 
-describe('/follow api', () => {
-  let circles;
+describe('/getAllCircles API', () => {
   before(function (done) {
     for (let i=0; i<10; i += 1) {
       circleDao.createCircle(function (err, data) {
         if (err) { throw err; }
       });
     }
-    circles = circleDao.circles;
     setTimeout(() => {
       done();
-    }, 1000);
+    }, 500);
   });
   it('should return array of circles whose elements are from given range', function (done) {
     request(app)
