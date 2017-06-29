@@ -2,9 +2,6 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 const app = require('../../app');
 
-
-const expect = require('chai').expect;
-
 require('chai').should();
 
 const request = require('supertest');

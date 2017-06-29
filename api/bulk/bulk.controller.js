@@ -6,7 +6,8 @@ function getOpenMailboxes(req, res) {
   const count = req.params.count;
   bulkDao.getOpenMailboxes({ offset, count }, (err, users) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
-    if (users.length) { res.status(200).json({ users }); } else { res.status(404).json({ message: 'Not found' }); }
+    if (!users.length) { res.status(404).json({ message: 'Not found' }); return; }
+    res.status(200).json({ users });
   });
 }
 
@@ -15,7 +16,8 @@ function getAllCircles(req, res) {
   const count = req.params.count;
   bulkDao.getAllCircles({ offset, count }, (err, circles) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
-    if (circles.length) { res.status(200).json({ circles }); } else { res.status(404).json({ message: 'Not found' }); }
+    if (!circles.length) { res.status(404).json({ message: 'Not found' }); return; }
+    res.status(200).json({ circles });
   });
 }
 
@@ -29,7 +31,8 @@ function getAllFollowersOfACircle(req, res) {
 
     bulkDao.getAllFollowersOfACircle(circleId, { offset, count }, (err, followers) => {
       if (err) { res.status(404).json({ message: `${err}` }); return; }
-      if (followers.length) { res.status(200).json({ followers }); } else { res.status(404).json({ message: 'Not found' }); }
+      if (!followers.length) { res.status(404).json({ message: 'Not found' }); return; }
+      res.status(200).json({ followers });
     });
   });
 }
