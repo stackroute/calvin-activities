@@ -48,12 +48,14 @@
           format: "int64"
         - name: "Authorization"
           in: "header"
-          description: "Authentication key"
+          description: "Authentication Key"
           required: false
           type: "string"
         responses:
           200:
             description: Deletes a circle.
+          404:
+            description: circle does not exist.
     /mailbox:
       post:
         tags:
@@ -91,7 +93,9 @@
           type: "string"
         responses:
           200:
-            description: Deletes a mailbox.             
+            description: Deletes a mailbox. 
+          404: 
+            description: Mailbox does not exist.
     /mailbox/{mailboxId}/circle/{circleId}:
       post:
         tags:
@@ -102,6 +106,8 @@
         responses: 
           201: 
             description: Follow a circle. 
+          404: 
+            description: The mailbox or the circle does not Exist. 
         parameters:
         - name: "mailboxId"
           in: "path"
@@ -148,10 +154,12 @@
         responses:
           200:
             description: Unfollow a circle.
+          404: 
+            description: The mailbox or the circle does not Exist. 
     /circle/{circleId}/activity:
        post:
         tags:
-          - "Publish Activity API"
+          - "Publish API"
         summary: "Publish activity"
         produces: 
           - "application/json"
@@ -162,6 +170,8 @@
         responses: 
           201: 
             description: Published Activity. 
+          404: 
+            description: Circle does not exist. 
         parameters:
         - name: "circleId"
           in: "path"
@@ -186,7 +196,7 @@
           in: "header"
           description: "Authentication key"
           required: false
-          type: "string"
+          type: "string"    
     /mailbox/{mailboxId}/activity:
        get:
         tags:
@@ -197,6 +207,8 @@
         responses:
           200:
             description: Get Activity from Mailbox.
+          404:
+            description: Mailbox does not exist.
         parameters:
         - name: "mailboxId"
           in: "path"

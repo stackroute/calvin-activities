@@ -6,15 +6,15 @@ function follow(req, res) {
   const { circleId, mailboxId } = req.params;
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
-    if (err) { res.status(404).json(err); return; }
+    if (err) { res.status(404).json({ message: `${err}` }); return; }
     const isMailboxExists=doesMailboxExists;
 
     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
-      if (err1) { res.status(404).json(err1); return; }
+      if (err1) { res.status(404).json({ message: `${err1}` }); return; }
       const isCircleExists=doesCircleExists;
 
       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
-        if (err2) { res.status(404).json(err2); return; }
+        if (err2) { res.status(404).json({ message: `${err2}` }); return; }
         const isFollowExists=isExists;
         if (!isMailboxExists) {
           res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
@@ -42,15 +42,15 @@ function unfollow(req, res) {
   const { circleId, mailboxId } = req.params;
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
-    if (err) { res.status(404).json(err); return; }
+    if (err) { res.status(404).json({ message: `${err}` }); return; }
     const isMailboxExists=doesMailboxExists;
 
     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
-      if (err1) { res.status(404).json(err1); return; }
+      if (err1) { res.status(404).json({ message: `${err1}` }); return; }
       const isCircleExists=doesCircleExists;
 
       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
-        if (err2) { res.status(404).json(err2); return; }
+        if (err2) { res.status(404).json({ message: `${err2}` }); return; }
         const isFollowExists=isExists;
 
         if (!isMailboxExists) {
@@ -69,7 +69,7 @@ function unfollow(req, res) {
         }
 
         followDAO.deleteFollow({ circleId, mailboxId }, (err3, result) => {
-          if (err) { res.status(500).json({ message: `Error ${err3}` }); }
+          if (err) { res.status(500).json({ message: ` ${err3}` }); }
           res.status(200).json(result);
         });
       });
