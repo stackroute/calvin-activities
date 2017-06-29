@@ -47,14 +47,15 @@
           type: "string"
           format: "int64"
         - name: "Authorization"
-          description: "Authentication key"
+          in: "header"
+          description: "Authentication Key"
           required: false
           type: "string"
         responses:
           200:
             description: Deletes a circle.
-          404: 
-            description: Circle does not exist. 
+          404:
+            description: circle does not exist.
     /mailbox:
       post:
         tags:

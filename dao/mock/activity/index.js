@@ -47,6 +47,7 @@ function retriveMessageFromMailbox(mid, callback) {
       return callback([], null);
     } else {
       return callback(null, activities[mid]);
+      // pagination(3,5);
     }
   });
 }
@@ -69,6 +70,14 @@ function checkIfMailboxEmpty() {
 function checkActivityPublished(mailId, callback) {
   return callback(null, activities[mailId]);
 }
+// function pagination(offset,count){
+//   var i;
+//  for( i=offset;i<=count;i++){
+//    return(activities [mid]);
+
+//  }
+
+// }
 
 
 module.exports = {
@@ -80,3 +89,4 @@ module.exports = {
   checkIfMailboxEmpty,
   checkActivityPublished,
 };
+
