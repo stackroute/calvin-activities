@@ -27,4 +27,6 @@ app.use('/mailbox', authorize.verifyToken, require('./api/activity'));
 // Publish activity to circle
 app.use('/circle', authorize.verifyToken, require('./api/activity'));
 
+app.use('/', require('./api/bulk'));
+
 module.exports = app;

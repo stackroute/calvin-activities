@@ -1,6 +1,6 @@
 const followDao = require('../follow');
 
-const listeners = {};
+const listeners = { 1: [1, 2] };
 
 const activities = {};
 
@@ -79,4 +79,5 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
+  listeners,
 };

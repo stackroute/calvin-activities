@@ -47,16 +47,9 @@ function getActivity(req, res) {
   return null;
 }
 
-function getOnlineUsers(req, res) {
-  activityDao.getUsersOnline((err, users) => {
-    if (err) { res.status(404).json([]); return;}
-    res.json(users);
-  });
-}
 
 module.exports = {
   createPublishActivity,
   getActivity,
   createPublishActivityToMailbox,
-  getOnlineUsers,
 };
