@@ -2,21 +2,29 @@ const activityDAO = require('../../index').activity;
 const followDAO = require('../../index').follow;
 const circleDAO = require('../../index').circle;
 
-function getUsersOnline(pagination, callback) {
-  const users = (Object.keys(activityDAO.listeners)).slice(pagination.offset, (pagination.offset+pagination.count));
+function getUsersOnline(range, callback) {
+  const offset = parseInt(range.offset);
+  const count = parseInt(range.count);
+
+  const users = (Object.keys(activityDAO.listeners)).slice(offset, (offset+count));
   return callback(null, users);
 }
 
-function getAllCircles(pagination, callback) {
-  const circles = (circleDAO.circles).map(circle => circle.id);
-  const paginatedCircles = circles.slice(pagination.offset, (pagination.offset+pagination.count));
-  return callback(null, paginatedCircles);
+function getAllCircles(range, callback) {
+  const offset = parseInt(range.offset);
+  const count = parseInt(range.count);
+
+  const circles = (circleDAO.circles).map(circle => circle.id)
+    .slice(offset, (offset+count));
+  return callback(null, circles);
 }
 
-function getAllFollowersOfACircle(pagination, callback) {
-  const followers = (followDAO.followapi).filter(follow => follow.circleId === pagination.circleId)
+function getAllFollowersOfACircle(circleId, range, callback) {
+  const offset = parseInt(range.offset);
+  const count = parseInt(range.count);
+  const followers = (followDAO.followapi).filter(follow => follow.circleId === circleId)
     .map(filteredFollower => filteredFollower.mailboxId)
-    .slice(pagination.offset, (pagination.offset+pagination.count));
+    .slice(offset, (offset+count));
   callback(null, followers);
 }
 
