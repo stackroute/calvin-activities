@@ -76,7 +76,6 @@ function checkActivityPublished(mid, callback) {
   });
 }
 
-
 module.exports = {
   publishToMailbox,
   addListnerToMailbox,

@@ -26,4 +26,5 @@ module.exports = {
   addFollow,
   checkIfFollowExists,
   splitMailId,
+  followapi,
 };

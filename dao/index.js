@@ -16,4 +16,7 @@ module.exports = {
   get follow() {
     return require(`./${config.dao}/follow`);
   },
+  get bulk() {
+    return require(`./${config.dao}/bulk`);
+  },
 };
