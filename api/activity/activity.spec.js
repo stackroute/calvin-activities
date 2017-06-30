@@ -34,6 +34,12 @@ describe('/activity API', () => {
       });
     });
   });
+  afterEach((done) => {
+    circleDao.deleteCircle(circleId, (err, result) => {
+      if (err) { throw err; }
+    });
+    done();
+  });
 
 
   it(`should publish message to circle mailbox and its followers mailbox,

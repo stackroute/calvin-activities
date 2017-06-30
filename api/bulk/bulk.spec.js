@@ -49,7 +49,7 @@ describe('getOpenMailboxes API', () => {
 
     setTimeout(function () {
       done();
-    }, 1000);
+    }, 100);
   });
 
   afterEach((done) => {
@@ -66,8 +66,10 @@ describe('getOpenMailboxes API', () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err4, res) => {
-          (res.body).should.have.property('users');
-          (res.body.users).should.be.a('Array').with.lengthOf(3);
+          (res.body).should.have.property('users').a('object');
+          (res.body.users).should.have.property('record_count').a('number').equal(3);
+          (res.body.users).should.have.property('total_count').a('number').gt(1);
+          (res.body.users).should.have.property('records').a('Array').with.lengthOf(3);
           done();
         });
     });
@@ -79,8 +81,10 @@ describe('getOpenMailboxes API', () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err4, res) => {
-          (res.body).should.have.property('users');
-          (res.body.users).should.be.a('Array');
+          (res.body).should.have.property('users').a('object');
+          (res.body.users).should.have.property('record_count').a('number').gt(1);
+          (res.body.users).should.have.property('total_count').a('number').gt(1);
+          (res.body.users).should.have.property('records').a('Array').with.length.gt(3);
           done();
         });
     });
@@ -112,8 +116,10 @@ describe('/getAllCircles API', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err4, res) => {
-        (res.body).should.have.property('circles');
-        (res.body.circles).should.be.a('Array').with.lengthOf(3);
+        (res.body).should.have.property('circles').a('object');
+        (res.body.circles).should.have.property('record_count').a('number').equal(3);
+        (res.body.circles).should.have.property('total_count').a('number').equal(10);
+        (res.body.circles).should.have.property('records').a('Array').with.lengthOf(3);
         done();
       });
   });
@@ -124,8 +130,10 @@ describe('/getAllCircles API', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err4, res) => {
-        (res.body).should.have.property('circles');
-        (res.body.circles).should.be.a('Array').with.lengthOf(6);
+        (res.body).should.have.property('circles').a('object');
+        (res.body.circles).should.have.property('record_count').a('number').equal(5);
+        (res.body.circles).should.have.property('total_count').a('number').equal(10);
+        (res.body.circles).should.have.property('records').a('Array').with.lengthOf(5);
         done();
       });
   });
@@ -172,8 +180,10 @@ describe('/getAllFollowersOfACircle API', () => {
           .expect(200)
           .expect('Content-Type', /json/)
           .end((err4, res) => {
-            (res.body).should.have.property('followers');
-            (res.body.followers).should.be.a('Array').with.lengthOf(3);
+            (res.body).should.have.property('followers').a('object');
+            (res.body.followers).should.have.property('record_count').a('number').equal(3);
+            (res.body.followers).should.have.property('total_count').a('number').equal(10);
+            (res.body.followers).should.have.property('records').a('Array').with.lengthOf(3);
             done();
           });
       });

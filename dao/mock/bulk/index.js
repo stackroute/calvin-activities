@@ -6,25 +6,39 @@ function getOpenMailboxes(range, callback) {
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
   const users = (Object.keys(activityDAO.listeners)).slice(offset, (offset+count));
-  return callback(null, users);
+  const response = {
+    record_count: users.length,
+    total_count: Object.keys(activityDAO.listeners).length,
+    records: users,
+  };
+  return callback(null, response);
 }
 
 function getAllCircles(range, callback) {
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
-
   const circles = (circleDAO.circles).map(circle => circle.id)
     .slice(offset, (offset+count));
-  return callback(null, circles);
+  const response = {
+    record_count: circles.length,
+    total_count: (circleDAO.circles).length,
+    records: circles,
+  };
+  return callback(null, response);
 }
 
 function getAllFollowersOfACircle(circleId, range, callback) {
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
-  const followers = (followDAO.followapi).filter(follow => follow.circleId === circleId)
-    .map(filteredFollower => filteredFollower.mailboxId)
+  const followersObject = (followDAO.followapi).filter(follow => follow.circleId === circleId);
+  const followers = followersObject.map(filteredFollower => filteredFollower.mailboxId)
     .slice(offset, (offset+count));
-  callback(null, followers);
+  const response = {
+    record_count: followers.length,
+    total_count: followersObject.length,
+    records: followers,
+  };
+  callback(null, response);
 }
 
 module.exports = {

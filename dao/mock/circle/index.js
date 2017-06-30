@@ -7,6 +7,7 @@ const uuid = start.uuid;
 
 function createCircle(callback) {
   let circleMailbox;
+
   mailboxDao.createMailbox((err, newMailbox) => {
     circleMailbox = newMailbox.id;
   });
