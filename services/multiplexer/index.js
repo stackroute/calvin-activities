@@ -25,6 +25,5 @@ module.exports = {
   deleteMultiplexer,
   getAllMultiplexer,
   checkIfMultiplexerExists,
-
 };
 

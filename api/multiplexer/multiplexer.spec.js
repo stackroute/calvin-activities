@@ -40,7 +40,7 @@ describe('/multiplexer api', () => {
       });
   });
 
-  it('it should not add multiplexer if its already exists', (done) => {
+  it('it should not add multiplexer if it already exists', (done) => {
     multiplexerService.checkIfMultiplexerExists(mxId, (err, res) => {
       res.should.be.equal(1);
       request(app)
