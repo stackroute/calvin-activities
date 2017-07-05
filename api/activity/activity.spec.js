@@ -14,9 +14,7 @@ const activityDao = require('../../dao').activity;
 
 const authorize = require('../../authorize');
 
-// CHANGEME: Describe test cases for "publish to circle" and "publish to mailbox"
 describe('/activity API', () => {
-  // TODO: Pre assertion should be put inside before block
   let circleId;
   let mailboxId;
   let token;
@@ -35,6 +33,12 @@ describe('/activity API', () => {
         });
       });
     });
+  });
+  afterEach((done) => {
+    circleDao.deleteCircle(circleId, (err, result) => {
+      if (err) { throw err; }
+    });
+    done();
   });
 
 
