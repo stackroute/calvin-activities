@@ -14,7 +14,6 @@ const redisClient = redis.createClient({
   database: 1,
 });
 
-producer.on('ready', () => {
   consumer.on('message', (message) => {
     const key = `${config.l1Namespace}:${JSON.parse(message.value).circleID}`;
     const msg = JSON.parse(message.value).message;
@@ -32,5 +31,4 @@ producer.on('ready', () => {
       });
     });
   });
-});
 
