@@ -30,4 +30,7 @@ app.use('/circle', authorize.verifyToken, require('./api/activity'));
 // Multiplexer
 app.use('/multiplexer', require('./api/multiplexer'));
 
+//Routes
+app.use('/routes', require('./api/routes'));
+
 module.exports = app;
