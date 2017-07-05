@@ -6,11 +6,11 @@ const thunk = require('thunks')();
 
 const client = redis.createClient();
 
-function checkIfrouteExists(route, callback) {
-  // const multiplexerId = parseInt(route.multiplexerId);
+function checkIfRouteExists(route, callback) {
+  const multiplexerId = (route.multiplexerId).toString();
   client.smembers(`L1R:${route.circleId}`)(function(err, res){
     if (err) { callback(err, null); return; }
-    const doesExists = res.filter(data => data == route.multiplexerId);
+    const doesExists = res.filter(data => data == multiplexerId);
     callback(null, doesExists.length !== 0);
   });
 }
@@ -29,10 +29,10 @@ function getRoutesList(callback) {
   });
 }
 
-function checkIfCircleIdPresentinCache(route, callback) {
+function checkIfCircleIsPresentinCache(route, callback) {
   client.exists(`L1R:${route.circleId}`)(function(err, res){
     if (err) { callback(err, null); return; }
-    return callback(null, res.length !== 0);
+    return callback(null, res);
   });
 }
 
@@ -55,6 +55,6 @@ module.exports = {
   getRoutesForCircle,
   getRoutesList,
   deleteRoute,
-  checkIfCircleIdPresentinCache,
-  checkIfrouteExists,
+  checkIfCircleIsPresentinCache,
+  checkIfRouteExists,
 };

@@ -7,7 +7,7 @@ function addRoute(req, res) {
     circleId: req.params.circleId,
     multiplexerId: req.params.multiplexerId,
   };
-  l1rService.checkIfrouteExists(newRoute, (err, result) => {
+  l1rService.checkIfRouteExists(newRoute, (err, result) => {
     if (err) { res.status(500).json({ message: err }); return; }
     if (result) {
       res.status(409).json({ message: `Route between circle with id ${newRoute.circleId} and multiplexer with id ${newRoute.multiplexerId} already exists` });
@@ -32,7 +32,7 @@ function getRoutesForCircle(req, res) {
     circleId: req.params.circleId,
   };
 
-  l1rService.checkIfCircleIdPresentinCache(circle, (err, result) => {
+  l1rService.checkIfCircleIsPresentinCache(circle, (err, result) => {
     if (err) { res.status(500).json({ message: err }); return; }
     if (!result) {
       res.status(404).json({ message: `Route for circle with id ${circle.circleId} does not exists` });
@@ -50,7 +50,7 @@ function deleteRoute(req, res) {
     circleId: req.params.circleId,
     multiplexerId: req.params.multiplexerId,
   };
-  l1rService.checkIfCircleIdPresentinCache(route, (err, result) => {
+  l1rService.checkIfCircleIsPresentinCache(route, (err, result) => {
     if (err) { res.status(500).json({ message: err }); return; }
     if (!result) {
       res.status(404).json({ message: `Route for circle with id ${route.circleId} does not exists` });
