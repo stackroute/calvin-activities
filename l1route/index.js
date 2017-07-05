@@ -8,8 +8,6 @@ const consumer = kafka.consumer;
 
 const redis = require('thunk-redis');
 
-const thunk = require('thunks')();
-
 const redisClient = redis.createClient({
   database: 1,
 });
