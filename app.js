@@ -33,4 +33,6 @@ app.use('/multiplexer', require('./api/multiplexer'));
 //Routes
 app.use('/routes', require('./api/routes'));
 
+app.use('/l1route', require('./api/l1r'));
+
 module.exports = app;
