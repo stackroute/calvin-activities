@@ -8,7 +8,8 @@
     "test": "npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
-    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
+    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'",
+    "service":"./node_modules/.bin/mocha **/l1r/l1r.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "swagger-ui-express": "^2.0.0",
     "thunk": "0.0.1",
     "thunk-redis": "^2.1.2",
+    "thunks": "^4.8.0",
     "uuid": "^3.0.1",
     "winston": "^2.3.1"
   },

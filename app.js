@@ -28,4 +28,5 @@ app.use('/mailbox', authorize.verifyToken, require('./api/activity'));
 app.use('/circle', authorize.verifyToken, require('./api/activity'));
 
 app.use('/l1route', require('./api/l1r'));
+
 module.exports = app;
