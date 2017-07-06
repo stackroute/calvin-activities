@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node start",
-    "test": "npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
+    "test": "npm run eslint && npm run yamllint && DAO=mock nyc ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
     "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
@@ -35,6 +35,7 @@
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-mocha": "^4.9.0",
     "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
     "supertest": "^3.0.0",
     "yaml-lint": "^0.0.4"
   }

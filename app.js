@@ -29,6 +29,8 @@ app.use('/circle', authorize.verifyToken, require('./api/activity'));
 
 app.use('/l1route', require('./api/l1r'));
 
+// app.use('/multiplxerrouter', require('./api/multiplexer_routes'));
+
 app.use('/', require('./api/bulk'));
 
 module.exports = app;
