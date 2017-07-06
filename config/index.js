@@ -17,4 +17,8 @@ module.exports = {
       fromOffset: true,
     },
   },
+  dao: process.env.DAO || 'mock',
+  namespace: 'L1R',
+  namespacemul: 'multiplexer',
+  namespaceroutemanager: 'routesmanager',
 };

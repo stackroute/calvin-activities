@@ -14,10 +14,6 @@ function checkIfMultiplexerExists(mx, callback) {
   client.hexists(`${namespace}`, mx)((err, res) => callback(null, res));
 }
 
-function deleteMultiplexer(mx, callback) {
-  client.hdel(`${namespace}`, mx, 0)((err, res) => callback(null, res));
-}
-
 function getAllMultiplexer(callback) {
   client.hgetall(`${namespace}`)((err, res) => callback(null, res));
 }
@@ -33,7 +29,6 @@ function deleteMultiplexer(mx, callback) {
 
 module.exports = {
   createMultiplexer,
-  deleteMultiplexer,
   getAllMultiplexer,
   checkIfMultiplexerExists,
   addMultiplexer,
