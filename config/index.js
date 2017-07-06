@@ -17,20 +17,10 @@ module.exports = {
             "fromOffset" : true
         }
   },
-//   redis:{
-
-//   },
-//   mxdCachePrefix: "notifications",
+  // redis:{
+  //      mxdCachePrefix: "notifications",
+  //  },
+  
 //   l1rCachePrefix: "L1R",
 
  };
-
-// {
-//     "connectionString" : "localhost:2181",
-//     "clientId" : "kafka-node-client",
-//     "topics" : { "topic": "activity", "partition": 0 , "offset" : 7  },
-//     "options" : {
-//             "autoCommit": false,
-//             "fromOffset" : true
-//         }
-// }
