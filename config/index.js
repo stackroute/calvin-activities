@@ -11,11 +11,15 @@ module.exports = {
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'M1D', partition: 0, offset: 0 },
+    topics: { topic: ['activities','M1','M1D'], partition: 0, offset: 0 },
     options: {
       autoCommit: false,
       fromOffset: true,
     },
+  },
+  redis: {
+    host:'127.0.0.1',
+    port:'6379',
   },
   dao: process.env.DAO || 'mock',
   namespace: 'L1R',

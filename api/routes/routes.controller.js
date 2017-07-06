@@ -37,7 +37,6 @@ function createRoute(req, res) {
   });
 }
 
-
 function deleteRoute(req, res) {
   const circleId = req.params.circleId;
   const userId = req.params.userId;
