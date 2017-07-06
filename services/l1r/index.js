@@ -17,7 +17,6 @@ function addRoute(route, callback) {
   client.sadd(`${namespace}${route.circleId}`, route.multiplexerId)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
-    console.log("l1e");
   });
 }
 

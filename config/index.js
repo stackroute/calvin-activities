@@ -11,4 +11,5 @@ module.exports = {
   dao: process.env.DAO || 'mock',
   namespace: 'L1R',
   namespacemul: 'multiplexer',
+  namespaceroutemanaget: 'routesmanager',
 };

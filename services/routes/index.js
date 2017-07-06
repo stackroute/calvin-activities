@@ -6,6 +6,8 @@ const client = redis.createClient();
 
 const multiplexerService = require('../multiplexer/');
 
+const namespace = require('../../config').namespaceroutemanager;
+
 function getMultiplexerStatus(callback){
   multiplexerService.getAllMultiplexer((err, result) => {
     var a = [];
@@ -16,18 +18,23 @@ function getMultiplexerStatus(callback){
       return a[1] - b[1];
     });
     let z = a[0][0];
-    console.log(z);
     callback(null, z);
   })
 }
 
 function createRoute(circleId, userId, callback) {
-  client.sadd('routesmanager', circleId, userId)(function (err, res) {
+  client.sadd(`${namespace}`, circleId, userId)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
 }
 
+function deleteRoute(circleId, userId, callback) {
+  client.srem(`${namespace}`, circleId, userId)(function (err, res) {
+    if (err) { callback(err, null); return; }
+    callback(null, res);
+  });
+}
 
 module.exports = {
   createRoute,

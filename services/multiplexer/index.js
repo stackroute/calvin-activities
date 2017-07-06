@@ -22,15 +22,21 @@ function getAllMultiplexer(callback) {
   client.hgetall(`${namespace}`)((err, res) => callback(null, res));
 }
 
-function addMultiplexer(mx, callback){
-  console.log("mx" + mx);
-  client.hincrby(`${namespace}`,mx,1)((err, res) => callback(null, res));
+function addMultiplexer(mx, callback) {
+  client.hincrby(`${namespace}`, mx, 1)((err, res) => callback(null, res));
 }
+
+function deleteMultiplexer(mx, callback) {
+  client.hincrby(`${namespace}`, mx, -1)((err, res) => callback(null, res));
+}
+
+
 module.exports = {
   createMultiplexer,
   deleteMultiplexer,
   getAllMultiplexer,
   checkIfMultiplexerExists,
   addMultiplexer,
+  deleteMultiplexer,
 };
 
