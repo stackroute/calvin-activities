@@ -1,7 +1,9 @@
+const express = require('express');
+// require('c')
+
 const redis = require('thunk-redis');
 
 const client = redis.createClient();
-
 
 function add(mx, payload, callback) {
   client.hmset('Notification', mx, JSON.stringify(payload))((err, res) => callback(null, res));
@@ -10,5 +12,5 @@ function add(mx, payload, callback) {
 
 module.exports = {
 
-  client, add,
+  add,
 };

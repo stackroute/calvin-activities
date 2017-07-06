@@ -1,6 +1,5 @@
 const kafka = require('kafka-node');
 
-// const client = require('./db').client;
 const kafkaClient = require('../client/kafkaclient');
 
 const Producer = kafka.Producer;
@@ -9,9 +8,8 @@ const producer = new Producer(kafkaClient.client);
 
 
 producer.on('ready', () => {
-  producer.createTopics(['testingKafka'], true, (err, data) => {
-    if (err) { console.log(err); }
-    console.log(data);
+  producer.createTopics(['M1D'], true, (err, data) => {
+
   });
 });
 
