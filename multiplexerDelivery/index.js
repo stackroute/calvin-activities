@@ -10,12 +10,13 @@ const mailboxDAO = require('../dao').mailbox;
 
 
 kafkaClient.consumer.on('message', (message) => {
-  const receiver ='0b8ce7ad-8cac-4f59-92bc-e373330fe146';
+  const receiver =JSON.parse(message.value).mailboxId;
   const newActivity = {
-    message: message.value,
+    message: JSON.parse(message.value).payload,
+    
     timestamp: new Date(),
   };
-
+//console.log(typeof(message));
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
     if (!mailboxExists) { console.log('Mailbox Id does not exists'); return; }
     activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
