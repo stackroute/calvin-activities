@@ -1,6 +1,6 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 
-const client = require('../../redis-client').client;
+const client = require('../../client/redisclient').client;
 
 const namespace = require('../../config').namespace;
 
