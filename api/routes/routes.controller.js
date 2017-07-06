@@ -3,13 +3,12 @@ const routesService = require('../../services/routes');
 const multiplexerService = require('../../services/multiplexer');
 
 
-
 function createRoute(req, res) {
-    routesService.createRoute(req.params.circleId, req.params.userId, (err, result) => {
-        console.log(`result of createRoute:${result}`);
-        if (err) { res.status(500).send({ message: `${err}` }); return; }
-         res.send({ message:`${result}`}); 
-    });
+  routesService.createRoute(req.params.circleId, req.params.userId, (err, result) => {
+    console.log(`result of createRoute:${result}`);
+    if (err) { res.status(500).send({ message: `${err}` }); return; }
+    res.send({ message: `${result}` });
+  });
 }
 
 
@@ -29,5 +28,5 @@ multiplexerService.getAllMultiplexer((err, result) => {
 // }
 
 module.exports = {
- createRoute,   
-}
+  createRoute,
+};

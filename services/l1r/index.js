@@ -1,52 +1,50 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 
-const redis = require('thunk-redis');
+const client = require('../../redis-client').client;
 
-const thunk = require('thunks')();
+const namespace = require('../../config').namespace;
 
-const client = redis.createClient();
-
-function checkIfrouteExists(route, callback) {
-  // const multiplexerId = parseInt(route.multiplexerId);
-  client.smembers(`L1R:${route.circleId}`)(function(err, res){
+function checkIfRouteExists(route, callback) {
+  const multiplexerId = (route.multiplexerId).toString();
+  client.smembers(`${namespace}${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
-    const doesExists = res.filter(data => data == route.multiplexerId);
+    const doesExists = res.filter(data => data === multiplexerId);
     callback(null, doesExists.length !== 0);
   });
 }
 
 function addRoute(route, callback) {
-  client.sadd(`L1R:${route.circleId}`, route.multiplexerId)(function(err, res){
+  client.sadd(`${namespace}${route.circleId}`, route.multiplexerId)(function (err, res) {
     if (err) { callback(err, null); return; }
-    return callback(null, res);
+    callback(null, res);
   });
 }
 
 function getRoutesList(callback) {
-  client.keys('L1R:*')((err, res) => {
+  client.keys(`${namespace}*`)((err, res) => {
     if (err) { callback(err, null); return; }
-    return callback(null, res);
+    callback(null, res);
   });
 }
 
-function checkIfCircleIdPresentinCache(route, callback) {
-  client.exists(`L1R:${route.circleId}`)(function(err, res){
+function checkIfCircleIsPresentinCache(route, callback) {
+  client.exists(`${namespace}${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
-    return callback(null, res.length !== 0);
+    callback(null, res);
   });
 }
 
 function getRoutesForCircle(route, callback) {
-  client.smembers(`L1R:${route.circleId}`)(function(err, res){
+  client.smembers(`${namespace}${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
-    return callback(null, res);
+    callback(null, res);
   });
 }
 
 function deleteRoute(route, callback) {
-  client.srem(`L1R:${route.circleId}`, route.multiplexerId)((err, res) => {
+  client.srem(`${namespace}${route.circleId}`, route.multiplexerId)((err, res) => {
     if (err) { callback(err, null); return; }
-    return callback(null, res);
+    callback(null, res);
   });
 }
 
@@ -55,6 +53,6 @@ module.exports = {
   getRoutesForCircle,
   getRoutesList,
   deleteRoute,
-  checkIfCircleIdPresentinCache,
-  checkIfrouteExists,
+  checkIfCircleIsPresentinCache,
+  checkIfRouteExists,
 };
