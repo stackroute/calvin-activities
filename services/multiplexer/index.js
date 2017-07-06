@@ -19,7 +19,9 @@ function deleteMultiplexer(mx, callback) {
 function getAllMultiplexer(callback) {
   client.hgetall('multiplexer')((err, res) => callback(null, res));
 }
-
+function sortAllMultiplexer(callback){
+  
+}
 module.exports = {
   createMultiplexer,
   deleteMultiplexer,

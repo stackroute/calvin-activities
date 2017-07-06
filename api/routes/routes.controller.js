@@ -1,5 +1,7 @@
 const routesService = require('../../services/routes');
 
+const multiplexerService = require('../../services/multiplexer');
+
 
 
 function createRoute(req, res) {
@@ -10,6 +12,14 @@ function createRoute(req, res) {
     });
 }
 
+
+multiplexerService.getAllMultiplexer((err, result) => {
+    console.log([result]);
+      console.log([result.m1]);
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    res.status(201).json(result);
+
+    
 // function deleteRoute() {
 
 // }
