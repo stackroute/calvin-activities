@@ -11,10 +11,12 @@ const namespace = require('../../config').namespaceroutemanager;
 function getMultiplexerStatus(callback) {
   multiplexerService.getAllMultiplexer((err, result) => {
     const a = [];
-    for (const x in result) {
-      a.push([x, result[x]]);
+    if (Object.prototype.hasOwnProperty) {
+      for (const x in result) {
+        if (x !== null) { a.push([x, result[x]]); }
+      }
     }
-    a.sort((a, b) => a[1] - b[1]);
+    a.sort((a1, b1) => a1[1] - b1[1]);
     const z = a[0][0];
     callback(null, z);
   });
