@@ -1,5 +1,5 @@
 
-//const redisClient = require('../client/redisclient').client;
+// const redisClient = require('../client/redisclient').client;
 
 const kafka = require('kafka-node');
 
@@ -30,20 +30,19 @@ consumer.on('message', (message) => {
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
-  redisClient.smembers(`${message.topic}:${circleId}`)(function(err, result){
+  redisClient.smembers(`${message.topic}:${circleId}`)((err, result) => {
     followers = result;
-    let arr = [];
-    followers.forEach( (data) => {
+    const arr = [];
+    followers.forEach((data) => {
       const newActivity = {
-      payload: JSON.parse(message.value),
-      mailboxId: data,
-  };
-    arr.push({ topic: 'M1D', messages: [JSON.stringify(newActivity)] });
+        payload: JSON.parse(message.value),
+        mailboxId: data,
+      };
+      arr.push({ topic: 'M1D', messages: [JSON.stringify(newActivity)] });
     });
-  producer.send(arr, (err, data) => {
+    producer.send(arr, (error, data) => {
       // console.log(data);
     });
   });
 });
 
-  
