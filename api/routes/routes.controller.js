@@ -2,23 +2,34 @@ const routesService = require('../../services/routes');
 
 const multiplexerService = require('../../services/multiplexer');
 
+const l1rService = require('../../services/l1r');
+
+const namespace = require('../../config').namespace;
+
 
 function createRoute(req, res) {
   routesService.createRoute(req.params.circleId, req.params.userId, (err, result) => {
-    console.log(`result of createRoute:${result}`);
-    if (err) { res.status(500).send({ message: `${err}` }); return; }
-    res.send({ message: `${result}` });
+    if (err) { res.status(500).send({ message: `${err}` }); return; } 
+    routesService.getMultiplexerStatus((err, res1) => {
+      const route = {
+        circleId : req.params.circleId,
+        multiplexerId : res1,
+      };
+      l1rService.addRoute(route,(err, res2) => {
+        if(err) { throw err;  return }; 
+        multiplexerService.addMultiplexer(res1, (err,res3) => {
+          if(err) {throw err; return };
+          res.status(201).json({message:"done"});
+        });
+      });
+        //  res.status(201).json({message:res1});
+    });
+    // }
   });
-}
+
+    }
 
 
-multiplexerService.getAllMultiplexer((err, result) => {
-    console.log([result]);
-      console.log([result.m1]);
-    if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json(result);
-
-    
 // function deleteRoute() {
 
 // }
@@ -26,6 +37,7 @@ multiplexerService.getAllMultiplexer((err, result) => {
 // function getAllRoutes() {
 
 // }
+
 
 module.exports = {
   createRoute,

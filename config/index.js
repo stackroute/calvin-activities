@@ -10,4 +10,5 @@ module.exports = {
   secretKey: secret,
   dao: process.env.DAO || 'mock',
   namespace: 'L1R',
+  namespacemul: 'multiplexer',
 };
