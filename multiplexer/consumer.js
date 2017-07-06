@@ -22,8 +22,8 @@ const consumer = new Consumer(
   ],
   {
     autoCommit: false,
-    fromOffset: true
-  }
+    fromOffset: true,
+  },
 );
 
 consumer.on('message', (message) => {

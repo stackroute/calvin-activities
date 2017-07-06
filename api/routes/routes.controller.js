@@ -18,18 +18,18 @@ function createRoute(req, res) {
         multiplexerId: res1,
       };
       l1rService.addRoute(route, (err, res2) => {
-        if (err) { throw err; return };
+        if (err) { throw err; }
         multiplexerService.addMultiplexer(res1, (err, res3) => {
-          if (err) { throw err; return };
+          if (err) { throw err; }
           const route1 = {
             namespace: res1,
             circleId: req.params.circleId,
-            mailboxId: req.params.userId
-          }
+            mailboxId: req.params.userId,
+          };
           multiplexerRouteService.addRoute(route1, (err, res4) => {
-            if (err) { throw err; return };
-          })
-          res.status(201).json({ message: "Routes added" });
+            if (err) { throw err; }
+          });
+          res.status(201).json({ message: 'Routes added' });
         });
       });
     });
@@ -37,8 +37,8 @@ function createRoute(req, res) {
 }
 
 
-function deleteRoute(req,res) {
-routesService.createRoute(req.params.circleId, req.params.userId, (err, result) => {
+function deleteRoute(req, res) {
+  routesService.createRoute(req.params.circleId, req.params.userId, (err, result) => {
     if (err) { res.status(500).send({ message: `${err}` }); return; }
     routesService.getMultiplexerStatus((err, res1) => {
       const route = {
@@ -46,18 +46,18 @@ routesService.createRoute(req.params.circleId, req.params.userId, (err, result) 
         multiplexerId: res1,
       };
       l1rService.addRoute(route, (err, res2) => {
-        if (err) { throw err; return };
+        if (err) { throw err; }
         multiplexerService.addMultiplexer(res1, (err, res3) => {
-          if (err) { throw err; return };
+          if (err) { throw err; }
           const route1 = {
             namespace: res1,
             circleId: req.params.circleId,
-            mailboxId: req.params.userId
-          }
+            mailboxId: req.params.userId,
+          };
           multiplexerRouteService.addRoute(route1, (err, res4) => {
-            if (err) { throw err; return };
-          })
-          res.status(201).json({ message: "Routes added" });
+            if (err) { throw err; }
+          });
+          res.status(201).json({ message: 'Routes added' });
         });
       });
     });

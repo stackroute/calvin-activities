@@ -19,10 +19,9 @@ function deleteMultiplexer(req, res) {
 function getAllMultiplexer(req, res) {
   multiplexerService.getAllMultiplexer((err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-  res.status(201).json(result);
+    res.status(201).json(result);
   });
 }
-
 
 
 module.exports = {
