@@ -24,7 +24,7 @@ const producer = new Producer(kafkaClient.client);
 // };
 const msg1 = {
         "payload":{
-            "name":"The new test program"
+            "name":"KafkaTesting"
         },
         "mailboxId": "0b8ce7ad-8cac-4f59-92bc-e373330fe146"
     };
@@ -35,7 +35,7 @@ const msg1 = {
         "mailboxId": "0b8ce7ad-8cac-4f59-92bc-e373330fe146"
         };
 const payloads = [
-  { topic: "testing", messages: JSON.stringify(msg1)},
+  { topic: "testingKafka", messages: JSON.stringify(msg1)},
   // { topic: 'topic', messages: [msg1, msg2], partition: 0 },
 
 ];

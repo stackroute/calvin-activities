@@ -9,7 +9,7 @@ const producer = new Producer(kafkaClient.client);
 
 
 producer.on('ready', () => {
-  producer.createTopics(['testing'], true, (err, data) => {
+  producer.createTopics(['testingKafka'], true, (err, data) => {
     if (err) { console.log(err); }
     console.log(data);
   });

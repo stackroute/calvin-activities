@@ -38,6 +38,8 @@ function createPublishActivityToMailbox(req, res) {
 
 function getActivity(req, res) {
   const mailId = req.params.mailboxId;
+  //  const offset = req.params.offset;
+  // const count = req.params.count;
   activityDao.retriveMessageFromMailbox(mailId, (err, result) => {
     if (err) {
       res.status(404).json([]); return;
