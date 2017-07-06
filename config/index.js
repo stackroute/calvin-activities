@@ -6,7 +6,6 @@ module.exports = {
     contact: '127.0.0.1',
     port: '9042',
   },
-
   secretKey: secret,
   dao: process.env.DAO || 'cassandra',
   kafka: {
@@ -18,24 +17,4 @@ module.exports = {
       fromOffset: true,
     },
   },
-<<<<<<< HEAD
  };
-=======
-//   redis:{
-
-//   },
-//   mxdCachePrefix: "notifications",
-//   l1rCachePrefix: "L1R",
-
-};
-
-// {
-//     "connectionString" : "localhost:2181",
-//     "clientId" : "kafka-node-client",
-//     "topics" : { "topic": "activity", "partition": 0 , "offset" : 7  },
-//     "options" : {
-//             "autoCommit": false,
-//             "fromOffset" : true
-//         }
-// }
->>>>>>> 25fc2217c3baf8f05f57aa24c9937eebbfd3b688
