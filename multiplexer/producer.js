@@ -1,22 +1,21 @@
 const kafka = require('kafka-node');
 
-const redisClient = require('../client/redisclient');
+// const redisClient = require('../client/redisclient');
 
-const express = require('express');
 
-const redis = require('thunk-redis');
+// const redis = require('thunk-redis');
 
-const client = redis.createClient();
+// const client = redis.createClient();
 
-Producer = kafka.Producer;
-KeyedMessage = kafka.KeyedMessage;
-Client = new kafka.Client();
-producer = new Producer(Client);
+const Producer = kafka.Producer;
+// const KeyedMessage = kafka.KeyedMessage;
+const Client = new kafka.Client();
+const producer = new Producer(Client);
 
 const msg = {
-  payload:{
+  payload: {
     name: 'ABC',
-    activity:'third user added '
+    activity: 'fifth user added ',
   },
   circleId: 'C1',
 };

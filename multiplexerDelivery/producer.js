@@ -5,7 +5,7 @@ const kafka = require('kafka-node');
 const kafkaClient = require('../client/kafkaclient');
 
 const Producer = kafka.Producer;
-const KeyedMessage = kafka.KeyedMessage;
+// const KeyedMessage = kafka.KeyedMessage;
 
 const producer = new Producer(kafkaClient.client);
 // km = new KeyedMessage('key', 'message'),
@@ -28,12 +28,7 @@ const msg1 = {
   },
   mailboxId: '0b8ce7ad-8cac-4f59-92bc-e373330fe146',
 };
-const msg2 = {
-  payload: {
-    name: 'abc',
-  },
-  mailboxId: '0b8ce7ad-8cac-4f59-92bc-e373330fe146',
-};
+
 const payloads = [
   { topic: 'testingKafka', messages: JSON.stringify(msg1) },
   // { topic: 'topic', messages: [msg1, msg2], partition: 0 },
@@ -41,7 +36,7 @@ const payloads = [
 ];
 producer.on('ready', () => {
   producer.send(payloads, (err, data) => {
-    console.log(data);
+    // console.log(data);
   });
 });
 
