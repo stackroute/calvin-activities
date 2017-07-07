@@ -7,6 +7,7 @@ const uuid = start.uuid;
 
 function createCircle(callback) {
   let circleMailbox;
+
   mailboxDao.createMailbox((err, newMailbox) => {
     circleMailbox = newMailbox.id;
   });
@@ -30,6 +31,10 @@ function deleteCircle(circleId, callback) {
   circles.splice(circles.indexOf(filter[0]), 1);
   return callback(null, filter[0]);
 }
+
 module.exports = {
-  createCircle, deleteCircle, checkIfCircleExists,
+  createCircle,
+  deleteCircle,
+  checkIfCircleExists,
+  circles,
 };

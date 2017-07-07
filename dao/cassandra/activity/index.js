@@ -1,5 +1,5 @@
 const followDao = require('../follow');
-
+const kafkaClient = require('../../../kafka');
 const start=require('../../../db');
 
 const listeners = {};
@@ -17,22 +17,17 @@ function publishToMailbox(mid, activity, callback) {
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
     if (err) { return callback(err); }
-    publishActivityToListeners(mid, activity);
+    // publishActivityToListeners(mid, activity);
     return callback(err, activity);
   });
 }
 
 function createPublishActivity(mid, activity, callback) {
-  publishToMailbox(mid, activity, (error, result) => {
-    followDao.splitMailId(mid, (error1, followersMailboxId) => {
-      followersMailboxId.forEach((follower) => {
-        publishToMailbox(mid, activity, (err, data) => {
-          if (err) { callback(err, null); }
-        });
-      });
-    });
-    return callback(null, activity);
-  });
+  const msg = {};
+  msg.payload = activity;
+  msg.payload.requestedAt = new Date();
+  msg.circleId = mid;
+  kafkaClient.addActivity(msg, (err, data) => callback(err, data));
 }
 
 function checkIfMailboxExists(mid, callback) {
@@ -75,7 +70,6 @@ function checkActivityPublished(mid, callback) {
     return callback(null, result.rows);
   });
 }
-
 
 module.exports = {
   publishToMailbox,

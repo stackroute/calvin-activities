@@ -1,6 +1,6 @@
 const followDao = require('../follow');
 
-const listeners = {};
+const listeners = { };
 
 const activities = {};
 
@@ -39,6 +39,10 @@ function checkIfMailboxExists(mid, callback) {
   if (!filterMailId) { return callback(null, false); }
   return callback(null, filterMailId);
 }
+// function checkIfCircleExists(circleId, callback) {
+//   const filterCircle = circles.filter(circle => circle.id === circleId);
+//   callback(null, filterCircle.length!==0);
+// }
 
 function retriveMessageFromMailbox(mid, callback) {
   checkIfMailboxExists(mid, (err, MailIdExists) => {
@@ -46,12 +50,23 @@ function retriveMessageFromMailbox(mid, callback) {
     if (MailIdExists === false) {
       return callback([], null);
     } else {
-      return callback(null, activities[mid]);
-      // pagination(3,5);
+      const newAct = activities[mid];
+      //  const offset = parseInt(range.offset);
+      // const count = parseInt(range.count);
+      // console.log(new_Act);
+      let i;
+      const offset=0;
+      const count=5;
+      const msg = [];
+      for (i=offset; i<=count; i += 1) {
+        // console.log(new_Act[i])
+        msg.push(newAct[i]);
+      }
+
+      return callback(null, msg);
     }
   });
 }
-
 function addListnerToMailbox(mid, socket) {
   if (!listeners[mid]) { listeners[mid] = []; }
   listeners[mid].unshift(socket);
@@ -70,14 +85,6 @@ function checkIfMailboxEmpty() {
 function checkActivityPublished(mailId, callback) {
   return callback(null, activities[mailId]);
 }
-// function pagination(offset,count){
-//   var i;
-//  for( i=offset;i<=count;i++){
-//    return(activities [mid]);
-
-//  }
-
-// }
 
 
 module.exports = {
@@ -88,5 +95,6 @@ module.exports = {
   retriveMessageFromMailbox,
   checkIfMailboxEmpty,
   checkActivityPublished,
+  listeners,
 };
 
