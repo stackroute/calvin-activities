@@ -3,6 +3,7 @@ const redisClient = require('../client/redisclient').client;
 
 const topic =require('../config').kafka.topics.topic;
 
+console.log(topic);
 const kafkaClient = require('../client/kafkaclient');
 
 const consumer = kafkaClient.consumer;
@@ -10,6 +11,7 @@ const consumer = kafkaClient.consumer;
 const producer = kafkaClient.producer;
 
 consumer.on('message', (message) => {
+  console.log(message);
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
