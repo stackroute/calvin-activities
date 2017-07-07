@@ -12,8 +12,8 @@ const consumer = kafkaClient.consumer;
 
 consumer.on('message', (message) => {
   redis.incr(`${topic}:count`);
-  const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
-  const msg = JSON.parse(message.value).message;
+  const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleId}`;
+  const msg = JSON.parse(message.value).payload;
   redis.client.info('server')(function (error, res) {
     return this.select(0);
   })(function (error, res) {
@@ -21,7 +21,7 @@ consumer.on('message', (message) => {
   })((error, res) => {
     const payloads =[];
     res.forEach((element) => {
-      payloads.push({ topic: element, messages: [JSON.stringify(msg)] });
+      payloads.push({ topic: element, messages: [message.value] });
     });
     producer.send(payloads, (err, data) => {
       console.log(data);

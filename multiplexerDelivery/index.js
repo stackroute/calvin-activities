@@ -10,11 +10,10 @@ const activityDao = require('../dao').activity;
 const mailboxDAO = require('../dao').mailbox;
 
 const consumer = kafkaClient.consumer;
-redisClient.incr(`${topic}:count`);
 consumer.on('message', (message) => {
   const receiver =JSON.parse(message.value).mailboxId;
   const newActivity = {
-    message: JSON.parse(message.value).payload,
+    payload: JSON.parse(message.value).payload,
 
     timestamp: new Date(),
   };
@@ -25,7 +24,7 @@ consumer.on('message', (message) => {
       if (error1) { ({ message: `${error1}` }); return; }
 
       redisClient.add(receiver, newActivity.message, (err, data2) => {
-        if (error1) { ({ message: `${error1}` }); }
+        if (err) { ({ message: `${err}` }); }
       });
     });
   });

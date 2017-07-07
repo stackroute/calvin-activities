@@ -14,14 +14,12 @@ consumer.on('message', (message) => {
   const circleId = activity.circleId;
   let followers;
   redisClient.incr(`${topic}:count`);
-  redisClient.smembers(`${message.topic}:${circleId}`)((err, result) => {
+  redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
     followers = result;
     const arr = [];
     followers.forEach((data) => {
-      const newActivity = {
-        payload: JSON.parse(message.value),
-        mailboxId: data,
-      };
+      const newActivity = activity;
+      newActivity.mailboxId = data;
       arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
     });
     producer.send(arr, (error, data) => {
