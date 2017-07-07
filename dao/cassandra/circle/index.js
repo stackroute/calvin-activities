@@ -7,6 +7,7 @@ function createCircle(callback) {
   const newCircle = {
     id: uuid().toString(),
   };
+  console.log('inside cassandra');
   const query = ('INSERT INTO circle (id) values( ? )');
   client.execute(query, [newCircle.id], (err, result) => {
     if (err) { return callback(err, null); }
