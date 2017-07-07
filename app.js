@@ -35,6 +35,8 @@ app.use('/routes', require('./api/routes'));
 
 app.use('/l1route', require('./api/l1r'));
 
+// app.use('/multiplxerrouter', require('./api/multiplexer_routes'));
+
 app.use('/', require('./api/bulk'));
 
 app.use('/multiplexer_route', require('./api/multiplexer-route'));

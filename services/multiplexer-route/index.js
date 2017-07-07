@@ -1,6 +1,6 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 
-const client = require('../../redis-client').client;
+const client = require('../../client/redisclient').client;
 
 function checkIfRouteExists(route, callback) {
   const mailboxId = (route.mailboxId).toString();
@@ -26,21 +26,21 @@ function getRoutesList(route, callback) {
 }
 
 function checkIfCircleIsPresentinCache(route, callback) {
-  client.exists(`${route.namespace}${route.circleId}`)(function (err, res) {
+  client.exists(`${route.namespace}:${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
 }
 
 function getRoutesForCircle(route, callback) {
-  client.smembers(`${route.namespace}${route.circleId}`)(function (err, res) {
+  client.smembers(`${route.namespace}:${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
 }
 
 function deleteRoute(route, callback) {
-  client.srem(`${route.namespace}${route.circleId}`, route.mailboxId)((err, res) => {
+  client.srem(`${route.namespace}:${route.circleId}`, route.mailboxId)((err, res) => {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });

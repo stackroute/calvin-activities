@@ -1,6 +1,6 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 
-const client = require('../../redis-client').client;
+const client = require('../../client/redisclient').client;
 
 const namespace = require('../../config').namespace;
 
@@ -14,7 +14,7 @@ function checkIfRouteExists(route, callback) {
 }
 
 function addRoute(route, callback) {
-  client.sadd(`${namespace}${route.circleId}`, route.multiplexerId)(function (err, res) {
+  client.sadd(`${namespace}:${route.circleId}`, route.multiplexerId)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
