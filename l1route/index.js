@@ -6,7 +6,7 @@ const producer = kafka.producer;
 
 const consumer = kafka.consumer;
 
-const redis = require('../client/redisclient').client;
+const redis = require('../client/redisclient').client ;
 
 consumer.on('message', (message) => {
   const key = `${config.L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
