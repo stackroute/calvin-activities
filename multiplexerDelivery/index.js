@@ -11,6 +11,7 @@ const mailboxDAO = require('../dao').mailbox;
 
 const consumer = kafkaClient.consumer;
 consumer.on('message', (message) => {
+  console.log(message);
   const receiver =JSON.parse(message.value).mailboxId;
   const newActivity = {
     payload: JSON.parse(message.value).payload,
@@ -21,11 +22,7 @@ consumer.on('message', (message) => {
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
     if (!mailboxExists) { ({ message: 'Mailbox Id does not exists' }); return; }
     activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
-      if (error1) { ({ message: `${error1}` }); return; }
-
-      redisClient.add(receiver, newActivity.message, (err, data2) => {
-        if (err) { ({ message: `${err}` }); }
-      });
+      if (error1) { ({ message: `${error1}` }); }
     });
   });
 });

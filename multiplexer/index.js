@@ -10,6 +10,7 @@ const consumer = kafkaClient.consumer;
 const producer = kafkaClient.producer;
 
 consumer.on('message', (message) => {
+  console.log(message);
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
