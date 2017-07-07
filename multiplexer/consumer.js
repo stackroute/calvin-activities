@@ -1,5 +1,5 @@
 
-// const redisClient = require('../client/redisclient').client;
+const redisClient = require('../client/redisclient').client;
 
 const kafka = require('kafka-node');
 
@@ -12,8 +12,6 @@ const Producer = kafka.Producer;
 const producer = new Producer(client);
 
 const redis = require('thunk-redis');
-
-const redisClient = redis.createClient();
 
 const consumer = new Consumer(
   client,

@@ -1,4 +1,5 @@
-const config = require('./config.json');
+
+const L1RCacheNamespace = require('../config').namespace;
 
 const kafka = require('../kafka/l1route');
 
@@ -9,7 +10,7 @@ const consumer = kafka.consumer;
 const redis = require('../client/redisclient').client;
 
 consumer.on('message', (message) => {
-  const key = `${config.L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
+  const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
   const msg = JSON.parse(message.value).message;
   redis.client.info('server')(function (error, res) {
     return this.select(0);
