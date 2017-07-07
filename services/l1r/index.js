@@ -42,7 +42,7 @@ function getRoutesForCircle(route, callback) {
 }
 
 function deleteRoute(route, callback) {
-  client.srem(`${namespace}${route.circleId}`, route.multiplexerId)((err, res) => {
+  client.srem(`${namespace}:${route.circleId}`, route.multiplexerId)((err, res) => {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });

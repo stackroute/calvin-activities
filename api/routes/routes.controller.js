@@ -66,10 +66,6 @@ function deleteRoute(req, res) {
   });
 }
 
-// function getAllRoutes() {
-
-// }
-
 
 module.exports = {
   createRoute,
