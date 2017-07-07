@@ -8,7 +8,7 @@ const circles = [];
 const mailboxes = [];
 const activity = {
   type: 'Activity',
-  name: 'Sallie uploaded a document',
+  name: 'James uploaded a document',
   messageNumber: 0,
 };
 let i;
@@ -55,8 +55,8 @@ setTimeout(() => {
       activityDAO.createPublishActivity(circleId, activity, (err, result) => {
         console.log(err);
         console.log(result);
+        console.log(`Message pushed to activities topic at..${new Date().getTime()}`);
       });
     }
   });
-  console.log(`Stopped pushing messages to activities topic..${new Date().getTime()}`);
 }, 20000);
