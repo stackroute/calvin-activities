@@ -1,39 +1,13 @@
 const routesService = require('../../services/routes');
-
+const namespace = require('../../config').namespace;
 const multiplexerService = require('../../services/multiplexer');
-
 const l1rService = require('../../services/l1r');
-
 const multiplexerRouteService = require('../../services/multiplexer-route');
 
-const namespace = require('../../config').namespace;
-
-
 function createRoute(req, res) {
-  routesService.createRoute(req.params.circleId, req.params.userId, (err, result) => {
+  routesService.addRoute(req.params.circleId, req.params.userId, (err, result) => {
     if (err) { res.status(500).send({ message: `${err}` }); return; }
-    routesService.getMultiplexerStatus((error, res1) => {
-      const route = {
-        circleId: req.params.circleId,
-        multiplexerId: res1,
-      };
-      if (error) { throw error; }
-      l1rService.addRoute(route, (err1, res2) => {
-        if (err1) { throw err1; }
-        multiplexerService.addMultiplexer(res1, (err2, res3) => {
-          if (err2) { throw err2; }
-          const route1 = {
-            namespace: res1,
-            circleId: req.params.circleId,
-            mailboxId: req.params.userId,
-          };
-          multiplexerRouteService.addRoute(route1, (err3, res4) => {
-            if (err3) { throw err3; }
-          });
-          res.status(201).json({ message: 'Routes added' });
-        });
-      });
-    });
+    res.status(201).json(result);
   });
 }
 

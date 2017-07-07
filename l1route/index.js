@@ -15,7 +15,7 @@ consumer.on('message', (message) => {
     return this.select(0);
   })(function (error, res) {
     return this.smembers(key);
-  })(function (error, res) {
+  })((error, res) => {
     const payloads =[];
     res.forEach((element) => {
       payloads.push({ topic: element, messages: [JSON.stringify(msg)] });

@@ -2,6 +2,7 @@ const circleDAO = require('./dao').circle;
 const mailboxDAO = require('./dao').mailbox;
 const followDAO = require('./dao').follow;
 const activityDAO = require('./dao').activity;
+const routesManagerService = require('./services/routes');
 
 const circles = [];
 const mailboxes = [];
@@ -28,16 +29,24 @@ for (i = 0; i< 100; i += 1) {
   });
 }
 
-setTimeout(() => { circles.forEach((circleId) => {
-  mailboxes.forEach((mailboxId) => {
-    followDAO.addFollow({ circleId, mailboxId }, (err, result) => {
-      console.log(err);
-      console.log(result);
+setTimeout(() => {
+  circles.forEach((circleId) => {
+    mailboxes.forEach((mailboxId) => {
+      followDAO.addFollow({ circleId, mailboxId }, (err, result) => {
+        console.log(err);
+        console.log(result);
+        routesManagerService.addRoute(circleId, mailboxId, (err1, result1) => {
+          console.log('added route');
+          console.log(err1);
+          console.log(result1);
+        });
+      });
     });
   });
-}); }, 10000);
+}, 10000);
 
-setTimeout(() => { 
+
+setTimeout(() => {
   console.log(`Started pushing messages to activities topic..${new Date().getTime()}`);
   circles.forEach((circleId) => {
     for (i = 0; i< 100; i += 1) {
