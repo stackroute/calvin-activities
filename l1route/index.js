@@ -6,7 +6,7 @@ const producer = kafka.producer;
 
 const consumer = kafka.consumer;
 
-const redis = require('../redis');
+const redis = require('../client/redisclient').client;
 
 consumer.on('message', (message) => {
   const key = `${config.L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
@@ -15,7 +15,7 @@ consumer.on('message', (message) => {
     return this.select(0);
   })(function (error, res) {
     return this.smembers(key);
-  })(function (error, res) {
+  })((error, res) => {
     const payloads =[];
     res.forEach((element) => {
       payloads.push({ topic: element, messages: [JSON.stringify(msg)] });
