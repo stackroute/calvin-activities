@@ -13,6 +13,7 @@ consumer.on('message', (message) => {
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
+  redisClient.incr(`${topic}:count`);
   redisClient.smembers(`${message.topic}:${circleId}`)((err, result) => {
     followers = result;
     const arr = [];

@@ -2,13 +2,21 @@ const config =require('../config').kafka;
 
 const kafka = require('kafka-node');
 
-const client = new kafka.Client(`${config.host}:${config.port}`);
-const Consumer = kafka.Consumer;
+const client = new kafka.Client(config.connectionString, config.clientId);
+
 const topics = config.topics;
+
 const options = config.options;
+
+const Consumer = kafka.Consumer;
+
 const consumer = new Consumer(client, [topics], options);
 
-module.exports={
-  consumer, client,
-};
+const Producer = kafka.Producer;
 
+const producer = new Producer(client);
+
+module.exports = {
+  consumer,
+  producer,
+};

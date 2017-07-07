@@ -1,11 +1,17 @@
 /* eslint no-unused-expressions:0 */
 
 const kafkaClient = require('../client/kafkaclient');
+
 const redisClient = require('../client/redisclient');
+
+const topic =require('../config').kafka.topics.topic;
+
 const activityDao = require('../dao').activity;
 const mailboxDAO = require('../dao').mailbox;
 
-kafkaClient.consumer.on('message', (message) => {
+const consumer = kafkaClient.consumer;
+redisClient.incr(`${topic}:count`);
+consumer.on('message', (message) => {
   const receiver =JSON.parse(message.value).mailboxId;
   const newActivity = {
     message: JSON.parse(message.value).payload,
@@ -25,4 +31,4 @@ kafkaClient.consumer.on('message', (message) => {
   });
 });
 
-kafkaClient.consumer.on('error', err => ({ message: `${err}` }));
+consumer.on('error', err => ({ message: `${err}` }));

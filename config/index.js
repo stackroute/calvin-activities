@@ -8,20 +8,21 @@ module.exports = {
   },
   secretKey: secret,
   dao: process.env.DAO || 'cassandra',
-  kafka: {
+  kafka:{
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: ['activities'], partition: 0, offset: 0 },
-    options: {
-      autoCommit: false,
-      fromOffset: true,
-    },
+    topics : { "topic": "activities", "partition": 0 , "offset" : 0  },
+    options : {
+            autoCommit: false,
+            fromOffset : true, 
+        }
+
   },
   redis: {
     host: '127.0.0.1',
     port: '6379',
   },
-  namespace: 'L1R',
+  namespace: 'L1R:',
   namespacemul: 'multiplexer',
   namespaceroutemanager: 'routesmanager',
 };

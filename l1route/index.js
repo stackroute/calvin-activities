@@ -1,15 +1,18 @@
-
 const L1RCacheNamespace = require('../config').namespace;
 
-const kafka = require('../kafka/l1route');
+const redis = require('../client/redisclient').client ;
 
-const producer = kafka.producer;
+const kafkaClient = require('../client/kafkaclient');
 
-const consumer = kafka.consumer;
+const topic =require('../config').kafka.topics.topic;
 
-const redis = require('../client/redisclient').client;
+const producer = kafkaClient.producer;
+
+const consumer = kafkaClient.consumer;
 
 consumer.on('message', (message) => {
+
+  redis.incr(`${topic}:count`);
   const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
   const msg = JSON.parse(message.value).message;
   redis.client.info('server')(function (error, res) {
@@ -26,4 +29,3 @@ consumer.on('message', (message) => {
     });
   });
 });
-
