@@ -24,7 +24,7 @@ function getMultiplexerStatus(callback) {
 }
 
 function createRoute(circleId, userId, callback) {
-  client.sadd(`${namespace}`, circleId, userId)((err, res) => {
+  client.sadd(`${namespace}:${circleId}`, userId)((err, res) => {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
