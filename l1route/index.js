@@ -1,6 +1,6 @@
 const L1RCacheNamespace = require('../config').namespace;
 
-const redis = require('../client/redisclient').client ;
+const redis = require('../client/redisclient').client;
 
 const kafkaClient = require('../client/kafkaclient');
 
@@ -11,7 +11,6 @@ const producer = kafkaClient.producer;
 const consumer = kafkaClient.consumer;
 
 consumer.on('message', (message) => {
-
   redis.incr(`${topic}:count`);
   const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleID}`;
   const msg = JSON.parse(message.value).message;
