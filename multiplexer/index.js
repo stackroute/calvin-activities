@@ -1,28 +1,13 @@
 
 const redisClient = require('../client/redisclient').client;
 
-const kafka = require('kafka-node');
+const topic =require('../config').kafka.topics.topic;
 
-const Consumer = kafka.Consumer;
+const kafkaClient = require('../client/kafkaclient');
 
-const client = new kafka.Client();
+const consumer = kafkaClient.consumer;
 
-const Producer = kafka.Producer;
-
-const producer = new Producer(client);
-
-const redis = require('thunk-redis');
-
-const consumer = new Consumer(
-  client,
-  [
-    { topic: 'M2', partition: 0, offset: 2 },
-  ],
-  {
-    autoCommit: false,
-    fromOffset: true,
-  },
-);
+const producer = kafkaClient.producer;
 
 consumer.on('message', (message) => {
   const activity = JSON.parse(message.value);
@@ -36,7 +21,7 @@ consumer.on('message', (message) => {
         payload: JSON.parse(message.value),
         mailboxId: data,
       };
-      arr.push({ topic: 'M1D', messages: [JSON.stringify(newActivity)] });
+      arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
     });
     producer.send(arr, (error, data) => {
     });
