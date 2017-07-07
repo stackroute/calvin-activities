@@ -27,4 +27,18 @@ app.use('/mailbox', authorize.verifyToken, require('./api/activity'));
 // Publish activity to circle
 app.use('/circle', authorize.verifyToken, require('./api/activity'));
 
+// Multiplexer
+app.use('/multiplexer', require('./api/multiplexer'));
+
+// Routes
+app.use('/routes', require('./api/routes'));
+
+app.use('/l1route', require('./api/l1r'));
+
+// app.use('/multiplxerrouter', require('./api/multiplexer_routes'));
+
+app.use('/', require('./api/bulk'));
+
+app.use('/multiplexer_route', require('./api/multiplexer-route'));
+
 module.exports = app;

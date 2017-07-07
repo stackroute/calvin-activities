@@ -3,5 +3,6 @@ node_js:
   - 8.0.0
 services:
   - cassandra
+  - redis-server
 before_install:
   - ./setup-DB.sh
