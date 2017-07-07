@@ -41,7 +41,6 @@ consumer.on('message', (message) => {
       arr.push({ topic: 'M1D', messages: [JSON.stringify(newActivity)] });
     });
     producer.send(arr, (error, data) => {
-      // console.log(data);
     });
   });
 });
