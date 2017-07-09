@@ -2,7 +2,7 @@ const config =require('../config').kafka;
 
 const kafka = require('kafka-node');
 
-const client = new kafka.Client(config.connectionString, config.clientId);
+const client = new kafka.Client(`${config.host}:${config.port}`);
 
 const topics = config.topics;
 
