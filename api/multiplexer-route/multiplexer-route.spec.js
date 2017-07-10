@@ -63,7 +63,6 @@ describe('multiplexer routes Api', function () {
     multiplexerRouteService.checkIfCircleIsPresentinCache({ circleId }, (err, result) => {
       if (err) { throw err; }
       result.should.be.equal(0);
-
       multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId }, (err1, doesRouteExist) => {
         if (err1) { throw err1; }
         doesRouteExist.should.be.equal(true);
@@ -89,9 +88,9 @@ describe('multiplexer routes Api', function () {
     multiplexerRouteService.checkIfCircleIsPresentinCache({ circleId }, (err, result) => {
       if (err) { throw err; }
       result.should.be.equal(0);
-      multiplexerRouteService.addRoute({ circleId, mailboxId }, (err1, deosRouteAdded) => {
+      multiplexerRouteService.addRoute({ namespace, circleId, mailboxId }, (err1, doesRouteAdded) => {
         if (err1) { throw err1; }
-        deosRouteAdded.should.be.equal(1);
+        doesRouteAdded.should.be.equal(1);
         multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId }, (err2, doesRouteExist) => {
           if (err2) { throw err2; }
           doesRouteExist.should.be.equal(true);
@@ -101,15 +100,14 @@ describe('multiplexer routes Api', function () {
             .expect('Content-Type', /json/)
             .end((error, res) => {
               res.body.should.have.property('message');
-              (res.body.message).should.be.equal(`circle with id ${circleId}
-            does not have a route for mailbox with id ${randomMailboxId}`);
-
+              (res.body.message).should.be.equal(`circle with id ${circleId} does not have a route for mailbox with id ${randomMailboxId}`);
               done();
             });
         });
       });
     });
   });
+
   it('should get list of circles having routes', (done) => {
     request(app)
       .get(`/multiplexer_route/${namespace}`)
@@ -124,13 +122,12 @@ describe('multiplexer routes Api', function () {
 
   it('should get list of circles having routes', (done) => {
     multiplexerRouteService.checkIfCircleIsPresentinCache({ circleId }, (err, result) => {
-    //  console.log(result);
       if (err) { throw err; }
-      result.should.be.equal(1);
-      if (result) {
-        multiplexerRouteService.addRoute({ circleId, mailboxId }, (err1, deosRouteAdded) => {
+      result.should.be.equal(0);
+      if (!result) {
+        multiplexerRouteService.addRoute({ circleId, mailboxId }, (err1, doesRouteAdded) => {
           if (err1) { throw err1; }
-          deosRouteAdded.should.be.equal(false);
+          doesRouteAdded.should.be.equal(true);
           request(app)
             .get(`/multiplexer_route/${namespace}/${circleId}`)
             .expect(200)
