@@ -6,10 +6,10 @@
   "scripts": {
     "start": "node start",
     "test": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
-    "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
-    "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
+    "eslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js'",
+    "fixeslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js' --fix",
     "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'",
-    "circletest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/circle.spec.js"
+    "mailboxtest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/mailbox.spec.js"
   },
   "author": "",
   "license": "ISC",

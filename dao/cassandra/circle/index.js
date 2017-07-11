@@ -8,10 +8,10 @@ function createCircle(callback) {
     circleId: uuid().toString(),
     mailboxId: uuid().toString(),
     createdOn: Date.now(),
-    lastActivity: Date.now(),
   };
-  const query = ('INSERT INTO circle (circleId, mailboxId, createdOn, lastActivity) values( ?, ?, ?, ?)');
-  client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn, newCircle.lastActivity], (err, result) => {
+  console.log(`Created${newCircle.createdOn}`);
+  const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
+  client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
     if (err) { return callback(err, null); }
     return callback(err, newCircle);
   });
@@ -33,7 +33,16 @@ function deleteCircle(circleId, callback) {
   });
 }
 
+function getAllCircles(callback) {
+  const query = ('SELECT * from circle');
+  client.execute(query, (error, result) => {
+    if (error) { return callback(error, null); }
+    console.log('Inside cassandra');
+    // if (result.rows === 0) { return callback(err, "No circles present");}
+    return callback(null, result);
+  });
+}
 
 module.exports = {
-  createCircle, checkIfCircleExists, deleteCircle,
+  createCircle, checkIfCircleExists, deleteCircle, getAllCircles,
 };
