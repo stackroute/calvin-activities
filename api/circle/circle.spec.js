@@ -21,14 +21,17 @@ describe('/circle api', function () {
 
   it('it should create a circle', function (done) {
     request(app)
-      .post('/circle/')
+      .post('/circle')
       .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
         if (err) { done(err); return; }
-        expect(res.body).to.have.property('id').a('string');
-        circleId = (res.body.id).toString();
+        expect(res.body).to.have.property('circleId');
+        expect(res.body).to.have.property('mailboxId');
+        expect(res.body).to.have.property('createdOn');
+        expect(res.body).to.have.property('lastActivity');
+        circleId = res.body.circleId;
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }
           circleExists.should.be.equal(true);
