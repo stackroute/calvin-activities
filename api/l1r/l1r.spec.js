@@ -124,7 +124,7 @@ describe('L1R routes api', function () {
         .end((error, res) => {
           res.body.should.have.property('message');
           (res.body.message).should.be.equal(`circle with id ${circleId}
-      does not have a route for multiplexer with id ${randomMultiplexerid} `);
+      does not have a route for multiplexer with id ${randomMultiplexerid}`);
           done();
         });
     });

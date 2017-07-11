@@ -27,7 +27,7 @@ describe('multiplexer routes Api', function () {
       if (err) { throw err; }
       doesRouteExist.should.be.equal(false);
       request(app)
-        .post(`/multiplexer_route/${namespace}/${circleId}/${mailboxId}`)
+        .post(`/multiplexerRoute/${namespace}/${circleId}/${mailboxId}`)
         .expect(201)
         .expect('Content-Type', /json/)
         .end((error, res) => {
@@ -47,7 +47,7 @@ describe('multiplexer routes Api', function () {
       if (err) { throw err; }
       doesRouteExist.should.be.equal(true);
       request(app)
-        .post(`/multiplexer_route/${namespace}/${circleId}/${mailboxId}`)
+        .post(`/multiplexerRoute/${namespace}/${circleId}/${mailboxId}`)
         .expect(409)
         .expect('Content-Type', /json/)
         .end((error, res) => {
@@ -67,7 +67,7 @@ describe('multiplexer routes Api', function () {
         if (err1) { throw err1; }
         doesRouteExist.should.be.equal(true);
         request(app)
-          .delete(`/multiplexer_route/${namespace}/${circleId}/${mailboxId}`)
+          .delete(`/multiplexerRoute/${namespace}/${circleId}/${mailboxId}`)
           .expect(200)
           .expect('Content-Type', /json/)
           .end((error, res) => {
@@ -95,7 +95,7 @@ describe('multiplexer routes Api', function () {
           if (err2) { throw err2; }
           doesRouteExist.should.be.equal(true);
           request(app)
-            .delete(`/multiplexer_route/${namespace}/${circleId}/${randomMailboxId}`)
+            .delete(`/multiplexerRoute/${namespace}/${circleId}/${randomMailboxId}`)
             .expect(404)
             .expect('Content-Type', /json/)
             .end((error, res) => {
@@ -110,7 +110,7 @@ describe('multiplexer routes Api', function () {
 
   it('should get list of circles having routes', (done) => {
     request(app)
-      .get(`/multiplexer_route/${namespace}`)
+      .get(`/multiplexerRoute/${namespace}`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end((error, res) => {
@@ -129,7 +129,7 @@ describe('multiplexer routes Api', function () {
           if (err1) { throw err1; }
           doesRouteAdded.should.be.equal(true);
           request(app)
-            .get(`/multiplexer_route/${namespace}/${circleId}`)
+            .get(`/multiplexerRoute/${namespace}/${circleId}`)
             .expect(200)
             .expect('Content-Type', /json/)
             .end((error, res) => {
@@ -148,7 +148,7 @@ describe('multiplexer routes Api', function () {
       if (err) { throw err; }
       result.should.be.equal(0);
       request(app)
-        .get(`/multiplexer_route/${namespace}/${randomCircleId}`)
+        .get(`/multiplexerRoute/${namespace}/${randomCircleId}`)
         .expect(404)
         .expect('Content-Type', /json/)
         .end((error, res) => {

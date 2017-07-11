@@ -41,8 +41,25 @@ function getAllFollowersOfACircle(circleId, range, callback) {
   callback(null, response);
 }
 
+function getAllActivitiesOfACircle(circleId, range, callback) {
+  const before=parseInt(range.before);
+  const after=parseInt(range.after);
+  const limit= parseInt(range.limit);
+  const activityObject = (activityDAO.activities).filter(activity => activity.circleId === circleId);
+  const activity= activityObject.map(filteredActivity => filteredActivity.mailboxId)
+    .slice(after, (after+limit));
+  const response = {
+    record_count: activity.length,
+    total_count: activityObject.length,
+    records: activity,
+  };
+
+  callback(null, response);
+}
+
 module.exports = {
   getOpenMailboxes,
   getAllCircles,
   getAllFollowersOfACircle,
+  getAllActivitiesOfACircle,
 };
