@@ -6,7 +6,7 @@ const namespace = require('../../config').namespace;
 
 function checkIfRouteExists(route, callback) {
   const multiplexerId = (route.multiplexerId).toString();
-  client.smembers(`${namespace}${route.circleId}`)(function (err, res) {
+  client.smembers(`${namespace}:${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     const doesExists = res.filter(data => data === multiplexerId);
     callback(null, doesExists.length !== 0);
@@ -28,21 +28,21 @@ function getRoutesList(callback) {
 }
 
 function checkIfCircleIsPresentinCache(route, callback) {
-  client.exists(`${namespace}${route.circleId}`)(function (err, res) {
+  client.exists(`${namespace}:${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
 }
 
 function getRoutesForCircle(route, callback) {
-  client.smembers(`${namespace}${route.circleId}`)(function (err, res) {
+  client.smembers(`${namespace}:${route.circleId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
 }
 
 function deleteRoute(route, callback) {
-  client.srem(`${namespace}${route.circleId}`, route.multiplexerId)((err, res) => {
+  client.srem(`${namespace}:${route.circleId}`, route.multiplexerId)((err, res) => {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });

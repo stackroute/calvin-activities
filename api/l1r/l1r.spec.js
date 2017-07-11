@@ -98,6 +98,7 @@ describe('L1R routes api', function () {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((error, res) => {
+          console.log(error);
           res.body.should.have.property('result');
           (res.body.result).should.be.equal(1);
           done();
