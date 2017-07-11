@@ -9,6 +9,17 @@ const consumer = kafkaClient.consumer;
 
 const producer = kafkaClient.producer;
 
+const redisClient = require('./client/redisclient');
+
+function setStartTimeIfUnset() {
+  redisClient.get('startTime', (err, reply) => {
+    if(err) { process.exit(-1); }
+    if(!reply) {
+      redisClient.set('startTime', new Date());
+    }
+  });
+}
+
 consumer.on('message', (message) => {
   console.log(message);
   const activity = JSON.parse(message.value);
@@ -24,7 +35,7 @@ consumer.on('message', (message) => {
       arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
     });
     producer.send(arr, (error, data) => {
+      redisClient.set('endTime', new Date());
     });
   });
 });
-
