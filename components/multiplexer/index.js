@@ -13,28 +13,31 @@ let startTimeAlreadySet = false;
 
 function setStartTime() {
   startTimeAlreadySet = true;
-  redisClient.get('startTime', (err, reply) => {
-    if(!reply) {
+  redisClient.get('startTime')(function(err, reply){
+     if(!reply) {
       console.log('Reply Not Set');
-      redisClient.set('startTime', (new Date()).getTime());
-    } else { console.log('Reply Already Set'); }
-  });
+      return redisClient.set('startTime', (new Date()).getTime());
+    }
+  })(function(err, response){
+    if(err){ console.log(err); return; }
+    else { console.log('Reply Already Set'); }
+  })
 }
 
 let setEndTimeTimeout = null;
 
 function setEndTime(endTime) {
-  redisClient.set('endTime', (new Date()).getTime());
+  redisClient.set('endTime', (new Date()).getTime())(function(err, response){
+    if(err){ console.log(err); return; }
+    else { console.log('EndTime Set'); }
+  })
 }
-
-console.log('config:', config);
 
 consumer.on('message', (message) => {
   if(!startTimeAlreadySet) {
     setStartTime();
   }
 
-  console.log(message);
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
