@@ -2,7 +2,8 @@
 
 const kafkaClient = require('../client/kafkaclient');
 
-const redisClient = require('../client/redisclient');
+// const redisClient = require('../client/redisclient');
+const publisher = require("redis").createClient([{host:'172.23.238.134', port:'6379'}]);
 
 const topic =require('../config').kafka.topics.topic;
 
@@ -23,6 +24,7 @@ consumer.on('message', (message) => {
     if (!mailboxExists) { ({ message: 'Mailbox Id does not exists' }); return; }
     activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
       if (error1) { ({ message: `${error1}` }); }
+      publisher.publish(receiver, JSON.stringify(newActivity));
     });
   });
 });
