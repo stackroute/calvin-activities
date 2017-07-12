@@ -17,7 +17,6 @@ function publishToMailbox(mid, activity, callback) {
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
     if (err) { return callback(err); }
-    // publishActivityToListeners(mid, activity);
     return callback(err, activity);
   });
 }
@@ -80,4 +79,5 @@ module.exports = {
   removeListnerFromMailbox,
   retriveMessageFromMailbox,
   checkActivityPublished,
+  publishActivityToListeners,
 };

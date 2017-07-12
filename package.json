@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node start",
+<<<<<<< HEAD
     "test": " npm run eslint && npm run yamllint && DAO=cassandra ./node_modules/.bin/mocha **/*.spec.js",
     "eslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js' --fix",
@@ -14,6 +15,12 @@
     "mailboxtest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/mailbox.spec.js",
     "followtest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/follow.spec.js",
     "bulktest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/bulk.spec.js"
+=======
+    "test": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js && DAO=cassandra ./node_modules/.bin/mocha **/*.spec.js",
+    "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
+    "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
+    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
+>>>>>>> 130bf6e0c0c1488bfea189143e141b517cd39ada
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +32,7 @@
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
     "kafka-node": "^1.6.2",
+    "redis": "^2.7.1",
     "require-yml": "^1.3.1",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
