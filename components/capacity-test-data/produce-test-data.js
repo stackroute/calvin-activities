@@ -39,7 +39,25 @@ function addActivity(n, callback) {
   });
 }
 
-addActivity(1000000, (err, result) => {
+function addMDActivity(n, callback) {
+  console.log(`PREPARING ${n} records`);
+  let messages = [];
+  for(let i=0; i<n; i++) {
+    messages.push(JSON.stringify({
+      payload: {
+        foo: 'bar'
+      },
+      mailboxId: 'baz'
+    }));
+  }
+
+  console.log(`PRODUCING ${n} records`);
+  producer.on('ready', () => {
+    producer.send([{ topic: 'm1D', messages: messages }], (err, data) => callback(err, data));
+  });
+}
+
+addMDActivity(10000, (err, result) => {
   if(err) { console.log('error:', err) ; return;}
   console.log('PRODUCED 1000000 records');
 });

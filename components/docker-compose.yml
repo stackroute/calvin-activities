@@ -9,6 +9,18 @@ services:
     environment:
       REDIS_HOST: redis
       ZOOKEEPER_HOST: kafka
+  multiplexer-delivery:
+    image: multiplexer-delivery
+    build: multiplexerDelivery
+    links:
+      - redis
+      - kafka
+      - dse
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka
+      DSE_HOST: dse
+      DSE_KEYSPACE: testdb
   redis:
     image: redis
     ports:
@@ -21,6 +33,10 @@ services:
       - 9092:9092
     environment:
       ADVERTISED_HOST: kafka
+  dse:
+    image: cassandra
+    ports:
+      - 9042:9042
   produce:
     image: capacity-test-data
     build: capacity-test-data
