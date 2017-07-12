@@ -1,0 +1,30 @@
+version: "2"
+services:
+  multiplexer:
+    image: multiplexer
+    build: multiplexer
+    links:
+      - redis
+      - kafka
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  kafka:
+    image: spotify/kafka
+    build: spotify-kafka/kafka
+    environment:
+      ADVERTISED_HOST: kafka
+  produce:
+    image: capacity-test-data
+    build: capacity-test-data
+    links:
+      - redis
+      - kafka
+    environment:
+      NUMBER_OF_MESSAGES: 1000000
+      ZOOKEEPER_HOST: kafka
+      REDIS_HOST: redis
