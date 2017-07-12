@@ -8,8 +8,7 @@
     "test": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/*.spec.js && DAO=cassandra ./node_modules/.bin/mocha **/*.spec.js",
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
-    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'",
-    "push": "DAO=cassandra ./node_modules/.bin/mocha **/api/socket/pushnotification.spec.js"
+    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'"
   },
   "author": "",
   "license": "ISC",
