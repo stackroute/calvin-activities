@@ -4,6 +4,9 @@ const mailboxDAO= require('../../dao/').mailbox;
 
 function follow(req, res) {
   const { circleId, mailboxId } = req.params;
+    const startFollowing = {
+    timestamp: new Date(),
+    };
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
@@ -31,7 +34,7 @@ function follow(req, res) {
           return;
         }
 
-        followDAO.addFollow({ circleId, mailboxId }, (err3, data) => {
+        followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
           res.status(201).json(data);
         });
       });
@@ -68,14 +71,18 @@ function unfollow(req, res) {
           return;
         }
 
-        followDAO.deleteFollow({ circleId, mailboxId }, (err3, result) => {
+        followDAO.deleteFollow({ circleId, mailboxId }, (err3, data) => {
           if (err) { res.status(500).json({ message: ` ${err3}` }); }
-          res.status(200).json(result);
+          res.status(200).json(data);
         });
       });
     });
   });
 }
+
+function bulkFollow(req,res){
+
+}
 module.exports = {
-  follow, unfollow,
+  follow, unfollow,bulkFollow,
 };

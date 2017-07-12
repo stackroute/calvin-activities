@@ -18,15 +18,16 @@ describe('/activity API', () => {
   let circleId;
   let mailboxId;
   let token;
+  let startedFollowing = new Date();
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
       if (err) { throw err; }
-      circleId = result.id;
+      circleId = result.circleId;
       mailboxDao.createMailbox((error, result1) => {
         if (error) { throw error; }
-        mailboxId = result1.id;
-        followDAO.addFollow({ circleId, mailboxId }, (error1, result2) => {
+        mailboxId = result1.mailboxId;
+        followDAO.addFollow({ circleId, mailboxId }, startedFollowing, (error1, result2) => {
           setTimeout(() => {
             done();
           }, 1500);

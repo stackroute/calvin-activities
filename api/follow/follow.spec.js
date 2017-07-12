@@ -25,10 +25,10 @@ describe('/follow api', () => {
   before(function (done) {
     token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
-      circleId = result.id;
+      circleId = result.circleId;
     });
     mailboxDAO.createMailbox((err, result) => {
-      mailboxId = result.id;
+      mailboxId = result.mailboxId;
     });
     token = authorize.generateJWTToken();
     setTimeout(() => {
@@ -78,6 +78,7 @@ describe('/follow api', () => {
             .end((err3, res) => {
               if (err3) { done(err3); return; }
               res.body.should.have.property('message').equal(`Circle with id ${randomCircleId} does not exist`);
+              // res.body.should.have.property('message').equal('Link does not exist');
               followDAO.checkIfFollowExists({ circleId: randomCircleId, mailboxId }, (err4, doesFollowExistsAfter) => {
                 if (err4) { done(err4); return; }
                 doesFollowExistsAfter.should.be.equal(false);

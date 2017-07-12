@@ -30,7 +30,6 @@ describe('/circle api', function () {
         expect(res.body).to.have.property('circleId');
         expect(res.body).to.have.property('mailboxId');
         expect(res.body).to.have.property('createdOn');
-        expect(res.body).to.have.property('lastActivity');
         circleId = res.body.circleId;
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }

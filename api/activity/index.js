@@ -14,6 +14,6 @@ router.post('/:mailboxId/activitytomailbox',
   controller.createPublishActivityToMailbox);
 
 // Receive message from mailbox
-router.get('/:mailboxId/activity', authorize.permit('mailbox:all', 'mailbox:read'), controller.getActivity);
+router.get('/:mailboxId/activity', authorize.permit('mailbox:all', 'mailbox:read'), controller.retriveMessageFromMailbox);
 
 module.exports = router;
