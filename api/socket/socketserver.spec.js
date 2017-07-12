@@ -6,7 +6,7 @@ const followDao = require('../../dao').follow;
 const activityDao = require('../../dao').activity;
 const bootstrapSocketServer = require('./socketserver');
 require('chai').should();
-
+console.log(process.env.DAO);
 describe('/push notifications', () => {
   let token;
   let socket;

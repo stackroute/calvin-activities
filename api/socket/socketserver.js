@@ -4,10 +4,6 @@ const subscriber = require("redis").createClient([{host:'172.23.238.134', port:'
 
 function bootstrapSocketServer(io) {
   io.on('connection', (socket) => {
-    socket.on('publish', (data) => {
-      activityDAO.publishToMailbox(data.mid, data.message, (err, result) => {});
-    });
-
   subscriber.on('message',function(channel, data){
     activityDAO.publishActivityToListeners(channel, data);
   });
