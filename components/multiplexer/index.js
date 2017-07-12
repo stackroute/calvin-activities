@@ -1,26 +1,39 @@
 
-const redisClient = require('../client/redisclient').client;
+const redisClient = require('./client/redisclient').client;
 
-const topic =require('../config').kafka.topics.topic;
+const topic =require('./config').kafka.topics.topic;
 
-const kafkaClient = require('../client/kafkaclient');
+const kafkaClient = require('./client/kafkaclient');
 
 const consumer = kafkaClient.consumer;
 
 const producer = kafkaClient.producer;
 
-const redisClient = require('./client/redisclient');
+let startTimeAlreadySet = false;
 
-function setStartTimeIfUnset() {
+function setStartTime() {
+  startTimeAlreadySet = true;
   redisClient.get('startTime', (err, reply) => {
-    if(err) { process.exit(-1); }
     if(!reply) {
-      redisClient.set('startTime', new Date());
-    }
+      console.log('Reply Not Set');
+      redisClient.set('startTime', (new Date()).getTime());
+    } else { console.log('Reply Already Set'); }
   });
 }
 
+let setEndTimeTimeout = null;
+
+function setEndTime(endTime) {
+  redisClient.set('endTime', (new Date()).getTime());
+}
+
+console.log('config:', config);
+
 consumer.on('message', (message) => {
+  if(!startTimeAlreadySet) {
+    setStartTime();
+  }
+
   console.log(message);
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
@@ -35,7 +48,8 @@ consumer.on('message', (message) => {
       arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
     });
     producer.send(arr, (error, data) => {
-      redisClient.set('endTime', new Date());
+      if(setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
+      setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
     });
   });
 });

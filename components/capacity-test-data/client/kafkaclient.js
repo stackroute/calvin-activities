@@ -1,5 +1,7 @@
 const config =require('../config').kafka;
 
+console.log('config:', config);
+
 const kafka = require('kafka-node');
 
 const client = new kafka.Client(`${config.host}:${config.port}`);
