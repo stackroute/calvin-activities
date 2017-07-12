@@ -10,4 +10,6 @@ const controller = require('./bulk.controller');
 
 router.get('/getallcircles', controller.getAllCircles);
 router.get('/getfollowers/:circleId', controller.getFollowersMailboxesOfACircle);
+router.get('/getallactivities/:mailboxId', controller.getAllActivities);
+
 module.exports = router;

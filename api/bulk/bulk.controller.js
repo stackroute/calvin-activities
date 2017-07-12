@@ -1,6 +1,6 @@
-const bulkDao = require('../../dao').bulk;
 const circleDAO = require('../../dao').circle;
 const followDAO = require('../../dao').follow;
+const activityDAO = require('../../dao').activity;
 
 function getAllCircles(req, res) {
   circleDAO.getAllCircles((err, result) => {
@@ -18,10 +18,17 @@ function getFollowersMailboxesOfACircle(req, res) {
   });
 }
 
-function getAllActivities(req,res){
-  
+function getAllActivities(req, res) {
+activityDAO.retriveMessageFromMailbox(req.params.mailboxId,(err,result) =>{
+ if (err) { res.status(500).json({ message: `${err}` }); return; }
+    if (result === 0) { res.status(404).json({ message: 'No messages found' }); return; }
+    res.status(201).json(result);
+});
 }
+
+
 module.exports = {
   getAllCircles,
   getFollowersMailboxesOfACircle,
+  getAllActivities,
 };

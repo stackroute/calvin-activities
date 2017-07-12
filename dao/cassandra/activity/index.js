@@ -34,7 +34,7 @@ function checkIfMailboxExists(mid, callback) {
   const query = (`SELECT * from activity where mailboxId= ${mid}`);
   client.execute(query, (err, result) => {
     if (err) { return callback(err); }
-    return callback(err, result.rows.length>0);
+    return callback(err, result.rowLength>0);
   });
 }
 
@@ -48,7 +48,9 @@ function retriveMessageFromMailbox(mid, callback) {
         return callback(null, result.rows);
       });
     }
-    return true;
+    if(!MailIdExists){
+      return callback(null, "No messages found");
+    }
   });
 }
 

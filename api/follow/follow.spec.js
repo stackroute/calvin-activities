@@ -50,8 +50,8 @@ describe('/follow api', () => {
             .expect('Content-Type', /json/)
             .end((err4, res) => {
               if (err4) { done(err4); return; }
-              res.body.should.have.property('circleId').equal(circleId).a('string');
-              res.body.should.have.property('mailboxId').equal(mailboxId).a('string');
+              res.body.should.have.property('circleId').equal(circleId);
+              res.body.should.have.property('mailboxId').equal(mailboxId);
               followDAO.checkIfFollowExists({ circleId, mailboxId }, (err3, doesFollowExistsAfter) => {
                 doesFollowExistsAfter.should.be.equal(true);
                 done();

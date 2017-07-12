@@ -33,7 +33,7 @@ function deleteCircle(circleId, callback) {
 }
 
 function getAllCircles(callback) {
-  const query = ('SELECT * from circle');
+  const query = ('SELECT * from circle limit 10');
   client.execute(query, (error, result) => {
     if (error) { return callback(error, null); }
     return callback(null, result);

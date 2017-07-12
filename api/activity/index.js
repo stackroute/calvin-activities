@@ -5,7 +5,7 @@ const controller = require('./activity.controller');
 const authorize = require('../../authorize');
 
 // For circle
-router.post('/:circleId/activity', authorize.permit('circle:all', 'circle:publish'), controller.createPublishActivity);
+//router.post('/:circleId/activity', authorize.permit('circle:all', 'circle:publish'), controller.createPublishActivity);
 
 // For mailbox
 
