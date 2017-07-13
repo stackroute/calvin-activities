@@ -8,8 +8,6 @@ const topicName = 'multiplex';
 const consumerGroupName = 'consumerGroupName'
 const config = require('../config').kafka;
 
-
-console.log('multiplexer started........');
 library.registerConsumer(config, topicName, consumerGroupName, onMessage);
 function onMessage( msg){
   try{
