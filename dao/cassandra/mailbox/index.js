@@ -17,12 +17,12 @@ function createMailbox(callback) {
 }
 
 function checkIfMailboxExists(mailboxId, callback) {
-  console.log('mailboxId inside checkIfMailboxExists',mailboxId);
+ // console.log('mailboxId inside checkIfMailboxExists',mailboxId);
   const query = (`SELECT * from mailbox where id = ${mailboxId}`);
  // console.log('client.execute',client.execute(`SELECT * from mailbox`));
   client.execute(query, (err, result) => {
-    if (err) { return callback(err); }
-    console.log('rowLength===>',result);
+    if (err) { console.log('error returned'+err);return callback(err); }
+    console.log('rowLength===>',result.rowLength);
     return callback(null, result.rowLength > 0);
   });
 }

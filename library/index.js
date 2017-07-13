@@ -5,7 +5,7 @@ const registerconsumer = require('./register-consumer');
 // module.exports = { registerConsumer };
 
 function registerConsumer(config, topicName, consumerGroupName, onMessage){
-	console.log('inside index.js labrary file');
+	console.log('inside index.js library file');
 	 return registerconsumer.registerConsumer(config, topicName,consumerGroupName, onMessage);
 }
 

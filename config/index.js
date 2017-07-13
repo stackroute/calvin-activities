@@ -12,6 +12,7 @@ module.exports = {
     host: '172.23.238.134',
     port: '2181',
     topics: { topic: 'multiplex', offset: 0 },
+
     options: {
       autoCommit: false,
       fromOffset: true,
