@@ -80,4 +80,20 @@ describe('/circle api', function () {
         });
     });
   });
+
+  it('should return all circle', (done) => {
+      request(app)
+        .get('/circle/getallcircles?limit=2')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err1, res) => {
+          expect(res.body.length).to.be.equal(2);
+          done();
+        });
+  });
 });
+
+  
+   
+

@@ -1,71 +1,84 @@
+/* eslint prefer-arrow-callback:0, func-names:0, no-loop-func:0*/
+const EventEmitter = require('events');
 require('chai').should();
-const expect = require('chai').expect;
 const request = require('supertest');
-
 const app = require('../../app');
-
-const start = require('../../db');
-
+const start=require('../../db');
 const mailboxDao = require('../../dao').mailbox;
-
 const circleDao = require('../../dao').circle;
-
 const followDao = require('../../dao').follow;
-
 const uuid = start.uuid;
-
 const authorize = require('../../authorize');
-
-describe('/getAllCircles API', () => {
-    let a = [];
-    before(function (done) {
-        for (let i = 1; i <= 2; i += 1) {
-            circleDao.createCircle(function (err, data) {
-                if (err) { throw err; }
-                a.push(data.circleId);
-            });
-        }
-        setTimeout(() => {
-            done();
-        }, 1500);
+const bootstrapSocketServer = require('../socket/socketserver');
+describe('getOpenMailboxes API', () => {
+  const sockets = [];
+  const mailboxIds =[];
+  let io;
+  let token;
+  beforeEach((done) => {
+    token = authorize.generateJWTToken();
+    io = new EventEmitter();
+    bootstrapSocketServer(io);
+    for (let i=0; i<40; i+=1) {
+      const socket = new EventEmitter();
+      io.emit('connection', socket);
+      sockets.push(socket);
+      mailboxDao.createMailbox((error, result) => {
+        mailboxIds.push(result.mailboxId);
+      });
+    }
+    for (let i=0; i<10; i+=1) {
+      const random = Math.ceil(Math.random()*9);
+      sockets[random].emit('authorize', `Bearer ${token}`);
+      sockets[random].emit('startListeningToMailbox', mailboxIds[Math.ceil(Math.random()*9)]);
+    }
+    setTimeout(function () {
+      done();
+    }, 100);
+  });
+  afterEach((done) => {
+    sockets.forEach((socket) => {
+      socket.removeAllListeners();
     });
-    afterEach(function (done) {
-        for (let i = 1; i >= 0; i -= 1) {
-            let circleId = a[i];
-            circleDao.deleteCircle(circleId, function (err, data) {
-                if (err) { throw err; }
-            });
-        }
-        done();
+    io.removeAllListeners();
+    done();
+  });
+  it('should return array of Mailbox Ids which are open and number of results should be in the given range',
+    function (done) {
+      request(app)
+        .get('/mailboxesopen/1/3')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err4, res) => {
+          (res.body).should.have.property('users').a('object');
+          (res.body.users).should.have.property('record_count').a('number').equal(3);
+          (res.body.users).should.have.property('total_count').a('number').gt(1);
+          (res.body.users).should.have.property('records').a('Array').with.lengthOf(3);
+          done();
+        });
     });
-
-    it('should return all circle', function (done) {
-        request(app)
-            .get('/getallcircles')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end((err, res) => {
-                expect(res.body.length).to.be.above(1);
-                done();
-            });
-    });
-
-    it('should not return circleId if does not exists', function (done) {
-        for (let i = 1; i >= 0; i -= 1) {
-            let circleId = a[i];
-            circleDao.deleteCircle(circleId, function (err, data) {
-                if (err) { throw err; }
-            });
-        }
-
-        request(app)
-            .get('/getallcircles')
-            .expect(404)
-            .expect('Content-Type', /json/)
-            .end((err, res) => {
-                expect(res.body).to.be.an('array').that.is.empty;
-                done();
-            });
-    });
-
-}); //end of describe
+//   it('should return an array of Mailbox Ids when offset is within the range and count is out of range',
+//     function (done) {
+//       request(app)
+//         .get('/mailboxesopen/5/200')
+//         .expect(200)
+//         .expect('Content-Type', /json/)
+//         .end((err4, res) => {
+//           (res.body).should.have.property('users').a('object');
+//           (res.body.users).should.have.property('record_count').a('number').gt(1);
+//           (res.body.users).should.have.property('total_count').a('number').gt(1);
+//           (res.body.users).should.have.property('records').a('Array').with.length.gt(3);
+//           done();
+//         });
+//     });
+//   it('should fail when the given range is not available', function (done) {
+//     request(app)
+//       .get('/getallcircles/110/3')
+//       .expect(404)
+//       .expect('Content-Type', /json/)
+//       .end((err4, res) => {
+//         (res.body).should.have.property('message').a('string').equal('Not found');
+//         done();
+//       });
+//   });
+});

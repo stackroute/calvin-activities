@@ -13,3 +13,8 @@ function getOpenMailboxes(range, callback) {
   };
   return callback(null, response);
 }
+
+
+module.export = {
+  getOpenMailboxes,
+}

@@ -35,15 +35,17 @@ function createPublishActivityToMailbox(req, res) {
   });
 }
 
-function retriveMessageFromMailbox(req,res){
-  activityDao.retriveMessageFromMailbox(req.params.mailboxId, (err,result) => {
-    if (err) { res.status(404).json({ message: `${err}` }); return; }
-    res.status(200).json(result);
+
+function getAllActivities(req, res) {
+  activityDao.retriveMessageFromMailbox(req.params.mailboxId, req.query.before, req.query.after, (err, result) => {
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    res.status(201).json(result);
   });
 }
 
+
 module.exports = {
   createPublishActivity,
-  retriveMessageFromMailbox,
   createPublishActivityToMailbox,
+  getAllActivities,
 };

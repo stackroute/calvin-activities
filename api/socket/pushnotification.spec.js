@@ -7,7 +7,7 @@ const followDao = require('../../dao').follow;
 const publisher = require("redis").createClient([{host:'172.23.238.134', port:'6379'}]);
 require('chai').should();
 
-describe('/push notifications', () => {
+describe('/push notifications using redis', () => {
   let token;
   let socket;
   let io;
@@ -15,7 +15,9 @@ describe('/push notifications', () => {
   let mailboxId;
   const payload = {};
   payload.name = 'Tester';
+  payload.timestamp = new Date();
   let validEventEmitted;
+  let startedFollowing = new Date();
   beforeEach((done) => {
     validEventEmitted = false;
     token = authorize.generateJWTToken();
@@ -24,10 +26,13 @@ describe('/push notifications', () => {
     bootstrapSocketServer(io);
     io.emit('connection', socket);
     circleDao.createCircle((err, result) => {
-      circleId = result.id;
+      if(err){ console.log(err); }
+      circleId = result.circleId;
       mailboxDao.createMailbox((error, result1) => {
-        mailboxId = result1.id;
-        followDao.addFollow({ circleId, mailboxId }, (error1, result2) => {
+        if(error){ console.log(error); }
+        mailboxId = result1.mailboxId;
+        followDao.addFollow({ circleId, mailboxId },startedFollowing, (error1, result2) => {
+          if(error1){ console.log(error1); }
           done();
         });
       });

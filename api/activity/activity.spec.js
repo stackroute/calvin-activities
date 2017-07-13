@@ -72,13 +72,12 @@ describe('/activity API', () => {
       if (err) { done(err); return; }
       expect(doesMailboxExists).be.equal(true);
       request(app)
-        .get(`/circle/${mailboxId}/activity/`)
+        .get(`/circle/getallactivities/${mailboxId}?before='2017-07-15'&after='2017-07-10'`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(200)
+        .expect(201)
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          expect(res.body).to.have.lengthOf.above(0);
           let mailboxActivity = res.body;
           let b = (mailboxActivity[0].payload);
             let c = JSON.parse(b);
@@ -95,10 +94,9 @@ describe('/activity API', () => {
       .get(`/mailbox/${mailboxIdd}/activity`)
       .set('Authorization', `Bearer ${token}`)
       .expect(404)
-      .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        expect(res.body.message).contain('ResponseError');
+        expect(res.body).to.be.an('object').that.is.empty;
         done();
       });
   });

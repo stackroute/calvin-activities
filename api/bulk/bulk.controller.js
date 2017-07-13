@@ -1,34 +1,61 @@
 const circleDAO = require('../../dao').circle;
 const followDAO = require('../../dao').follow;
 const activityDAO = require('../../dao').activity;
+const bulkDAO = require('../../dao').bulk;
 
-function getAllCircles(req, res) {
-  circleDAO.getAllCircles((err, result) => {
-    if (err) { res.status(500).json({ message: `${err}` }); return; }
-    if (result.rows === 0) { res.status(404).json({ message: 'No circles found' }); return; }
-    res.status(201).json(result.rows);
+function getOpenMailboxes(req, res) {
+  const offset = req.params.offset;
+  const count = req.params.count;
+  bulkDao.getOpenMailboxes({ offset, count }, (err, users) => {
+    if (err) { res.status(404).json({ message: `${err}` }); return; }
+    if (!users.record_count) { res.status(404).json({ message: 'Not found' }); return; }
+    res.status(200).json({ users });
   });
 }
 
-function getFollowersMailboxesOfACircle(req, res) {
-  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, (err, result) => {
-    if (err) { res.status(500).json({ message: `${err}` }); return; }
-    if (result.rows === 0) { res.status(404).json({ message: 'No followers found' }); return; }
-    res.status(201).json(result.rows);
-  });
-}
+function bulkFollow(req, res) {
+    console.log("bulk follow");
+  follower = req.body;
+  circleId = req.params.circleId;
+  startFollowing = new Date();
+//   let a = follower.id;
+  // a.forEach(function (mailboxId) {
+  //   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+  //     if (err) { res.status(404).json({ message: `${err}` }); return; }
+  //     const isMailboxExists = doesMailboxExists;
 
-function getAllActivities(req, res) {
-activityDAO.retriveMessageFromMailbox(req.params.mailboxId,(err,result) =>{
- if (err) { res.status(500).json({ message: `${err}` }); return; }
-    if (result === 0) { res.status(404).json({ message: 'No messages found' }); return; }
-    res.status(201).json(result);
-});
-}
+  //     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
+  //       if (err1) { res.status(404).json({ message: `${err1}` }); return; }
+  //       const isCircleExists = doesCircleExists;
 
+  //       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
+  //         if (err2) { res.status(404).json({ message: `${err2}` }); return; }
+  //         const isFollowExists = isExists;
+  //         if (!isMailboxExists) {
+  //           res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
+  //           return;
+  //         }
+
+  //         if (!isCircleExists) {
+  //           res.status(404).json({ message: `Circle with id ${circleId} does not exist` });
+  //           return;
+  //         }
+
+  //         if (isFollowExists) {
+  //           res.status(409).json({ message: `Mailbox ${mailboxId} is already following ${circleId}` });
+  //           return;
+  //         }
+
+  //         followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
+  //           res.status(201).json(data);
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
+}
 
 module.exports = {
-  getAllCircles,
-  getFollowersMailboxesOfACircle,
-  getAllActivities,
+    getOpenMailboxes,
+    bulkFollow,
 };

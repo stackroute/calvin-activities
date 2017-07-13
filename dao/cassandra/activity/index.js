@@ -1,10 +1,10 @@
 const followDao = require('../follow');
 const kafkaClient = require('../../../kafka');
-const start=require('../../../db');
+const start = require('../../../db');
 
 const listeners = {};
 
-const client=start.client;
+const client = start.client;
 
 function publishActivityToListeners(mid, activity) {
   if (!listeners[mid]) { return; }
@@ -13,9 +13,11 @@ function publishActivityToListeners(mid, activity) {
   });
 }
 function publishToMailbox(mid, activity, callback) {
+  console.log("inside dao");
   const payload = JSON.stringify(activity);
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
+    console.log(err);
     if (err) { return callback(err); }
     return callback(err, activity);
   });
@@ -33,22 +35,22 @@ function checkIfMailboxExists(mid, callback) {
   const query = (`SELECT * from activity where mailboxId= ${mid}`);
   client.execute(query, (err, result) => {
     if (err) { return callback(err); }
-    return callback(err, result.rowLength>0);
+    return callback(err, result.rowLength > 0);
   });
 }
 
-function retriveMessageFromMailbox(mid, callback) {
+function retriveMessageFromMailbox(mid, before, after, callback) {
   checkIfMailboxExists(mid, (err, MailIdExists) => {
     if (err) { return callback(err, null); }
     if (MailIdExists) {
-      const query = (`SELECT * from activity where mailboxId= ${mid}`);
+      const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt < ${before} and createdAt > ${after}`);
       client.execute(query, (err1, result) => {
         if (err1) { return callback(err1); }
         return callback(null, result.rows);
       });
     }
-    if(!MailIdExists){
-      return callback(null, "No messages found");
+    if (!MailIdExists) {
+      return callback(null, "No mailbox found");
     }
   });
 }
