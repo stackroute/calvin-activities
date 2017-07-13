@@ -1,6 +1,6 @@
 const config = require('../config').dse;
 
-const model = require('dse-driver');
+const model = require('cassandra-driver');
 
 const client = new model.Client({
   contactPoints: [ config.host ],

@@ -1,9 +1,9 @@
 /* eslint no-unused-expressions:0 */
 
 const kafkaClient = require('./client/kafkaclient');
-const redisClient = require('./client/redisclient');
-const activityDAO = require('./dao').activity;
-const mailboxDAO = require('./dao').mailbox;
+const redisClient = require('./client/redisclient').client;
+const activityDAO = require('./dao/activity');
+const mailboxDAO = require('./dao/mailbox');
 const topic =require('./config').kafka.topics.topic;
 
 const consumer = kafkaClient.consumer;
@@ -37,20 +37,22 @@ consumer.on('message', (message) => {
     setStartTime();
   }
 
-  console.log(message);
   const receiver =JSON.parse(message.value).mailboxId;
   const newActivity = {
     payload: JSON.parse(message.value).payload,
     timestamp: new Date(),
   };
 
-  activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {
+  mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
+    if(err){ console.log({ message: `${err}` }); return;}
+      activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {
       if (error) { console.log({ message: `${error}` }); }
       else{
         if(setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
         setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
       }
     });
+  })
 });
 
 consumer.on('error', err => ({ message: `${err}` }));

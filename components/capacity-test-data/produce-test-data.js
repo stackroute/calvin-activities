@@ -20,6 +20,7 @@ producer.send([{topic: 'm1', messages: messages}], (err, res) => {
 });*/
 
 const {producer} = require('./client/kafkaclient');
+const consumerGroupName = require('./config').consumerGroupName;
 
 function addActivity(n, callback) {
   console.log(`PREPARING ${n} records`);
@@ -47,7 +48,7 @@ function addMDActivity(n, callback) {
       payload: {
         foo: 'bar'
       },
-      mailboxId: 'baz'
+      mailboxId: '9da64d71-fc74-4c45-9249-153d4751c7a6'
     }));
   }
 
@@ -57,7 +58,16 @@ function addMDActivity(n, callback) {
   });
 }
 
-addMDActivity(10000, (err, result) => {
+if(consumerGroupName.indexOf('D') > -1){
+  addMDActivity(10000, (err, result) => {
+    if(err) { console.log('error:', err) ; return;}
+    console.log('PRODUCED 1000000 records');
+  });
+}
+else{
+  addActivity(10000, (err, result) => {
   if(err) { console.log('error:', err) ; return;}
   console.log('PRODUCED 1000000 records');
 });
+}
+
