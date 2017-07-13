@@ -41,15 +41,20 @@ function deleteRoute(circleId, userId, callback) {
 }
 
 function addRoute(circleId, userId, callback) {
+  console.log(`inside addRoute---->${circleId}userId---->-${userId}`);
   createRoute(circleId, userId, (err, result) => {
     if (err) { return callback(err, null); }
     getMultiplexerStatus((err1, selectedMultiplexer) => {
+      // console.log('selectedMultiplexer--->'+selectedMultiplexer);
       if (err1) { return callback(err1, null); }
       l1rService.addRoute({ circleId, multiplexerId: selectedMultiplexer }, (err2, result2) => {
+        // console.log('result2--->'+result2);
         if (err2) { return callback(err2, null); }
         multiplexerService.addMultiplexer(selectedMultiplexer, (err3, result3) => {
+          // console.log('result3--->'+result3);
           if (err3) { return callback(err3, null); }
           multiplexerRouteService.addRoute({ namespace: selectedMultiplexer, circleId, mailboxId: userId }, (err4, result4) => {
+            // console.log('result4--->'+JSON.stringify({ namespace: selectedMultiplexer, circleId, mailboxId: userId }));
             if (err4) { return callback(err4, result4); }
             return callback(null, { circleId, mailboxId: userId });
           });

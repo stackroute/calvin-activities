@@ -17,9 +17,12 @@ function createMailbox(callback) {
 }
 
 function checkIfMailboxExists(mailboxId, callback) {
+  console.log('mailboxId inside checkIfMailboxExists',mailboxId);
   const query = (`SELECT * from mailbox where id = ${mailboxId}`);
+ // console.log('client.execute',client.execute(`SELECT * from mailbox`));
   client.execute(query, (err, result) => {
     if (err) { return callback(err); }
+    console.log('rowLength===>',result);
     return callback(null, result.rowLength > 0);
   });
 }

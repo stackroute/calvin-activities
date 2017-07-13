@@ -13,6 +13,7 @@ function publishActivityToListeners(mid, activity) {
   });
 }
 function publishToMailbox(mid, activity, callback) {
+  console.log('inside publishToMailbox'+mid);
   const payload = JSON.stringify(activity);
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
