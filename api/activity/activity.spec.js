@@ -18,15 +18,16 @@ describe('/activity API', () => {
   let circleId;
   let mailboxId;
   let token;
+  let startedFollowing = new Date();
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
       if (err) { throw err; }
-      circleId = result.id;
+      circleId = result.circleId;
       mailboxDao.createMailbox((error, result1) => {
         if (error) { throw error; }
-        mailboxId = result1.id;
-        followDAO.addFollow({ circleId, mailboxId }, (error1, result2) => {
+        mailboxId = result1.mailboxId;
+        followDAO.addFollow({ circleId, mailboxId }, startedFollowing, (error1, result2) => {
           setTimeout(() => {
             done();
           }, 1500);
@@ -41,34 +42,6 @@ describe('/activity API', () => {
     done();
   });
 
-
-  it(`should publish message to circle mailbox and its followers mailbox,
-   when we publish activity to circle`, (done) => {
-      circleDao.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
-        request(app)
-          .post(`/circle/${circleId}/activity`)
-          .set('Authorization', `Bearer ${token}`)
-          .send({ link: 'www.google.com' })
-          .expect(201)
-          .expect('Content-Type', /json/)
-          .end((err, res) => {
-            if (err) { done(err); return; }
-            expect(res.body).to.have.property('payload');
-            activityDao.checkActivityPublished(circleId, (error, circleActivity) => {
-              if (error) { done(error); return; }
-              expect(circleActivity).to.have.lengthOf(1);
-              expect(circleActivity[0].payload.link).to.equal('www.google.com');
-              activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
-                if (error1) { done(error1); return; }
-                expect(mailboxActivity).to.have.lengthOf(1);
-                expect(mailboxActivity[0].payload.link).to.equal('www.google.com');
-                done();
-              });
-            });
-          });
-      });
-    });
-
   it('should publish message to mailbox when we publish activity to mailbox', (done) => {
     mailboxDao.checkIfMailboxExists(mailboxId, (err1, doesMailboxExists) => {
       request(app)
@@ -80,11 +53,13 @@ describe('/activity API', () => {
         .end((err, res) => {
           if (err) { done(err); return; }
           expect(res.body).to.have.property('payload');
-
           activityDao.checkActivityPublished(mailboxId, (error, mailboxActivity) => {
             if (error) { done(error); return; }
-            expect(mailboxActivity).to.have.lengthOf(2);
-            expect(mailboxActivity[0].payload.link).to.equal('www.facebook.com');
+            expect(mailboxActivity).to.have.lengthOf(1);
+            let b = (mailboxActivity[0].payload);
+            let c = JSON.parse(b);
+            let result = c.payload.link;
+            expect(result).to.equal('www.facebook.com');
             done();
           });
         });
@@ -95,17 +70,19 @@ describe('/activity API', () => {
   it('should retrieve message from Mailbox', (done) => {
     mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
       if (err) { done(err); return; }
-      doesMailboxExists.should.be.equal(true);
+      expect(doesMailboxExists).be.equal(true);
       request(app)
-        .get(`/circle/${circleId}/activity/`)
+        .get(`/circle/getallactivities/${mailboxId}?before='2017-07-15'&after='2017-07-10'`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(200)
+        .expect(201)
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          // expect(res.body).to.have.lengthOf(3);
-          // expect(res.body.new_Act).should.be.a('Array').with.lengthOf(1);
-          // expect(JSON.stringify(res.body[0].payload.link)).to.equal('"www.google.com"');
+          let mailboxActivity = res.body;
+          let b = (mailboxActivity[0].payload);
+            let c = JSON.parse(b);
+            let result = c.payload.link;
+            expect(result).to.equal('www.facebook.com');
           done();
         });
     });
@@ -117,10 +94,9 @@ describe('/activity API', () => {
       .get(`/mailbox/${mailboxIdd}/activity`)
       .set('Authorization', `Bearer ${token}`)
       .expect(404)
-      .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) { done(err); return; }
-        expect(res.body).to.be.an('array').to.have.lengthOf(0);
+        expect(res.body).to.be.an('object').that.is.empty;
         done();
       });
   });

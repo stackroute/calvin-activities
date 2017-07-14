@@ -1,21 +1,22 @@
 const circleDAO = require('../../dao').circle;
 const followDAO = require('../../dao/').follow;
-const mailboxDAO= require('../../dao/').mailbox;
+const mailboxDAO = require('../../dao/').mailbox;
 
 function follow(req, res) {
   const { circleId, mailboxId } = req.params;
+  const startFollowing = new Date();
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
-    const isMailboxExists=doesMailboxExists;
+    const isMailboxExists = doesMailboxExists;
 
     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
       if (err1) { res.status(404).json({ message: `${err1}` }); return; }
-      const isCircleExists=doesCircleExists;
+      const isCircleExists = doesCircleExists;
 
       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
         if (err2) { res.status(404).json({ message: `${err2}` }); return; }
-        const isFollowExists=isExists;
+        const isFollowExists = isExists;
         if (!isMailboxExists) {
           res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
           return;
@@ -31,7 +32,7 @@ function follow(req, res) {
           return;
         }
 
-        followDAO.addFollow({ circleId, mailboxId }, (err3, data) => {
+        followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
           res.status(201).json(data);
         });
       });
@@ -43,15 +44,15 @@ function unfollow(req, res) {
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
-    const isMailboxExists=doesMailboxExists;
+    const isMailboxExists = doesMailboxExists;
 
     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
       if (err1) { res.status(404).json({ message: `${err1}` }); return; }
-      const isCircleExists=doesCircleExists;
+      const isCircleExists = doesCircleExists;
 
       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
         if (err2) { res.status(404).json({ message: `${err2}` }); return; }
-        const isFollowExists=isExists;
+        const isFollowExists = isExists;
 
         if (!isMailboxExists) {
           res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
@@ -68,14 +69,26 @@ function unfollow(req, res) {
           return;
         }
 
-        followDAO.deleteFollow({ circleId, mailboxId }, (err3, result) => {
+        followDAO.deleteFollow({ circleId, mailboxId }, (err3, data) => {
           if (err) { res.status(500).json({ message: ` ${err3}` }); }
-          res.status(200).json(result);
+          res.status(200).json(data);
         });
       });
     });
   });
 }
+
+
+
+   function getFollowersMailboxesOfACircle(req, res) {
+  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit,(err, result) => {
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    if (result.rows === 0) { res.status(404).json({ message: 'No followers found' }); return; }
+    res.status(201).json(result.rows);
+  });
+}
+
+
 module.exports = {
-  follow, unfollow,
+  follow, unfollow, getFollowersMailboxesOfACircle,
 };

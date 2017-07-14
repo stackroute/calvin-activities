@@ -12,7 +12,7 @@ function checkIfRouteExists(route, callback) {
 }
 
 function addRoute(route, callback) {
-  client.sadd(`${route.namespace}:${route.circleId}`, route.mailboxId)(function (err, res) {
+  client.sadd(`${route.namespace}:${route.circleId}`, `${route.mailboxId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });

@@ -1,5 +1,5 @@
 const start = require('../../../db');
-
+const config = require('../../../config');
 const client = start.client;
 const uuid = start.uuid;
 
@@ -7,19 +7,17 @@ const uuid = start.uuid;
 
 function createMailbox(callback) {
   const newMailbox = {
-    id: uuid().toString(),
+    mailboxId: uuid().toString(),
   };
-  const query = ('INSERT INTO mailbox (id) values( ? )');
-  client.execute(query, [newMailbox.id], (err, result) => {
+  const query = ('INSERT INTO mailbox (mailboxId) values( ? )');
+  client.execute(query, [newMailbox.mailboxId], (err, result) => {
     if (err) { return callback(err, null); }
     return callback(null, newMailbox);
   });
 }
 
 function checkIfMailboxExists(mailboxId, callback) {
- // console.log('mailboxId inside checkIfMailboxExists',mailboxId);
-  const query = (`SELECT * from mailbox where id = ${mailboxId}`);
- // console.log('client.execute',client.execute(`SELECT * from mailbox`));
+  const query = (`SELECT * from mailbox where mailboxId = ${mailboxId}`);
   client.execute(query, (err, result) => {
     if (err) { console.log('error returned'+err);return callback(err); }
     console.log('rowLength===>',result.rowLength);
@@ -28,16 +26,46 @@ function checkIfMailboxExists(mailboxId, callback) {
 }
 // Function to delete the mailbox with id. If id not exists returns no mailbox error
 function deleteMailbox(mailboxId, callback) {
-  const query = (`DELETE from  mailbox where id =${mailboxId}`);
+  const query = (`DELETE from  mailbox where mailboxId = ${mailboxId}`);
   client.execute(query, (error, result) => {
     if (error) { callback(error, null); }
-    return callback(null, { id: mailboxId });
+    return callback(null, mailboxId);
   });
 }
 
+
+function getAllMailboxes(limit, callback) {
+  if (limit == 0) {
+    return callback("limit is set to 0", null);
+  }
+
+  else if (limit == -1) {
+    const query = ('SELECT * from mailbox');
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      return callback(null, result);
+    });
+  }
+  else if (limit === undefined) {
+    limit = config.defaultLimit;
+    const query = (`SELECT * from mailbox limit ${limit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      return callback(null, result);
+    });
+  }
+  else{
+    const query = (`SELECT * from mailbox limit ${limit}`);
+    client.execute(query, (error, result) => {
+    if (error) { return callback(error, null); }
+    return callback(null, result);
+  });
+  }
+}
 
 module.exports = {
   createMailbox,
   checkIfMailboxExists,
   deleteMailbox,
+  getAllMailboxes,
 };

@@ -36,22 +36,20 @@ function createPublishActivityToMailbox(req, res) {
 }
 
 
-function getActivity(req, res) {
-  const mailId = req.params.mailboxId;
-  //  const offset = req.params.offset;
-  // const count = req.params.count;
-  activityDao.retriveMessageFromMailbox(mailId, (err, result) => {
-    if (err) {
-      res.status(404).json([]); return;
-    }
-    res.json(result);
+function getAllActivities(req, res) {
+  let limit = req.query.limit;
+  let before = req.query.before;
+  let after = req.query.after;
+  let mailboxId = req.params.mailboxId;
+  activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    res.status(201).json({totalItems: result.length, items: result});
   });
-  return null;
 }
 
 
 module.exports = {
   createPublishActivity,
-  getActivity,
   createPublishActivityToMailbox,
+  getAllActivities,
 };

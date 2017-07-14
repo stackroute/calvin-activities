@@ -25,10 +25,10 @@ describe('/follow api', () => {
   before(function (done) {
     token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
-      circleId = result.id;
+      circleId = result.circleId;
     });
     mailboxDAO.createMailbox((err, result) => {
-      mailboxId = result.id;
+      mailboxId = result.mailboxId;
     });
     token = authorize.generateJWTToken();
     setTimeout(() => {
@@ -50,8 +50,8 @@ describe('/follow api', () => {
             .expect('Content-Type', /json/)
             .end((err4, res) => {
               if (err4) { done(err4); return; }
-              res.body.should.have.property('circleId').equal(circleId).a('string');
-              res.body.should.have.property('mailboxId').equal(mailboxId).a('string');
+              res.body.should.have.property('circleId').equal(circleId);
+              res.body.should.have.property('mailboxId').equal(mailboxId);
               followDAO.checkIfFollowExists({ circleId, mailboxId }, (err3, doesFollowExistsAfter) => {
                 doesFollowExistsAfter.should.be.equal(true);
                 done();
@@ -78,6 +78,7 @@ describe('/follow api', () => {
             .end((err3, res) => {
               if (err3) { done(err3); return; }
               res.body.should.have.property('message').equal(`Circle with id ${randomCircleId} does not exist`);
+              // res.body.should.have.property('message').equal('Link does not exist');
               followDAO.checkIfFollowExists({ circleId: randomCircleId, mailboxId }, (err4, doesFollowExistsAfter) => {
                 if (err4) { done(err4); return; }
                 doesFollowExistsAfter.should.be.equal(false);
@@ -305,4 +306,41 @@ describe('/follow api', () => {
       });
     });
   });
+
+it('should return circle with limit', (done) => {
+    request(app)
+      .get('/circle/getallcircles?limit=5')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.equal(5);
+        for (let i = 0; i < 5; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
+        }
+        done();
+      });
+  });
+    it('should return circle without limit', (done) => {
+    request(app)
+      .get('/circle/getallcircles')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.above(0);
+        for (let i = 0; i < res.body.totalItems; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
+        }  
+        done();
+      });
+  });
+
+
 });

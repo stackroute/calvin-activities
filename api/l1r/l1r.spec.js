@@ -24,6 +24,7 @@ describe('L1R routes api', function () {
   const checkIfRouteExists = thunk.thunkify(l1rService.checkIfRouteExists);
   const addRoute = thunk.thunkify(l1rService.addRoute);
 
+
   before(function (done) {
     circleId = uuid();
     multiplexerId = Math.floor(Math.random()*50);
@@ -98,7 +99,6 @@ describe('L1R routes api', function () {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((error, res) => {
-          console.log(error);
           res.body.should.have.property('result');
           (res.body.result).should.be.equal(1);
           done();

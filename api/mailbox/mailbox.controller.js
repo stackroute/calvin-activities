@@ -1,4 +1,4 @@
-const mailboxDao = require('../../dao').mailbox;
+const mailboxDao = require('../../dao/').mailbox;
 
 function createMailbox(req, res) {
   mailboxDao.createMailbox((err, newMailbox) => {
@@ -16,13 +16,22 @@ function deleteMailbox(req, res) {
     }
     mailboxDao.deleteMailbox(req.params.mailboxId, (err, deletedMailbox) => {
       if (err) { res.status(404).json({ message: `${err}` }); return; }
-      res.status(200).json(deletedMailbox);
+      res.status(200).json({ mailboxId: `${deletedMailbox}` });
     });
   });
 }
 
+function getAllMailboxes(req, res) {
+  mailboxDao.getAllMailboxes(req.query.limit, (err, result) => {
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    res.status(201).json({ totalItems: result.rows.length, items: result.rows });
+  });
+}
+
+
 module.exports = {
   createMailbox,
   deleteMailbox,
+  getAllMailboxes,
 };
 

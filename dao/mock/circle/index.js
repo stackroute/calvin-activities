@@ -12,8 +12,8 @@ function createCircle(callback) {
     circleMailbox = newMailbox.id;
   });
   const newCircle = {
-    id: uuid().toString(),
-    mailboxid: circleMailbox,
+    circleId: uuid().toString(),
+    mailboxId: circleMailbox,
     createdOn: Date.now(),
     lastActivity: Date.now(),
   };
@@ -22,6 +22,7 @@ function createCircle(callback) {
 }
 
 function checkIfCircleExists(circleId, callback) {
+  console.log('In mock DAO');
   const filterCircle = circles.filter(circle => circle.id === circleId);
   callback(null, filterCircle.length!==0);
 }

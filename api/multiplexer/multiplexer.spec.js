@@ -15,7 +15,7 @@ const client = redis.createClient();
 describe('/multiplexer api', () => {
   let mxId;
   before((done) => {
-    mxId = 'm47';
+    mxId = Math.floor(Math.random()*50);
     done();
   });
   after((done) => {

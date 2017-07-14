@@ -21,10 +21,11 @@ module.exports = {
     multiplexerConsumerGroup: 'm1CG',
   },
   redis: {
-    host: '127.0.0.1',
+    host: '172.23.238.134',
     port: '6379',
   },
   namespace: 'L1R',
   namespacemul: 'multiplexer',
   namespaceroutemanager: 'routesmanager',
+  defaultLimit: 10,
 };
