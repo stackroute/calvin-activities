@@ -1,3 +1,16 @@
-<h1>
-  {{title}}
-</h1>
+
+<md-card>
+  <md-card-content>
+    <table>
+      <tr>
+        <th>Topic</th>
+        <th>Count</th>
+      </tr>
+      <tr *ngFor="let msg of messages">
+        <td>{{msg.topic}}</td>
+        <td>{{msg.count}}</td>
+      </tr>
+      
+</table>
+ </md-card-content>
+</md-card>

@@ -7,12 +7,11 @@ import * as io from 'socket.io-client';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
-
+  messages = new Array({topic : 'mx1' , count : 92143 },{topic : 'mx2' , count : 12440 },{topic : 'mx3' , count : 92440 });  
   constructor() {
     const socket = io('localhost:3000');
     socket.on('msg', (value) => {
-      console.log('value:', value);
+   // this.messages.push(value); 
     });
   }
 }
