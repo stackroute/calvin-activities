@@ -1,0 +1,15 @@
+{
+  "name": "capacity-test-data",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node produce-test-data"
+  },
+  "author": "Sagar Patke <sagarpatke@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "kafka-node": "^2.0.0"
+  }
+}

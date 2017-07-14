@@ -1,0 +1,3 @@
+[submodule "components/spotify-kafka"]
+	path = components/spotify-kafka
+	url = https://github.com/spotify/docker-kafka
