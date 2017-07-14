@@ -23,6 +23,16 @@ services:
       DSE_HOST: dse
       DSE_KEYSPACE: testdb
       CONSUMER_GROUP: m1D
+  l1r:
+    image: l1r
+    build: l1r
+    links:
+      - redis
+      - kafka
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka 
+      CONSUMER_GROUP: l1r
   redis:
     image: redis
   kafka:
