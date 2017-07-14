@@ -6,7 +6,8 @@ docker-compose down --remove-orphans
 
 docker-compose up -d --build kafka
 
-sleep 20
+echo "Sleeping for 5s after kafka starts"
+sleep 5
 
 chmod +x ./bootstrapl1r.sh 
 
@@ -14,9 +15,14 @@ chmod +x ./bootstrapl1r.sh
 
 docker-compose up -d --build redis
 
+# Setup routes
+redis-cli SADD L1R:baz m1
+redis-cli SADD L1R:baz m2
+redis-cli SADD L1R:baz m3
+
 docker-compose up -d --build l1r
 
 docker-compose scale l1r=3
 
-docker-compose up -d --build produce
+docker-compose up -d --build produce-l1r
 

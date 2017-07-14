@@ -1,7 +1,7 @@
 
 const redisClient = require('./client/redisclient').client;
 
-const topic =require('./config').kafka.topics.topic;
+const topic =require('./config').kafka.topics[0];
 
 const kafkaClient = require('./client/kafkaclient');
 

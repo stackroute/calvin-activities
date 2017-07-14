@@ -24,5 +24,5 @@ docker-compose up -d --build redis
 
 docker-compose up -d --build multiplexer-delivery
 docker-compose scale multiplexer-delivery=3
-docker-compose up -d --build produce
+docker-compose up -d --build produce-multiplexer-delivery
 
