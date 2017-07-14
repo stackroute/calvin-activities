@@ -58,7 +58,7 @@ function deleteRoute(req, res) {
       if (err1) { res.status(404).json({ message: err }); return; }
       if (result) { res.status(200).json({ result }); } else {
         res.status(404).json({ message: `circle with id ${route.circleId}
-      does not have a route for multiplexer with id ${route.multiplexerId} ` });
+      does not have a route for multiplexer with id ${route.multiplexerId}` });
       }
     });
   });

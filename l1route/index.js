@@ -14,7 +14,7 @@ consumer.on('message', (message) => {
   redis.incr(`${topic}:count`);
   const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleId}`;
   const msg = JSON.parse(message.value).payload;
-  redis.client.info('server')(function (error, res) {
+  redis.info('server')(function (error, res) {
     return this.select(0);
   })(function (error, res) {
     return this.smembers(key);
