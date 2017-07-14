@@ -1,5 +1,5 @@
 const start = require('../../../db');
-
+const config = require('../../../config');
 const client = start.client;
 const uuid = start.uuid;
 
@@ -33,8 +33,38 @@ function deleteMailbox(mailboxId, callback) {
 }
 
 
+function getAllMailboxes(limit, callback) {
+  if (limit == 0) {
+    return callback("limit is set to 0", null);
+  }
+
+  else if (limit == -1) {
+    const query = ('SELECT * from mailbox');
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      return callback(null, result);
+    });
+  }
+  else if (limit === undefined) {
+    limit = config.defaultLimit;
+    const query = (`SELECT * from mailbox limit ${limit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      return callback(null, result);
+    });
+  }
+  else{
+    const query = (`SELECT * from mailbox limit ${limit}`);
+    client.execute(query, (error, result) => {
+    if (error) { return callback(error, null); }
+    return callback(null, result);
+  });
+  }
+}
+
 module.exports = {
   createMailbox,
   checkIfMailboxExists,
   deleteMailbox,
+  getAllMailboxes,
 };

@@ -25,4 +25,5 @@ module.exports = {
   namespace: 'L1R',
   namespacemul: 'multiplexer',
   namespaceroutemanager: 'routesmanager',
+  defaultLimit: 10,
 };
