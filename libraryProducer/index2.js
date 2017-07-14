@@ -4,7 +4,7 @@ function producer(msg) {
     
     console.log('Successfull  :', msg);
 }
-const topicName = 'testtopic2';
+const topicName = 'monitoring';
 const message = 'hello world';
 
 producer1.registeredProducer(topicName, message, producer);

@@ -1,4 +1,4 @@
 {
-    "connectionString" : "172.23.238.134:2181",
+    "connectionString" : "127.0.0.1:2181",
     "clientId" : "kafka-node-client"
 }
