@@ -9,6 +9,8 @@ const consumer = kafkaClient.consumer;
 
 const producer = kafkaClient.producer;
 
+const thisConsumerId = kafkaClient.thisConsumerId;
+
 let startTimeAlreadySet = false;
 
 function setStartTime() {
@@ -41,7 +43,7 @@ consumer.on('message', (message) => {
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
-  redisClient.incr(`${topic}:count`)((err, result) => {  });
+  redisClient.incr(`${thisConsumerId}:count`)((err, result) => {  });
   redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
     followers = result;
     const arr = [];

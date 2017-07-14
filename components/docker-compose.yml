@@ -12,7 +12,7 @@ services:
       CONSUMER_GROUP: m1
   multiplexer-delivery:
     image: multiplexer-delivery
-    build: multiplexerDelivery
+    build: multiplexer-delivery
     links:
       - redis
       - kafka
