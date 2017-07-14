@@ -10,7 +10,7 @@ echo "Sleeping for 75s after dse starts"
 sleep 75
 
 echo "Connecting to DSE"
-./bootstrapMD.sh
+./bootstrap-md.sh
 
 docker-compose up -d --build kafka
 
@@ -24,5 +24,5 @@ docker-compose up -d --build redis
 
 docker-compose up -d --build multiplexer-delivery
 docker-compose scale multiplexer-delivery=3
-docker-compose up -d --build produce
+docker-compose up -d --build produce-multiplexer-delivery
 

@@ -1,13 +1,15 @@
 
 const redisClient = require('./client/redisclient').client;
 
-const topic =require('./config').kafka.topics.topic;
+const topic =require('./config').kafka.topics[0];
 
 const kafkaClient = require('./client/kafkaclient');
 
 const consumer = kafkaClient.consumer;
 
 const producer = kafkaClient.producer;
+
+const thisConsumerId = kafkaClient.thisConsumerId;
 
 let startTimeAlreadySet = false;
 
@@ -41,7 +43,7 @@ consumer.on('message', (message) => {
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
-  redisClient.incr(`${topic}:count`)((err, result) => {  });
+  redisClient.incr(`${thisConsumerId}:count`)((err, result) => {  });
   redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
     followers = result;
     const arr = [];

@@ -4,7 +4,7 @@ const kafkaClient = require('./client/kafkaclient');
 const redisClient = require('./client/redisclient').client;
 const activityDAO = require('./dao/activity');
 const mailboxDAO = require('./dao/mailbox');
-const topic =require('./config').kafka.topics.topic;
+const topic =require('./config').kafka.topics[0];
 
 const consumer = kafkaClient.consumer;
 
