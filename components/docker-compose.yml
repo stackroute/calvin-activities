@@ -25,6 +25,8 @@ services:
       CONSUMER_GROUP: m1D
   redis:
     image: redis
+    ports:
+      - 6379:6379
   kafka:
     image: spotify/kafka
     build: spotify-kafka/kafka

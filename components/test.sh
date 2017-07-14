@@ -19,4 +19,3 @@ for i in $( seq 0 99 ); do redis-cli SADD m1:baz $i; done;
 docker-compose up -d --build multiplexer
 docker-compose scale multiplexer=3
 docker-compose up -d --build produce
-
