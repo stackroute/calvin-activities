@@ -27,13 +27,18 @@ function createPublishActivity(mid, activity, callback) {
   msg.payload = activity;
   msg.payload.requestedAt = new Date();
   msg.circleId = mid;
-  kafkaClient.addActivity(msg, (err, data) => callback(err, data));
-  const query = (`UPDATE circle SET lastPublishedActivity = ? where circleId=?`);
-  client.execute(query, [new Date(), mid], (err, result) => {
-    console.log(err);
-    console.log(result);
-    if (err) { return callback(err); }
-    return callback(err, activity);
+  kafkaClient.addActivity(msg, (err, data) => {
+    if (err) { return callback(err, null); }
+    const query1 = (`select createdOn from circle where circleId = ${mid}`);
+    client.execute(query1, (err, result) => {
+      if (err) { return callback(err, null); }
+      let c = result.rows[0].createdon;
+      const query = (`UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?`);
+      client.execute(query, [new Date(), mid, c], (err, result) => {
+        if (err) { return callback(err, null); }
+        callback(null, data);
+      });
+    });
   });
 }
 
@@ -136,9 +141,9 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
         });
       }
     }
-   // else { return callback(null, "limit is 0");} 
+    // else { return callback(null, "limit is 0");} 
   });
- return callback(null, "limit is 0 or maiboxid does not exists");
+  return callback(null, "limit is 0 or maiboxid does not exists");
 }
 
 function addListnerToMailbox(mid, socket) {

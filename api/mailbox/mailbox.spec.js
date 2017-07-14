@@ -77,5 +77,34 @@ describe('/mailbox api', () => {
         });
     });
   });
+
+  it('should return mailbox with limit', (done) => {
+    request(app)
+      .get('/mailbox/getallmailboxes?limit=5')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.equal(5);
+        for (let i = 0; i < 5; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+        }
+        done();
+      });
+  });
+  it('should return circle without limit', (done) => {
+    request(app)
+      .get('/mailbox/getallmailboxes')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.above(0);
+        for (let i = 0; i < res.body.totalItems; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+        }
+        done();
+      });
+  });
 });
 
