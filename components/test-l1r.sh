@@ -9,9 +9,9 @@ docker-compose up -d --build kafka
 echo "Sleeping for 5s after kafka starts"
 sleep 5
 
-chmod +x ./bootstrapl1r.sh 
+chmod +x ./bootstrap-l1r.sh 
 
-./bootstrapl1r.sh
+./bootstrap-l1r.sh
 
 docker-compose up -d --build redis
 

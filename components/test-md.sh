@@ -10,7 +10,7 @@ echo "Sleeping for 75s after dse starts"
 sleep 75
 
 echo "Connecting to DSE"
-./bootstrapMD.sh
+./bootstrap-md.sh
 
 docker-compose up -d --build kafka
 

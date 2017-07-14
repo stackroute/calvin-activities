@@ -34,7 +34,7 @@ function addActivity(n, callback) {
     for(let i=0; i<10; i++) {
       send.push({topic: topic, partition: i, messages: i===9 ? messages : messages.splice(0, n/10)});
     }
-
+    
     producer.send(send, (err, data) => callback(err, data));
   });
 }
