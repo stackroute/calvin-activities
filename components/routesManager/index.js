@@ -18,7 +18,8 @@ if (messages.command == 'addRoute'){
          else{return { message: 'result' } }
      })
         }
-else if (messages.command== 'removeRoute'){        
+else if (messages.command== 'removeRoute'){
+           
   routesManagerDao. removeRoute(circleId,mailboxId,(err,result)=>{
          if(err){return { message: 'err' } }
          else {return { message: 'result' } }
