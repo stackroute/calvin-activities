@@ -23,17 +23,18 @@ function publishToMailbox(mid, activity, callback) {
 }
 
 function createPublishActivity(mid, activity, callback) {
-  //  const query = (`UPDATE circle SET lastPublished = ${Date.now()} where circleId=mid`);
-  // client.execute(query, [], (err, result) => {
-  //   console.log(err);
-  //   if (err) { return callback(err); }
-  //   return callback(err, activity);
-  // });
   const msg = {};
   msg.payload = activity;
   msg.payload.requestedAt = new Date();
   msg.circleId = mid;
   kafkaClient.addActivity(msg, (err, data) => callback(err, data));
+  const query = (`UPDATE circle SET lastPublishedActivity = ? where circleId=?`);
+  client.execute(query, [new Date(), mid], (err, result) => {
+    console.log(err);
+    console.log(result);
+    if (err) { return callback(err); }
+    return callback(err, activity);
+  });
 }
 
 function checkIfMailboxExists(mid, callback) {

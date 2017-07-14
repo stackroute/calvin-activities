@@ -82,18 +82,21 @@ describe('/circle api', function () {
   });
 
   it('should return all circle', (done) => {
-      request(app)
-        .get('/circle/getallcircles?limit=2')
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err1, res) => {
-          expect(res.body.length).to.be.equal(2);
-          done();
-        });
+    request(app)
+      .get('/circle/getallcircles?limit=5')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.equal(5);
+        for (let i = 0; i < 5; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+        }
+        done();
+      });
   });
 });
 
-  
-   
+
+
 
