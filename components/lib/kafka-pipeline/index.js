@@ -1,14 +1,7 @@
-const registerconsumer = require('./register-consumer');
+const producer = require('./producer');
 
-// registerconsumer.registerConsumer(config, topicName, consumerGroupName, onMessage);
+const registerConsumer = require('./register-consumer');
 
-// module.exports = { registerConsumer };
-
-function registerConsumer(config, topicName, consumerGroupName, onMessage) {
-  console.log('inside index.js library file');
-	 return registerconsumer.registerConsumer(config, topicName, consumerGroupName, onMessage);
-}
-
-module.exports ={
-  registerConsumer,
+module.exports = {
+  producer, registerConsumer
 };

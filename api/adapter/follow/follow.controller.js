@@ -8,21 +8,19 @@ function addFollow(req, res) {
       res.status(404).json({ message: 'Domain does not exist' });
       return;
     }
-    adapterDAO.checkIfUserExists(req.params.user, (error, doesUserExists) => {
-      if (error) { res.status(500).json({ message: `${error}` }); return; }
+    adapterDAO.checkIfUserExists(req.params.user, (error1, doesUserExists) => {
+      if (error1) { res.status(500).json({ message: `${error1}` }); return; }
       if (!doesUserExists) {
         res.status(404).json({ message: 'User does not exist' });
         return;
       }
       const obj = {
-        // domain: req.params.domain,
-        // user: req.params.user,
         circleId: (doesDomainExists.circleid).toString(),
         mailboxId: (doesUserExists.mailboxid).toString(),
-      }
+      };
       const startFollowing = new Date();
-      followDAO.addFollow(obj, startFollowing, (error, addfollower) => {
-        if (error) { res.status(500).json({ message: `${error}` }); return; }
+      followDAO.addFollow(obj, startFollowing, (error2, addfollower) => {
+        if (error2) { res.status(500).json({ message: `${error2}` }); return; }
         res.status(201).json(obj);
       });
     });
@@ -31,7 +29,6 @@ function addFollow(req, res) {
 
 
 function deleteFollow(req, res) {
-
   adapterDAO.checkIfDomainExists(req.params.domain, (error, doesDomainExists) => {
     if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesDomainExists) {
@@ -39,8 +36,8 @@ function deleteFollow(req, res) {
       return;
     }
 
-    adapterDAO.checkIfUserExists(req.params.user, (error, doesUserExists) => {
-      if (error) { res.status(500).json({ message: `${error}` }); return; }
+    adapterDAO.checkIfUserExists(req.params.user, (error1, doesUserExists) => {
+      if (error1) { res.status(500).json({ message: `${error1}` }); return; }
       if (!doesUserExists) {
         res.status(404).json({ message: 'User does not exist' });
         return;
@@ -65,4 +62,4 @@ function deleteFollow(req, res) {
 }
 
 
-module.exports = { addFollow, deleteFollow, }
+module.exports = { addFollow, deleteFollow };

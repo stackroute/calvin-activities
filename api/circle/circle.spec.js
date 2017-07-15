@@ -97,7 +97,7 @@ describe('/circle api with pagination', function () {
 
   it('should return circle with limit', (done) => {
     request(app)
-      .get(`/circle/getallcircles?limit=5`)
+      .get('/circle/getallcircles?limit=5')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
@@ -105,7 +105,7 @@ describe('/circle api with pagination', function () {
         console.log(res.body.text.items[0]);
         expect(res.body.totalItems).to.be.equal(5);
         for (let i = 0; i < 5; i += 1) {
-          console.log(res)
+          console.log(res);
           expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');

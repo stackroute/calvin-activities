@@ -8,18 +8,15 @@ module.exports = {
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'route' },
+    topics: { topic: 'events' },
     options: {
       autoCommit: false,
       fromOffset: true,
     },
-
+    routesTopic: 'route',
   },
   redis: {
     host: '127.0.0.1',
     port: '6379',
   },
-  namespace: 'L1R',
-  namespacemul: 'multiplexer',
-  namespaceroutemanager: 'routesmanager',
 };

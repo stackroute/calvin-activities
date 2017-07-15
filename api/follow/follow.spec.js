@@ -360,6 +360,4 @@ describe('/follow api', () => {
   //       done();
   //     });
   // });
-
-
 });
