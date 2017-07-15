@@ -13,3 +13,7 @@ cqlsh -e "create table testdb.mailboxesFollowingCircle(circleId uuid,mailboxId u
 cqlsh -e "create table testdb.circlesFollowedByMailbox(mailboxId uuid, circleId uuid, startedFollowing timestamp, primary key(mailboxId,circleId)) WITH CLUSTERING ORDER BY (circleId DESC)"
 
 cqlsh -e "CREATE TABLE testdb.activity (mailboxid uuid,createdat timestamp,payload text,PRIMARY KEY (mailboxid, createdat)) WITH CLUSTERING ORDER BY (createdat DESC)"
+
+cqlsh -e "CREATE TABLE testdb.domain (domain text PRIMARY KEY, circleid uuid, mailboxid uuid)"
+
+cqlsh -e "CREATE TABLE testdb.user (user text PRIMARY KEY,mailboxid uuid)"

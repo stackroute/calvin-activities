@@ -9,6 +9,9 @@ function checkStatus(req, res) {
   eventService.sendevent(event);
   res.status(201).json(event);
 }
+
+
+
 module.exports = {
   checkStatus,
 };

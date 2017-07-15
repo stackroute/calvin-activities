@@ -20,6 +20,7 @@ function setStartTime() {
       console.log('Reply Not Set');
       return redisClient.set('startTime', (new Date()).getTime());
     }
+    return 0;
   })((err, response) => {
     if (err) { console.log(err); } else { console.log('Reply Already Set'); }
   });

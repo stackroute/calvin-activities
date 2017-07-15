@@ -20,7 +20,7 @@ function createCircle(callback) {
 }
 
 function checkIfCircleExists(circleId, callback) {
-  const filterCircle = circles.filter(circles => circles.circleId === circleId);
+  const filterCircle = circles.filter(x => x.circleId === circleId);
   return callback(null, filterCircle.length !== 0);
 }
 
@@ -39,15 +39,15 @@ function getAllCircles(limit, callback) {
     const b = circles;
     return callback(null, { a, b });
   } else if (limit === undefined) {
-    limit = config.defaultLimit;
-    for (let i = 0; i < limit; i++) {
+    const defaultLimit = config.defaultLimit;
+    for (let i = 0; i < defaultLimit; i += 1) {
       result.push(circles[i]);
     }
     const a = result.length;
     const b = result;
     return callback(null, { a, b });
   } else {
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < limit; i += 1) {
       result.push(circles[i]);
     }
     const a = result.length;

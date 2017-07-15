@@ -6,10 +6,10 @@ const producer = kafkaClient.producer;
 
 const followDao = require('./dao/getCircles');
 
-const routes_Topic =kafkaClient.routesTopic;
+const routesTopic =kafkaClient.routesTopic;
 
 consumer.on('message', (message) => {
-  mailboxId= JSON.parse(message.value).mailboxId;
+  const mailboxId= JSON.parse(message.value).mailboxId;
 
   let command;
 
@@ -30,7 +30,7 @@ consumer.on('message', (message) => {
         mailboxid: mailboxId,
         command,
       };
-      const payloads = [{ topic: routes_Topic, messages: JSON.stringify(obj), partition: 0 }];
+      const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj), partition: 0 }];
       producer.send(payloads, (err, data) => {
         if (err) { return { message: 'err' }; }
       });

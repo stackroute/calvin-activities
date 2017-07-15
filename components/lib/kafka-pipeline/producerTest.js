@@ -1,5 +1,6 @@
 const producer = require('./producer');
-const {send} = producer;
+
+const { send } = producer;
 const kafka = require('kafka-node'),
   Consumer = kafka.Consumer;
 const { host, port } = require('./config').kafka;
@@ -16,7 +17,6 @@ setInterval(() => {
   // console.log('setInterval');
   send([{ topic: 't1', messages: [JSON.stringify({ foo: 'bar' })] }]);
 
-	
 
   const consumer = new Consumer(
     client,
@@ -38,8 +38,6 @@ setInterval(() => {
       console.log('else count inside consumer==>', JSON.parse(msg.topicCount));
     	console.log('false');
     }
-
-
-});
- },3000);
+  });
+}, 3000);
 
