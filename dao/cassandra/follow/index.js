@@ -3,6 +3,7 @@ const start=require('../../../db');
 const client=start.client;
 
 function addFollow(follower, startedFollowing, callback) {
+  console.log("Cassandra");
   const query = ('INSERT INTO mailboxesFollowingCircle (circleid, mailboxid, startedFollowing ) values(?, ?, ? )');
   client.execute(query, [follower.circleId, follower.mailboxId, startedFollowing], (err, result) => {
     if (err) { throw err; }
@@ -16,6 +17,7 @@ function addFollow(follower, startedFollowing, callback) {
 
 
 function checkIfFollowExists(follower, callback) {
+  console.log("Cassandra");
   const query = (`SELECT * from mailboxesFollowingCircle where circleid = ${follower.circleId}
    AND mailboxid = ${follower.mailboxId}`);
   client.execute(query, (err, result) => {
@@ -25,6 +27,7 @@ function checkIfFollowExists(follower, callback) {
 }
 
 function deleteFollow(follower, callback) {
+  console.log("Cassandra");
   const query = (`DELETE FROM mailboxesFollowingCircle where circleId = ${follower.circleId} AND mailboxId = ${follower.mailboxId}`);
   client.execute(query, (err, result) => {
     if (err) { throw err; }
@@ -37,6 +40,7 @@ function deleteFollow(follower, callback) {
 }
 
 function splitMailId(circleId, callback) {
+  console.log("Cassandra");
   const query = (`SELECT * from follow where circleid = ${circleId}`);
   client.execute(query, (err, result) => {
     if (err) { return callback(err); }
@@ -45,6 +49,7 @@ function splitMailId(circleId, callback) {
 }
 
 function getFollowersMailboxesOfACircle(circleId, limit, callback){
+  console.log("Cassandra");
    if (limit == 0) {
     return callback("limit is set to 0", null);
     return;

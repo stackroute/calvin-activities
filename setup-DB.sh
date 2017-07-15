@@ -4,7 +4,7 @@ set -e
 
 cqlsh -e "create keyspace testdb with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }"
 
-cqlsh -e "create table testdb.circle (circleId uuid, mailboxId uuid, createdOn timestamp, PRIMARY KEY(circleId, createdOn)) WITH CLUSTERING ORDER BY (createdOn DESC)"
+cqlsh -e "create table testdb.circle (circleId uuid, mailboxId uuid, createdOn timestamp, lastPublishedActivity timestamp, PRIMARY KEY(circleId, createdOn)) WITH CLUSTERING ORDER BY (createdOn DESC)"
 
 cqlsh -e "create table testdb.mailbox(mailboxId uuid primary key)"
 
