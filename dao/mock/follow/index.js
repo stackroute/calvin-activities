@@ -1,14 +1,21 @@
 const followapi = [];
 
-function addFollow(follower, callback) {
-  followapi.push(follower);
+function addFollow(follower, startedFollowing, callback) {
+  followapi.push(follower.circleId,follower.mailboxId,startedFollowing);
+   console.log("dao");console.log(followapi);
   return callback(null, follower);
 }
 
+
 function checkIfFollowExists(follower, callback) {
+  console.log("=============================");
+  console.log(followapi);
+  console.log(follower);
+  console.log("=============================");
   const filterData = follow => follow.circleId === follower.circleId && follow.mailboxId === follower.mailboxId;
   const filteredFollowers = followapi.filter(filterData);
-  return callback(null, filteredFollowers.length !== 0);
+  console.log(filteredFollowers);
+  return callback(null, filteredFollowers.length > 0);
 }
 function deleteFollow(follower, callback) {
   const filter = followapi.filter(y => y.circleId === follower.circleId && y.mailboxId === follower.mailboxId);

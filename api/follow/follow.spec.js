@@ -4,9 +4,11 @@ const app = require('../../app');
 
 require('chai').should();
 
+const expect = require('chai').expect;
+
 const request = require('supertest');
 
-const start=require('../../db');
+const start = require('../../db');
 
 const circleDAO = require('../../dao').circle;
 
@@ -63,7 +65,7 @@ describe('/follow api', () => {
   });
 
   it('should fail to add follow if circle does not exist, but mailbox exists', (done) => {
-    const randomCircleId=uuid();
+    const randomCircleId = uuid();
     mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(true);
       circleDAO.checkIfCircleExists(randomCircleId, (err1, doesCircleExists) => {
@@ -91,7 +93,7 @@ describe('/follow api', () => {
   });
 
   it('should fail to add follow if mailbox id does not exist, but circle exists', (done) => {
-    const randomMailboxId=uuid();
+    const randomMailboxId = uuid();
     mailboxDAO.checkIfMailboxExists(randomMailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(false);
       circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
@@ -118,8 +120,8 @@ describe('/follow api', () => {
   });
 
   it('should fail to add follow if circle id and mailbox id do not exist', (done) => {
-    const randomCircleId=uuid();
-    const randomMailboxId=uuid();
+    const randomCircleId = uuid();
+    const randomMailboxId = uuid();
     mailboxDAO.checkIfMailboxExists(randomMailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(false);
       circleDAO.checkIfCircleExists(randomCircleId, (err1, doesCircleExists) => {
@@ -225,7 +227,7 @@ describe('/follow api', () => {
   });
 
   it('should fail to delete follower if circle id does not exist, but mailbox exists', (done) => {
-    const randomCircleId=uuid();
+    const randomCircleId = uuid();
     mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(true);
       circleDAO.checkIfCircleExists(randomCircleId, (err1, doesCircleExists) => {
@@ -252,7 +254,7 @@ describe('/follow api', () => {
   });
 
   it('should fail to delete follower if mailbox id does not exist, but circle exists', (done) => {
-    const randomMailboxId=uuid();
+    const randomMailboxId = uuid();
     mailboxDAO.checkIfMailboxExists(randomMailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(false);
       circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
@@ -279,8 +281,8 @@ describe('/follow api', () => {
   });
 
   it('should fail to delete follower if circle id and mailbox id do not exist', (done) => {
-    const randomCircleId=uuid();
-    const randomMailboxId=uuid();
+    const randomCircleId = uuid();
+    const randomMailboxId = uuid();
     mailboxDAO.checkIfMailboxExists(randomMailboxId, (err, doesMailboxExists) => {
       doesMailboxExists.should.be.equal(false);
       circleDAO.checkIfCircleExists(randomCircleId, (err1, doesCircleExists) => {
@@ -307,40 +309,57 @@ describe('/follow api', () => {
     });
   });
 
-it('should return circle with limit', (done) => {
-    request(app)
-      .get('/circle/getallcircles?limit=5')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end((err1, res) => {
-        expect(res.body.totalItems).to.be.equal(5);
-        for (let i = 0; i < 5; i += 1) {
-          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
-        }
-        done();
-      });
-  });
-    it('should return circle without limit', (done) => {
-    request(app)
-      .get('/circle/getallcircles')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end((err1, res) => {
-        expect(res.body.totalItems).to.be.above(0);
-        for (let i = 0; i < res.body.totalItems; i += 1) {
-          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
-        }  
-        done();
-      });
-  });
+
+  // it('should return all followers with limit', (done) => {
+  //   for (let i = 0; i <= 5; i++) {
+  //     mailboxDAO.createMailbox((err, result) => {
+  //       if (err) { throw err; }
+  //       mailboxId = result.mailboxId;
+  //       console.log(mailboxId);
+  //       const follower = { circleId, mailboxId };
+  //       let startedFollowing = new Date();
+  //       followDAO.addFollow(follower, startedFollowing, (err, result) => {
+
+  //         if (err) { throw err; }
+  //       });
+  //     });
+  //   }
+  //   console.log(result);
+  //   request(app)
+  //     .get(`/mailbox/getfollowers/${circleId}?limit=2`)
+  //     .set('Authorization', `Bearer ${token}`)
+  //     .expect(200)
+  //     .expect('Content-Type', /json/)
+  //     .end((err1, res) => {
+  //       console.log(res.body);
+  //       expect(res.body.totalItems).to.be.equal(5);
+  //       for (let i = 0; i < res.body.totalItems; i += 1) {
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('startedFollowing');
+  //       }
+  //       done();
+  //     });
+  // });
+
+
+  // it('should return circle without limit', (done) => {
+  //   request(app)
+  //     .get('/circle/getallcircles')
+  //     .set('Authorization', `Bearer ${token}`)
+  //     .expect(200)
+  //     .expect('Content-Type', /json/)
+  //     .end((err1, res) => {
+  //       expect(res.body.totalItems).to.be.above(0);
+  //       for (let i = 0; i < res.body.totalItems; i += 1) {
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
+  //       }
+  //       done();
+  //     });
+  // });
 
 
 });

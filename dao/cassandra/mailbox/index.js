@@ -42,7 +42,9 @@ function getAllMailboxes(limit, callback) {
     const query = ('SELECT * from mailbox');
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+       let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, {a,b});
     });
   }
   else if (limit === undefined) {
@@ -50,14 +52,18 @@ function getAllMailboxes(limit, callback) {
     const query = (`SELECT * from mailbox limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+       let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, {a,b});;
     });
   }
   else{
     const query = (`SELECT * from mailbox limit ${limit}`);
     client.execute(query, (error, result) => {
     if (error) { return callback(error, null); }
-    return callback(null, result);
+     let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, {a,b});
   });
   }
 }
