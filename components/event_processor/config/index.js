@@ -4,16 +4,16 @@ module.exports = {
     contact: '127.0.0.1',
     port: '9042',
   },
-    dao: process.env.DAO || 'cassandra',
+  dao: process.env.DAO || 'cassandra',
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'events'},
+    topics: { topic: 'events' },
     options: {
       autoCommit: false,
       fromOffset: true,
     },
-   routesTopic: 'route',
+    routesTopic: 'route',
   },
   redis: {
     host: '127.0.0.1',
