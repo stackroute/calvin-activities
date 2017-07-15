@@ -13,8 +13,8 @@ function registerConsumer(topic, groupId, consumer) {
 
   const consumerGroup = new ConsumerGroup(options, topic);
   consumerGroup.on('message', (msg) => {
-    // console.log('message:', message);
-    consumer(JSON.parse(msg.value), function(err) {
+    console.log('message:',JSON.stringify(msg));
+    consumer(JSON.parse(JSON.stringify(msg.value)), function(err) {
       if(err) { console.log('nok'); return; }
       console.log('ok');
     });

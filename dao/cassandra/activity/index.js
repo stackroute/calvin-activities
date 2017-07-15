@@ -2,10 +2,13 @@ const followDao = require('../follow');
 const kafkaClient = require('../../../kafka');
 const start = require('../../../db');
 const config = require('../../../config');
+const library = require('../../../components/lib/kafka-pipeline').send;
 
 const listeners = {};
 
 const client = start.client;
+
+library.send([{topic:'t1', messages: [JSON.stringify({foo: 'bar'})]}]);
 
 function publishActivityToListeners(mid, activity) {
   if (!listeners[mid]) { return; }

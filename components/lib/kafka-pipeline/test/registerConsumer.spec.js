@@ -23,14 +23,14 @@ describe('registerConsumer', function() {
     done();
   });
 
-  it('should receive 3 messages', function(done) {
-    this.timeout(10000);
-    let count = 0;
+  // it('should receive 3 messages', function(done) {
+  //   this.timeout(10000);
+  //   let count = 0;
 
-    registerConsumer({host: 'localhost', port: 2181}, 'topic', 'foo', function(msg, callback) {
-      msg.should.have.property('foo').and.should.be.equal('bar');
-      callback();
-      if(++count === 3) { done(); return; }
-    });
-  });
+  //   registerConsumer({host: 'localhost', port: 2181}, 'topic', 'foo', function(msg, callback) {
+  //     msg.should.have.property('foo').and.should.be.equal('bar');
+  //     callback();
+  //     if(++count === 3) { done(); return; }
+  //   });
+  // });
 });
