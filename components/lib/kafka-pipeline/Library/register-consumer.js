@@ -1,7 +1,7 @@
 const kafka = require('kafka-node');
 
 const { ConsumerGroup, Client, HighLevelProducer } = kafka;
-const { host, port } = require('./config').kafka;
+const { host, port } = require('../config').kafka;
 
 const client = new Client(`${host}:${port}`);
 const producer = new HighLevelProducer(client);

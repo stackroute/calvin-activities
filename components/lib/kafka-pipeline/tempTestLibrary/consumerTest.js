@@ -1,4 +1,4 @@
-const registerConsumer = require('./register-consumer');
+const registerConsumer = require('../Library/register-consumer');
 
 
 registerConsumer('topic', 'foo', (msg, done) => {

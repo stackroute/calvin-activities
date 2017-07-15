@@ -1,7 +1,7 @@
-const producer = require('./producer');
+const registerProducer = require('../Library/register-producer');
 
-const registerConsumer = require('./register-consumer');
+const registerConsumer = require('../Library/register-consumer');
 
 module.exports = {
-  producer, registerConsumer
+  registerProducer, registerConsumer
 };
