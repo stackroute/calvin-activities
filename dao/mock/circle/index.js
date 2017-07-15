@@ -9,11 +9,11 @@ const result = [];
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  console.log("mock");
+  console.log('mock');
   const newCircle = {
     circleId: uuid().toString(),
     mailboxId: uuid().toString(),
-    createdOn: new Date()
+    createdOn: new Date(),
   };
   circles.push(newCircle);
   return callback(null, newCircle);
@@ -33,31 +33,26 @@ function deleteCircle(circleId, callback) {
 
 function getAllCircles(limit, callback) {
   if (limit == 0) {
-    return callback("limit is set to 0", null);
-  }
-
-  else if (limit == -1) {
-    let a = circles.length;
-    let b = circles;
-    return callback(null, {a,b});
-  }
-  else if (limit === undefined) {
+    return callback('limit is set to 0', null);
+  } else if (limit == -1) {
+    const a = circles.length;
+    const b = circles;
+    return callback(null, { a, b });
+  } else if (limit === undefined) {
     limit = config.defaultLimit;
     for (let i = 0; i < limit; i++) {
       result.push(circles[i]);
     }
-    let a = result.length;
-    let b = result;
-    return callback(null, {a,b});
-
-  }
-  else {
+    const a = result.length;
+    const b = result;
+    return callback(null, { a, b });
+  } else {
     for (let i = 0; i < limit; i++) {
       result.push(circles[i]);
     }
-    let a = result.length;
-    let b = result;
-    return callback(null, {a,b});
+    const a = result.length;
+    const b = result;
+    return callback(null, { a, b });
   }
 }
 

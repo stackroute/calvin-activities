@@ -1,20 +1,17 @@
-const followDao = require('../follow');
-const kafkaClient = require('../../../kafka');
+const producer = require('../../../client/kafkaclient').producer;
+const kafkaConfig =require('../../../config').kafka;
 const start = require('../../../db');
 const config = require('../../../config');
 
-const listeners = {};
-
 const client = start.client;
 
-function publishActivityToListeners(mid, activity) {
-  if (!listeners[mid]) { return; }
-  listeners[mid].forEach((socket) => {
-    socket.emit('newActivity', activity);
-  });
-}
+// function publishActivityToListeners(mid, activity) {
+//   if (!listeners[mid]) { return; }
+//   listeners[mid].forEach((socket) => {
+//     socket.emit('newActivity', activity);
+//   });
+// }
 function publishToMailbox(mid, activity, callback) {
-  console.log(`inside publishToMailbox${mid}`);
   const payload = JSON.stringify(activity);
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
@@ -28,7 +25,8 @@ function createPublishActivity(mid, activity, callback) {
   msg.payload = activity;
   msg.payload.requestedAt = new Date();
   msg.circleId = mid;
-  kafkaClient.addActivity(msg, (err, data) => {
+  producer.send([{ topic: kafkaConfig.activitiesTopic, messages: JSON.stringify(msg) }], (err, data) => {
+  //  kafkaClient.addActivity(msg, (err, data) => {
     if (err) { return callback(err, null); }
     const query1 = (`select createdOn from circle where circleId = ${mid}`);
     client.execute(query1, (err1, result1) => {
@@ -131,20 +129,19 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
           return callback(null, result.rows);
         });
       }
-    }
-    else { return callback(null, 'limit is 0'); }
+    } else { return callback(null, 'limit is 0'); }
   });
 }
 
-function addListnerToMailbox(mid, socket) {
-  if (!listeners[mid]) { listeners[mid] = []; }
-  listeners[mid].unshift(socket);
-}
+// function addListnerToMailbox(mid, socket) {
+//   if (!listeners[mid]) { listeners[mid] = []; }
+//   listeners[mid].unshift(socket);
+// }
 
-function removeListnerFromMailbox(mid, socket) {
-  const index = listeners[mid].indexOf(socket);
-  listeners[mid].splice(index, 1);
-}
+// function removeListnerFromMailbox(mid, socket) {
+//   const index = listeners[mid].indexOf(socket);
+//   listeners[mid].splice(index, 1);
+// }
 
 
 function checkActivityPublished(mid, callback) {
@@ -157,10 +154,10 @@ function checkActivityPublished(mid, callback) {
 
 module.exports = {
   publishToMailbox,
-  addListnerToMailbox,
+  //  addListnerToMailbox,
   createPublishActivity,
-  removeListnerFromMailbox,
+  //  removeListnerFromMailbox,
   retriveMessageFromMailbox,
   checkActivityPublished,
-  publishActivityToListeners,
+  //  publishActivityToListeners,
 };

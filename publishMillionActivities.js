@@ -1,3 +1,4 @@
+const winston = require('winston');
 const circleDAO = require('./dao').circle;
 const mailboxDAO = require('./dao').mailbox;
 const followDAO = require('./dao').follow;
@@ -15,16 +16,16 @@ let i;
 
 for (i = 0; i < 100; i += 1) {
   circleDAO.createCircle((err, result) => {
-    console.log(err);
-    console.log(result);
+    if (err) { throw err; }
+    winston.log(result);
     circles.push(result.id);
   });
 }
 
 for (i = 0; i< 100; i += 1) {
   mailboxDAO.createMailbox((err, result) => {
-    console.log(err);
-    console.log(result);
+    if (err) { throw err; }
+    winston.log(result);
     mailboxes.push(result.id);
   });
 }
@@ -33,12 +34,12 @@ setTimeout(() => {
   circles.forEach((circleId) => {
     mailboxes.forEach((mailboxId) => {
       followDAO.addFollow({ circleId, mailboxId }, (err, result) => {
-        console.log(err);
-        console.log(result);
+        if (err) { throw err; }
+        winston.log(result);
         routesManagerService.addRoute(circleId, mailboxId, (err1, result1) => {
-          console.log('added route');
-          console.log(err1);
-          console.log(result1);
+          winston.log('added route');
+          if (err) { throw err; }
+          winston.log(result1);
         });
       });
     });
@@ -47,16 +48,16 @@ setTimeout(() => {
 
 
 setTimeout(() => {
-  console.log(`Started pushing messages to activities topic..${new Date().getTime()}`);
+  winston.log(`Started pushing messages to activities topic..${new Date().getTime()}`);
   circles.forEach((circleId) => {
     for (i = 0; i< 100; i += 1) {
       activity.messageNumber = i;
       activity.cId = circleId;
       activityDAO.createPublishActivity(circleId, activity, (err, result) => {
-        console.log(err);
-        console.log(result);
+        if (err) { throw err; }
+        winston.log(result);
       });
     }
   });
-  console.log(`Stopped pushing messages to activities topic..${new Date().getTime()}`);
+  winston.log(`Stopped pushing messages to activities topic..${new Date().getTime()}`);
 }, 20000);

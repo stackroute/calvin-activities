@@ -86,15 +86,14 @@ describe('/getOpenMailboxes API', () => {
 
   it('should add bulk mailboxes for a circles as followers', function (done) {
     const mailboxId = [];
-    for (i = 0; i <= 1; i++) {
+    for (let i = 0; i <= 1; i += 1) {
       mailboxDao.createMailbox((err, result) => {
         mailboxId.push(result.mailboxId);
       });
     }
     circleDao.createCircle((err, result) => {
-      circleId = result.circleId;
+      const circleId = result.circleId;
     });
-    // console.log(`circleId${circleId}`);
     console.log(`mailbox${mailboxId}`);
   });
 });
