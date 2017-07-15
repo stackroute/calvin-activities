@@ -1,18 +1,21 @@
-const send = require('./send');
+const producer = require('./producer');
+const {send} = producer;
 const kafka = require('kafka-node'),
     Consumer = kafka.Consumer;
 const {host, port} = require('./config').kafka;
 
 const client = new kafka.Client(`${host}:${port}`);
 // console.log(client);
-	count = 0;
+	let count = 0;
 
+producer.ready(function() {
 setInterval(function() {
 	 count -= count; 
 	count++;
 	console.log('count initializer',count);
+	let message = {topic:'t1', messages: [JSON.stringify({foo: 'bar'})]}; 
 	// console.log('setInterval');
-send([{topic:'t1', messages: [JSON.stringify({foo: 'bar'})]}]);
+send([message,message,message,message,message]);
 
 	const consumer = new Consumer(
         client,
@@ -37,3 +40,6 @@ consumer.on('message', function (message) {
     }
 });
  },3000);
+});
+
+
