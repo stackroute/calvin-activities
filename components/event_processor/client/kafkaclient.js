@@ -21,5 +21,5 @@ const producer = new Producer(client);
 module.exports = {
   consumer,
   producer,
-  routesTopic
+  routesTopic,
 };

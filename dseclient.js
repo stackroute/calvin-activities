@@ -3,7 +3,7 @@ const config = require('../config').dse;
 const model = require('cassandra-driver');
 
 const client = new model.Client({
-  contactPoints: [ config.host ],
+  contactPoints: [config.host],
   protocolOptions: { port: config.port },
   keyspace: config.keyspace,
 });
