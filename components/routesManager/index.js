@@ -5,8 +5,7 @@ const consumer = kafkaClient.consumer;
 const routesManagerDao = require('./dao/routes_service');
 
 
-consumer.on('message', function (message) {
-
+consumer.on('message', (message) => {
   const messages = JSON.parse(message.value);
 
   const circleId = messages.circleid;
@@ -17,22 +16,21 @@ consumer.on('message', function (message) {
       if (err) {
         return {
           message: 'err',
-        }
+        };
       } else {
-        console.log(result)
+        console.log(result);
       }
-    })
+    });
   } else if (messages.command == 'removeRoute') {
-
     routesManagerDao.removeRoute(circleId, mailboxId, (err, result) => {
       if (err) {
         return {
           message: 'err',
-        }
+        };
       } else {
         return {
           message: 'result',
-        }
+        };
       }
     });
   }

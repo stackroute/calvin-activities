@@ -32,9 +32,9 @@ function deleteCircle(circleId, callback) {
 
 
 function getAllCircles(limit, callback) {
-  if (limit == 0) {
+  if (limit === 0) {
     return callback('limit is set to 0', null);
-  } else if (limit == -1) {
+  } else if (limit === -1) {
     const a = circles.length;
     const b = circles;
     return callback(null, { a, b });

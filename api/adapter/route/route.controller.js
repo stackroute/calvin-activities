@@ -1,9 +1,9 @@
-const client = require('../../client/kafkaclient').client;
-const eventService = require('../../services/event');
+const client = require('../../../client/kafkaclient').client;
+const eventService = require('../../../services/event');
 
 function checkStatus(req, res) {
   const event = {
-    mailboxId: req.params.mailboxId,
+    user: req.params.user,
     status: req.params.status,
   };
   eventService.sendevent(event);
@@ -12,3 +12,4 @@ function checkStatus(req, res) {
 module.exports = {
   checkStatus,
 };
+

@@ -14,4 +14,7 @@ module.exports = {
   get follow() {
     return require('./follow');
   },
+  get route() {
+    return require('./route');
+  },
 };
