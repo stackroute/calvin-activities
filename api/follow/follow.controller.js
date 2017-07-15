@@ -7,14 +7,17 @@ function follow(req, res) {
   const startFollowing = new Date();
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+    console.log(1);
     if (err) { res.status(404).json({ message: `${err}` }); return; }
     const isMailboxExists = doesMailboxExists;
 
     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
+      console.log(2);
       if (err1) { res.status(404).json({ message: `${err1}` }); return; }
       const isCircleExists = doesCircleExists;
 
       followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
+        console.log(3);
         if (err2) { res.status(404).json({ message: `${err2}` }); return; }
         const isFollowExists = isExists;
         if (!isMailboxExists) {
@@ -33,6 +36,7 @@ function follow(req, res) {
         }
 
         followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
+          console.log(4);
           res.status(201).json(data);
         });
       });
@@ -77,7 +81,6 @@ function unfollow(req, res) {
     });
   });
 }
-
 
 function getFollowersMailboxesOfACircle(req, res) {
   followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit, (err, result) => {

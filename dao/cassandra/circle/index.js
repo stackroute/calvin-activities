@@ -34,26 +34,32 @@ function deleteCircle(circleId, callback) {
 }
 
 function getAllCircles(limit, callback) {
-  if (limit == 0) {
+  if (limit === 0) {
     return callback('limit is set to 0', null);
-  } else if (limit == -1) {
+  } else if (limit === -1) {
     const query = ('SELECT * from circle');
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+      const a = result.rows.length;
+      const b = result.rows;
+      return callback(null, { a, b });
     });
   } else if (limit === undefined) {
-    limit = config.defaultLimit;
-    const query = (`SELECT * from circle limit ${limit}`);
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from circle limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+      const a = result.rows.length;
+      const b = result.rows;
+      return callback(null, { a, b });
     });
   } else {
     const query = (`SELECT * from circle limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+      const a = result.rows.length;
+      const b = result.rows;
+      return callback(null, { a, b });
     });
   }
 }

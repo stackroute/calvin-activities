@@ -45,15 +45,14 @@ function splitMailId(circleId, callback) {
 }
 
 function getFollowersMailboxesOfACircle(circleId, limit, callback) {
-  if (limit == 0) {
+  if (limit === 0) {
     return callback('limit is set to 0', null);
-  } else if (limit == -1) {
+  } else if (limit === -1) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       return callback(null, result);
     });
-    return;
   }
 
   const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} limit ${limit}`);
