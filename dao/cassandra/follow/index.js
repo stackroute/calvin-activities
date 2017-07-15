@@ -44,13 +44,10 @@ function splitMailId(circleId, callback) {
   });
 }
 
-function getFollowersMailboxesOfACircle(circleId, limit, callback){
-   if (limit == 0) {
-    return callback("limit is set to 0", null);
-    return;
-  }
-
-  else if (limit == -1) {
+function getFollowersMailboxesOfACircle(circleId, limit, callback) {
+  if (limit == 0) {
+    return callback('limit is set to 0', null);
+  } else if (limit == -1) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
@@ -60,7 +57,7 @@ function getFollowersMailboxesOfACircle(circleId, limit, callback){
   }
 
   const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} limit ${limit}`);
-  client.execute(query, (err,result) => {
+  client.execute(query, (err, result) => {
     if (err) { throw err; }
     return callback(err, result);
   });

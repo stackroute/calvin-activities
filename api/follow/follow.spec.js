@@ -307,7 +307,7 @@ describe('/follow api', () => {
     });
   });
 
-it('should return circle with limit', (done) => {
+  it('should return circle with limit', (done) => {
     request(app)
       .get('/circle/getallcircles?limit=5')
       .set('Authorization', `Bearer ${token}`)
@@ -324,7 +324,7 @@ it('should return circle with limit', (done) => {
         done();
       });
   });
-    it('should return circle without limit', (done) => {
+  it('should return circle without limit', (done) => {
     request(app)
       .get('/circle/getallcircles')
       .set('Authorization', `Bearer ${token}`)
@@ -337,10 +337,8 @@ it('should return circle with limit', (done) => {
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
           expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
-        }  
+        }
         done();
       });
   });
-
-
 });

@@ -98,7 +98,7 @@ describe('/circle api', function () {
         done();
       });
   });
-    it('should return circle without limit', (done) => {
+  it('should return circle without limit', (done) => {
     request(app)
       .get('/circle/getallcircles')
       .set('Authorization', `Bearer ${token}`)
@@ -111,12 +111,9 @@ describe('/circle api', function () {
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
           expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
-        }  
+        }
         done();
       });
   });
 });
-
-
-
 

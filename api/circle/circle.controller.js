@@ -24,12 +24,12 @@ function deleteCircle(req, res) {
 }
 
 function getAllCircles(req, res) {
-  circleDAO.getAllCircles(req.query.limit,(err, result) => {
+  circleDAO.getAllCircles(req.query.limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({totalItems: result.rows.length, items: result.rows});
+    res.status(201).json({ totalItems: result.rows.length, items: result.rows });
   });
 }
 
 module.exports = {
-  createCircle, deleteCircle,getAllCircles,
+  createCircle, deleteCircle, getAllCircles,
 };

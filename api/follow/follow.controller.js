@@ -79,9 +79,8 @@ function unfollow(req, res) {
 }
 
 
-
-   function getFollowersMailboxesOfACircle(req, res) {
-  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit,(err, result) => {
+function getFollowersMailboxesOfACircle(req, res) {
+  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
     if (result.rows === 0) { res.status(404).json({ message: 'No followers found' }); return; }
     res.status(201).json(result.rows);

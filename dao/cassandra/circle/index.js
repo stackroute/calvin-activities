@@ -8,7 +8,7 @@ function createCircle(callback) {
   const newCircle = {
     circleId: uuid().toString(),
     mailboxId: uuid().toString(),
-    createdOn: new Date()
+    createdOn: new Date(),
   };
   const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
   client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
@@ -35,30 +35,26 @@ function deleteCircle(circleId, callback) {
 
 function getAllCircles(limit, callback) {
   if (limit == 0) {
-    return callback("limit is set to 0", null);
-  }
-
-  else if (limit == -1) {
+    return callback('limit is set to 0', null);
+  } else if (limit == -1) {
     const query = ('SELECT * from circle');
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       return callback(null, result);
     });
-  }
-  else if (limit === undefined) {
+  } else if (limit === undefined) {
     limit = config.defaultLimit;
     const query = (`SELECT * from circle limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       return callback(null, result);
     });
-  }
-  else{
+  } else {
     const query = (`SELECT * from circle limit ${limit}`);
     client.execute(query, (error, result) => {
-    if (error) { return callback(error, null); }
-    return callback(null, result);
-  });
+      if (error) { return callback(error, null); }
+      return callback(null, result);
+    });
   }
 }
 

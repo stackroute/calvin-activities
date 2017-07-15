@@ -1,58 +1,53 @@
 const config = require('../config.json');
 
-var kafka = require('kafka-node'),
-KeyedMessage = kafka.KeyedMessage;
+let kafka = require('kafka-node'),
+  KeyedMessage = kafka.KeyedMessage;
 
-    Producer = kafka.Producer,
-    client = new kafka.Client(config.connectionString,config.clientId);
-    producer = new Producer(client);
- let count=0;    
+Producer = kafka.Producer,
+client = new kafka.Client(config.connectionString, config.clientId);
+producer = new Producer(client);
+let count=0;
 function registerProducer(topicName, monitorTopic, message, callback) {
-	++count;
-	    console.log('message===>'+message+' count============>>> '+count);
+  ++count;
+	    console.log(`message===>${message} count============>>> ${count}`);
 
-payloads = [
-        { topic: `${topicName}`, messages: 'hi'},
-       
+  payloads = [
+    { topic: `${topicName}`, messages: 'hi' },
 
-    ];
-  
-producer.on('ready', function () {
-    producer.send(payloads, function (err, data) {
+
+  ];
+
+  producer.on('ready', () => {
+    producer.send(payloads, (err, data) => {
     // console.log('send inside registerProducer===>',payloads);
-        if(err) { console.log(`${err}`); return; }
-        // produceToMonitor(monitorTopic,count,topicName);
-              return callback(payloads);
-});    
-});
+      if (err) { console.log(`${err}`); return; }
+      // produceToMonitor(monitorTopic,count,topicName);
+      return callback(payloads);
+    });
+  });
 
-producer.on('error', function (err) { console.log(`${err}`); return; })
-console.log('count in registerProducer===>',count);
+  producer.on('error', (err) => { console.log(`${err}`); });
+  console.log('count in registerProducer===>', count);
   setInterval(() => {
-   console.log('monitorTopic==>',monitorTopic);
-payloads = [
-        { topic: `${monitorTopic}`, message:`${count}`}
+    console.log('monitorTopic==>', monitorTopic);
+    payloads = [
+      { topic: `${monitorTopic}`, message: `${count}` },
 
     ];
-    producer.send(payloads, function (err, data) {
+    producer.send(payloads, (err, data) => {
+      if (err) { console.log(`${err}`); return; }
 
-        if(err) { console.log(`${err}`); return; }
-        
-              return payloads;
-});
-
+      return payloads;
+    });
   }, 1000);
 
 
-
-producer.on('error', function (err) { console.log("eerrr"); return; })
-
-
+  producer.on('error', (err) => { console.log('eerrr'); });
 }
 
 // setInterval( registerProducer, 2000,'multiplexer','hi',callback);
 
-//setInterval(function() { registerProducer('multiplexer','hi'); },  2000);
+// setInterval(function() { registerProducer('multiplexer','hi'); },  2000);
 
 // function produceToMonitor(monitorTopic,count,topicName){
 // 	// let mesg = JSON.stringify(payload);

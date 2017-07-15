@@ -17,4 +17,4 @@ function getOpenMailboxes(range, callback) {
 
 module.export = {
   getOpenMailboxes,
-}
+};

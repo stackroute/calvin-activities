@@ -1,8 +1,7 @@
 const producer1 = require('./register-producer');
 
 function producer(msg) {
-    
-    console.log('Successfull  :', msg);
+  console.log('Successfull  :', msg);
 }
 const topicName = 'testtopic2';
 const message = 'hello world';

@@ -37,13 +37,13 @@ function createPublishActivityToMailbox(req, res) {
 
 
 function getAllActivities(req, res) {
-  let limit = req.query.limit;
-  let before = req.query.before;
-  let after = req.query.after;
-  let mailboxId = req.params.mailboxId;
+  const limit = req.query.limit;
+  const before = req.query.before;
+  const after = req.query.after;
+  const mailboxId = req.params.mailboxId;
   activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({totalItems: result.length, items: result});
+    res.status(201).json({ totalItems: result.length, items: result });
   });
 }
 
