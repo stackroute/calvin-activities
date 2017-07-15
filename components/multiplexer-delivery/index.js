@@ -45,6 +45,7 @@ consumer.on('message', (message) => {
 
   mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
     if(err){ console.log({ message: `${err}` }); return;}
+      redisClient.publish(receiver, JSON.stringify(newActivity));
       activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {
       if (error) { console.log({ message: `${error}` }); }
       else{
