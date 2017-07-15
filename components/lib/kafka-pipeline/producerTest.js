@@ -1,5 +1,6 @@
 const producer = require('./producer');
-const {send} = producer;
+
+const { send } = producer;
 const kafka = require('kafka-node'),
   Consumer = kafka.Consumer;
 const { host, port } = require('./config').kafka;

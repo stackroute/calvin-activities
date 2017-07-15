@@ -6,18 +6,18 @@ const producer = kafkaClient.producer;
 
 const followDao = require('./dao/getCircles');
 
-const routes_Topic =kafkaClient.routesTopic;
+const routesTopic =kafkaClient.routesTopic;
 
 consumer.on('message', (message) => {
-  console.log(message.value);
+
   const mailboxId= JSON.parse(message.value).mailboxId;
    const circleId = JSON.parse(message.value).circleId;
-  // console.log(mailboxId);
-  // console.log(circleId);
+ 
+ 
   let command;
 
   let status = JSON.parse(message.value).event
- console.log(status);
+
   if ((status == "useronline")||(status == "addCircle")) {
     command = 'addRoute';
   } else if ((status == 'useroffline')||(status == 'removeCircle')) {
@@ -37,7 +37,7 @@ if ((status == "useronline") ||(status=="useroffline") ){
         mailboxid: mailboxId,
         command,
       };
-      const payloads = [{ topic: routes_Topic, messages: JSON.stringify(obj), partition: 0 }];
+      const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj), partition: 0 }];
       producer.send(payloads, (err, data) => {
         if (err) { return { message: 'err' }; }
         console.log(data);

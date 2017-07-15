@@ -46,12 +46,15 @@ function deleteFollow(req, res) {
       const obj = {
         circleId: (doesDomainExists.circleid).toString(),
         mailboxId: (doesUserExists.mailboxid).toString(),
-      };
-      followDAO.checkIfFollowExists(obj, (error2, doesFollowExists) => {
-        if (error2) { res.status(500).json({ message: `${error2}` }); return; }
+      }
+      followDAO.checkIfFollowExists(obj, (error, doesFollowExists) => {
+        if (error) { res.status(500).json({ message: `${error}` }); return; }
+        if(!doesFollowExists){
+          res.status(404).json({ message: `Link does not exists` }); return;
+        }
         followDAO.deleteFollow(obj, (err, result) => {
           if (err) { res.status(500).json({ message: ` ${err}` }); return; }
-          res.status(200).json(obj);
+          res.status(200).json({ message: 'follow deleted' });
         });
       });
     });
