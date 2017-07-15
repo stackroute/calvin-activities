@@ -15,7 +15,7 @@ consumer.on('message', function (message) {
 if (messages.command == 'addRoute'){
   routesManagerDao.addRoute(circleId,mailboxId,(err,result)=>{
          if(err){return { message: 'err' } }
-         else{return { message: 'result' } }
+         else{console.log(result);}
      })
         }
 else if (messages.command== 'removeRoute'){
@@ -26,6 +26,7 @@ else if (messages.command== 'removeRoute'){
      })
         }
      
+
 });
 
 consumer.on('error', function (err) {return { message: 'err' } });

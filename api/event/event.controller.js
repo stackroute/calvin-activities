@@ -1,6 +1,7 @@
 const client = require('../../client/kafkaclient').client;
 const eventService = require('../../services/event');
 
+
 function checkStatusForMailbox(req, res) {
   let eventName = null;
   if(req.params.status === 'online'){
@@ -21,13 +22,22 @@ function checkStatusForMailbox(req, res) {
 }
 
 function checkStatusForCircle(req, res) {
+  let eventName =null;
+  if(req.params.status === 'add'){
+    eventName = 'addCircle'; 
+  }
+  else if (req.params.status === 'remove'){
+    eventName = 'removeCircle'
+  }
   const event = {
     circleId: req.params.circleId,
-    status: req.params.status,
+    event: eventName,
   };
   eventService.sendevent(event);
   res.status(201).json(event);
 }
 module.exports = {
+
   checkStatusForMailbox,checkStatusForCircle,
+
 };

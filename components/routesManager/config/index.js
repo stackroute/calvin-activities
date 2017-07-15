@@ -8,7 +8,7 @@ module.exports = {
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'route' },
+    topics: { topic: 'routeTest' },
     options: {
       autoCommit: false,
       fromOffset: true,
