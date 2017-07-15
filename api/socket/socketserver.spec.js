@@ -6,6 +6,7 @@ const followDao = require('../../dao').follow;
 const activityDao = require('../../dao').activity;
 const bootstrapSocketServer = require('./socketserver');
 require('chai').should();
+
 console.log(process.env.DAO);
 describe('/push notifications', () => {
   let token;
@@ -24,12 +25,12 @@ describe('/push notifications', () => {
     socket = new EventEmitter();
     bootstrapSocketServer(io);
     io.emit('connection', socket);
-    let startedFollowing = new Date();
+    const startedFollowing = new Date();
     circleDao.createCircle((err, result) => {
       circleId = result.circleId;
       mailboxDao.createMailbox((error, result1) => {
         mailboxId = result1.mailboxId;
-        followDao.addFollow({ circleId, mailboxId }, startedFollowing,(error1, result2) => {
+        followDao.addFollow({ circleId, mailboxId }, startedFollowing, (error1, result2) => {
           done();
         });
       });

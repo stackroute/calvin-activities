@@ -80,6 +80,20 @@ describe('/circle api', function () {
         });
     });
   });
+});
+
+describe('/circle api with pagination', function () {
+  let circleId;
+  let token;
+  before(function (done) {
+    token = authorize.generateJWTToken();
+    done();
+    for (let i = 0; i <= 5; i++) {
+      circleDAO.createCircle((err, result) => {
+        circleId = result.circleId;
+      });
+    }
+  });
 
   it('should return circle with limit', (done) => {
     request(app)
@@ -88,8 +102,10 @@ describe('/circle api', function () {
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err1, res) => {
+        console.log(res.body.text.items[0]);
         expect(res.body.totalItems).to.be.equal(5);
         for (let i = 0; i < 5; i += 1) {
+          console.log(res);
           expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
@@ -98,7 +114,7 @@ describe('/circle api', function () {
         done();
       });
   });
-    it('should return circle without limit', (done) => {
+  it('should return circle without limit', (done) => {
     request(app)
       .get('/circle/getallcircles')
       .set('Authorization', `Bearer ${token}`)
@@ -111,12 +127,9 @@ describe('/circle api', function () {
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
           expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
-        }  
+        }
         done();
       });
   });
 });
-
-
-
 

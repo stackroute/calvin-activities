@@ -9,12 +9,12 @@
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
     "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'",
-    "activitytest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/activity.spec.js",
-    "circletest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/circle.spec.js",
-    "mailboxtest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/mailbox.spec.js",
-    "followtest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/follow.spec.js",
-    "bulktest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/bulk.spec.js",
-    "pushtest": " npm run eslint && npm run yamllint && DAO=cassandra && ./node_modules/.bin/mocha **/socketserver.spec.js"
+    "activitytest": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/activity.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/activity.spec.js",
+    "circletest": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/circle.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/circle.spec.js",
+    "mailboxtest": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/mailbox.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/mailbox.spec.js",
+    "followtest": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/follow.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/follow.spec.js",
+    "bulktest": " npm run eslint && npm run yamllint && DAO=mock ./node_modules/.bin/mocha **/bulk.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/bulk.spec.js",
+    "pushtest": " npm run eslint && npm run yamllint && DAO=mock && ./node_modules/.bin/mocha **/socketserver.spec.js"
   },
   "author": "",
   "license": "ISC",

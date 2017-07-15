@@ -14,7 +14,7 @@ const options = config.options;
 
 const ConsumerGroup = require('kafka-node').ConsumerGroup;
 
-const consumer = new ConsumerGroup(Object.assign({'id': thisConsumerId}, options), topics);
+const consumer = new ConsumerGroup(Object.assign({ id: thisConsumerId }, options), topics);
 
 const Producer = kafka.Producer;
 

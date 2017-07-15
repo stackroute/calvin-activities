@@ -1,5 +1,6 @@
 const start = require('../../../db');
 const config = require('../../../config');
+
 const client = start.client;
 const uuid = start.uuid;
 
@@ -19,8 +20,8 @@ function createMailbox(callback) {
 function checkIfMailboxExists(mailboxId, callback) {
   const query = (`SELECT * from mailbox where mailboxId = ${mailboxId}`);
   client.execute(query, (err, result) => {
-    if (err) { console.log('error returned'+err);return callback(err); }
-    console.log('rowLength===>',result.rowLength);
+    if (err) { console.log(`error returned${err}`); return callback(err); }
+    console.log('rowLength===>', result.rowLength);
     return callback(null, result.rowLength > 0);
   });
 }
@@ -35,31 +36,33 @@ function deleteMailbox(mailboxId, callback) {
 
 
 function getAllMailboxes(limit, callback) {
-  if (limit == 0) {
-    return callback("limit is set to 0", null);
-  }
-
-  else if (limit == -1) {
+  if (limit === 0) {
+    return callback('limit is set to 0', null);
+  } else if (limit === -1) {
     const query = ('SELECT * from mailbox');
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+      const a = result.rows.length;
+      const b = result.rows;
+      return callback(null, { a, b });
     });
-  }
-  else if (limit === undefined) {
-    limit = config.defaultLimit;
+  } else if (limit === undefined) {
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from mailbox limit ${defaultLimit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      const a = result.rows.length;
+      const b = result.rows;
+      return callback(null, { a, b });
+    });
+  } else {
     const query = (`SELECT * from mailbox limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
-      return callback(null, result);
+      const a = result.rows.length;
+      const b = result.rows;
+      return callback(null, { a, b });
     });
-  }
-  else{
-    const query = (`SELECT * from mailbox limit ${limit}`);
-    client.execute(query, (error, result) => {
-    if (error) { return callback(error, null); }
-    return callback(null, result);
-  });
   }
 }
 

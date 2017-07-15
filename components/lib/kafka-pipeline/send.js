@@ -1,7 +1,8 @@
 const kafka = require('kafka-node');
-const {HighLevelProducer} = kafka;
 
-const {host, port} = require('./config').kafka;
+const { HighLevelProducer } = kafka;
+
+const { host, port } = require('./config').kafka;
 
 const client = new kafka.Client(`${host}:${port}`);
 const producer = new HighLevelProducer(client);
@@ -20,7 +21,7 @@ setInterval(function() {
     return {
       topicName: topic,
       topicCount: topicCountCopy[topic],
-      ts
+      ts,
     };
   });
 
@@ -36,19 +37,20 @@ setInterval(function() {
 
 }, 3000);
 
+
 function send(...args) {
   args[0].forEach((payloadItem) => {
     const topic = payloadItem.topic;
     const count = payloadItem.messages.length;
-    // console.log('topic',topic);
-    if(!topicCount.hasOwnProperty(topic)) { 
-      topicCount[topic] = 0; }
+   
+    if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
     topicCount[topic] += count;
   });
-  // producer.on('ready', () => {
-     producer.send(args[0], (err, reply) => {
-      if(err) { console.error('err:', err); return; }
-     // console.log('reply:', reply);
+
+  producer.on('ready', () => {
+    producer.send(args[0], (err, reply) => {
+      if (err) { console.error('err:', err); return; }
+      console.log('reply:', reply);
     });
   // });
   producer.on('error', function (err) {})

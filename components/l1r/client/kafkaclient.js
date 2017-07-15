@@ -12,7 +12,7 @@ const options = config.options;
 
 const ConsumerGroup = require('kafka-node').ConsumerGroup;
 
-const consumer = new ConsumerGroup(Object.assign({'id': uuidv4()}, options), topics);
+const consumer = new ConsumerGroup(Object.assign({ id: uuidv4() }, options), topics);
 
 const Producer = kafka.Producer;
 
