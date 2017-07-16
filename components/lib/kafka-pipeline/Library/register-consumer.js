@@ -30,6 +30,7 @@ function registerConsumer(topic, groupId, consumer) {
       });
     }, 1000);
   });
+ producer.on('error', err => ({ message: `${err}` }));
 
  const options = {
     host: `${host}:${port}`,
@@ -48,6 +49,7 @@ function registerConsumer(topic, groupId, consumer) {
       console.log('ok');
     });
   });
+  consumerGroup.on('error', err => ({ message: `${err}`}));
 }
 
 module.exports = registerConsumer;

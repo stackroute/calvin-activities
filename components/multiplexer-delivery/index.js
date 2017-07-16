@@ -1,12 +1,11 @@
 /* eslint no-unused-expressions:0 */
 
-const kafkaClient = require('./client/kafkaclient');
 const redisClient = require('./client/redisclient').client;
 const activityDAO = require('./dao/activity');
 const mailboxDAO = require('./dao/mailbox');
 const topic =require('./config').kafka.topics[0];
-
-const consumer = kafkaClient.consumer;
+const groupName = require('./config').kafka.options.groupId;
+const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer');
 
 let startTimeAlreadySet = false;
 
@@ -30,17 +29,15 @@ function setEndTime(endTime) {
   });
 }
 
-consumer.on('message', (message) => {
+registerConsumer(topic, groupName, (message, done) => {
   if (!startTimeAlreadySet) {
     setStartTime();
-  }
-
-  const receiver =JSON.parse(message.value).mailboxId;
+   }
+   const receiver =JSON.parse(JSON.stringify(message.value)).mailboxId;
   const newActivity = {
-    payload: JSON.parse(message.value).payload,
+    payload: JSON.parse(JSON.stringify(message.value)).payload, 
     timestamp: new Date(),
   };
-
   mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
     if (err) { console.log({ message: `${err}` }); return; }
     redisClient.publish(receiver, JSON.stringify(newActivity));
@@ -48,9 +45,9 @@ consumer.on('message', (message) => {
       if (error) { console.log({ message: `${error}` }); } else {
         if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
         setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+        console.log("end");
       }
     });
   });
+  done();
 });
-
-consumer.on('error', err => ({ message: `${err}` }));

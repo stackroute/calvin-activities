@@ -1,44 +1,40 @@
-
 const redisClient = require('../client/redisclient').client;
 
-const topic =require('../config').kafka.topics.topic;
+// const kafkaClient = require('../client/kafkaclient');
 
-console.log(`topic===>${topic}`);
+const topic =require('../config').kafka.topics[0];
 
-const kafkaClient = require('../client/kafkaclient');
+const groupName = require('../config').kafka.options.groupId;
 
-const consumer = kafkaClient.consumer;
-
-const producer = kafkaClient.producer;
+const registerConsumer = require('../components/lib/kafka-pipeline/Library/register-consumer');
 
 
 function multiplexer(callback) {
   const arr = [];
-  consumer.on('message', (message) => {
-  // console.log(message);
+
+  registerConsumer(topic, groupName, (message, done) => {
+      console.log("start");
     const activity = JSON.parse(message.value);
     const circleId = activity.circleId;
     // console.log(`circleId${circleId}`);
     let followers;
     redisClient.incr(`${topic}:count`);
-    // console.log(`topic${topic}`);
-    //  console.log(`circleId${circleId}`);
     redisClient.smembers(`${topic}:C1`)((err, result) => {
       followers = result;
-      // console.log('followers'+result);
       followers.forEach((data) => {
-        // console.log('inside followers');
         const newActivity = activity;
         newActivity.mailboxId = data;
         arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
-        // console.log('arr'+arr);
+        
       });
       producer.send(arr, (error, data) => {
-
+        if(error) {console.log(`${error}`); return ; }
+        console.log(data);
       });
     });
   });
-  callback(null, arr);
+  callback(null, err);
+  
 }
 
 module.exports= {

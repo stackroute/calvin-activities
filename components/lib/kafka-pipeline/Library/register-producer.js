@@ -11,9 +11,9 @@ setInterval(() => {
   const ts = new Date().getTime();
   const send = Object.keys(topicCount).map((topic) => {
     topicCount[topic] -= topicCountCopy[topic]; return {
-      topicName: topic,
-      topicCount: topicCountCopy[topic],
-      ts,
+    topicName: topic,
+    topicCount: topicCountCopy[topic],
+    ts,
     };
   });
   producer.send([{ topic: 'monitor', messages: send.map(msg => JSON.stringify(msg)) }], (err, reply) => {
@@ -21,14 +21,17 @@ setInterval(() => {
     console.log('reply:', reply);
   });
   console.log('topic');
-}, 5000); function send(...args) {
-  args[0].forEach((payloadItem) => {
+  }, 5000); 
+  
+  function send(...args) {
+    args[0].forEach((payloadItem) => {
     const topic = payloadItem.topic;
     const count = payloadItem.messages.length;
     console.log('count==>', count);
     if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
     topicCount[topic] += count;
-  }); producer.send(args[0], (err, reply) => {
+  });
+   producer.send(args[0], (err, reply) => {
     console.log('args', args[0]);
     if (err) { console.error('err:', err); return; }
     console.log('reply:', reply);
@@ -36,4 +39,6 @@ setInterval(() => {
 }
 function ready(callback) {
   producer.on('ready', callback);
-}module.exports = { send, ready };
+  // producer.on('error', err => ({ message: `${err}` }));
+}
+module.exports = { send, ready };

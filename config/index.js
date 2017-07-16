@@ -11,8 +11,10 @@ module.exports = {
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'events', partition: 0, offset: 0 },
+    topics: [process.env.CONSUMER_GROUP || 'events'],
     options: {
+      host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
+      groupId: process.env.CONSUMER_GROUP || 'l1route',
       autoCommit: false,
       fromOffset: true,
     },

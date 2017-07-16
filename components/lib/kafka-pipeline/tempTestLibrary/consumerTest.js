@@ -1,7 +1,7 @@
 const registerConsumer = require('../Library/register-consumer');
 
 
-registerConsumer('topic', 'foo', (msg, done) => {
+registerConsumer('events', 'foo', (msg, done) => {
   console.log('message:', msg);
   done();
 });
