@@ -8,8 +8,9 @@ module.exports = {
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'eventsTest' },
+    topics: [process.env.CONSUMER_GROUP || 'eventsTest'],
     options: {
+      groupId: process.env.CONSUMER_GROUP || 'eventsTest',
       autoCommit: false,
       fromOffset: true,
     },

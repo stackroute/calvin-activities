@@ -5,7 +5,7 @@ const topic =require('./config').kafka.topics[0];
 
 const kafkaClient = require('./client/kafkaclient');
 
-const consumer = kafkaClient.consumer;
+// const consumer = kafkaClient.consumer;
 
 const producer = kafkaClient.producer;
 

@@ -2,7 +2,7 @@ const L1RCacheNamespace = require('../config').namespace;
 
 const redis = require('../client/redisclient').client;
 
-// const kafkaClient = require('../client/kafkaclient');
+const kafkaClient = require('../client/kafkaclient');
 
 const topic =require('../config').kafka.topics[0];
 
@@ -10,7 +10,7 @@ const groupName = require('../config').kafka.options.groupId;
 
 const registerConsumer = require('../components/lib/kafka-pipeline/Library/register-consumer');
 
-// const producer = kafkaClient.producer;
+const producer = kafkaClient.producer;
 
 // const consumer = kafkaClient.consumer;
 
