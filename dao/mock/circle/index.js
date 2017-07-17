@@ -1,35 +1,71 @@
-const start=require('../../../db');
+  const start = require('../../../db');
 
 const mailboxDao = require('../../index').mailbox;
 
-const circles=[];
+const config = require('../../../config');
+
+const circles = [];
+const result = [];
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  let circleMailbox;
-  mailboxDao.createMailbox((err, newMailbox) => {
-    circleMailbox = newMailbox.id;
-  });
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  console.log('mock');
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+=======
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
   const newCircle = {
-    id: uuid().toString(),
-    mailboxid: circleMailbox,
-    createdOn: Date.now(),
-    lastActivity: Date.now(),
+    circleId: uuid().toString(),
+    mailboxId: uuid().toString(),
+    createdOn: new Date(),
   };
   circles.push(newCircle);
   return callback(null, newCircle);
 }
 
 function checkIfCircleExists(circleId, callback) {
-  const filterCircle = circles.filter(circle => circle.id === circleId);
-  callback(null, filterCircle.length!==0);
+  const filterCircle = circles.filter(x => x.circleId === circleId);
+  return callback(null, filterCircle.length !== 0);
 }
 
 function deleteCircle(circleId, callback) {
-  const filter = circles.filter(circle => circle.id === circleId);
+  const filter = circles.filter(y => y.circleId === circleId);
   circles.splice(circles.indexOf(filter[0]), 1);
-  return callback(null, filter[0]);
+  return callback(null, { id: filter[0].circleId });
 }
+
+
+function getAllCircles(limit, callback) {
+  if (limit === 0) {
+    return callback('limit is set to 0', null);
+  } else if (limit === -1) {
+    const a = circles.length;
+    const b = circles;
+    return callback(null, { a, b });
+  } else if (limit === undefined) {
+    const defaultLimit = config.defaultLimit;
+    for (let i = 0; i < defaultLimit; i += 1) {
+      result.push(circles[i]);
+    }
+    const a = result.length;
+    const b = result;
+    return callback(null, { a, b });
+  } else {
+    for (let i = 0; i < limit; i += 1) {
+      result.push(circles[i]);
+    }
+    const a = result.length;
+    const b = result;
+    return callback(null, { a, b });
+  }
+}
+
+
 module.exports = {
-  createCircle, deleteCircle, checkIfCircleExists,
+  createCircle,
+  deleteCircle,
+  checkIfCircleExists,
+  getAllCircles,
 };

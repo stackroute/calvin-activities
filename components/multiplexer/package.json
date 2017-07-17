@@ -1,0 +1,18 @@
+{
+  "name": "calvin-activities-multiplexer",
+  "version": "0.1.0",
+  "description": "Multiplexer Unit for Calvin Activities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Sagar Patke <sagarpatke@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "kafka-node": "^2.0.0",
+    "kafka-pipeline": "file:../lib/kafka-pipeline",
+    "thunk-redis": "^2.1.2",
+    "uuid": "^3.1.0"
+  }
+}

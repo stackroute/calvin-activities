@@ -10,7 +10,6 @@ const request = require('supertest');
 const circleDAO = require('../../dao').circle;
 
 const authorize = require('../../authorize');
-
 describe('/circle api', function () {
   let circleId;
   let token;
@@ -21,14 +20,16 @@ describe('/circle api', function () {
 
   it('it should create a circle', function (done) {
     request(app)
-      .post('/circle/')
+      .post('/circle')
       .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
         if (err) { done(err); return; }
-        expect(res.body).to.have.property('id').a('string');
-        circleId = (res.body.id).toString();
+        expect(res.body).to.be.an('object').to.have.property('circleId');
+        expect(res.body).to.be.an('object').to.have.property('mailboxId');
+        expect(res.body).to.be.an('object').to.have.property('createdOn');
+        circleId = res.body.circleId;
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }
           circleExists.should.be.equal(true);
@@ -78,4 +79,40 @@ describe('/circle api', function () {
         });
     });
   });
+
+  it('should return circle with limit', (done) => {
+    request(app)
+      .get('/circle/getallcircles?limit=5')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.equal(5);
+        for (let i = 0; i < 5; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
+        }
+        done();
+      });
+  });
+  it('should return circle without limit', (done) => {
+    request(app)
+      .get('/circle/getallcircles')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err1, res) => {
+        expect(res.body.totalItems).to.be.above(0);
+        for (let i = 0; i < res.body.totalItems; i += 1) {
+          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
+          expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
+        }
+        done();
+      });
+  });
 });
+
