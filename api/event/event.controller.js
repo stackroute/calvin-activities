@@ -24,10 +24,10 @@ function checkStatusForMailbox(req, res) {
 function checkStatusForCircle(req, res) {
   let eventName =null;
   if(req.params.status === 'add'){
-    eventName = 'addCircle'; 
+    eventName = 'addcircle'; 
   }
   else if (req.params.status === 'remove'){
-    eventName = 'removeCircle'
+    eventName = 'removecircle';
   }
   const event = {
     circleId: req.params.circleId,

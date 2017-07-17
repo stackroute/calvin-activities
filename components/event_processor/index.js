@@ -6,35 +6,32 @@ const producer = kafkaClient.producer;
 
 const followDao = require('./dao/getCircles');
 
-const routesTopic =kafkaClient.routesTopic;
+const routesTopic = kafkaClient.routesTopic;
 
 consumer.on('message', (message) => {
 
   const mailboxId= JSON.parse(message.value).mailboxId;
-   const circleId = JSON.parse(message.value).circleId;
- 
+  const circleId = JSON.parse(message.value).circleId;
  
   let command;
+  let status = JSON.parse(message.value).event;
 
-  let status = JSON.parse(message.value).event
-
-  if ((status == "useronline")||(status == "addCircle")) {
+  if ((status == "useronline") || (status == "addcircle")) {
     command = 'addRoute';
-  } else if ((status == 'useroffline')||(status == 'removeCircle')) {
+  } else if ((status == 'useroffline')||(status == 'removecircle')) {
     command = 'removeRoute';
   } else {
     command = 'undefined';
   }
 if ((status == "useronline") ||(status=="useroffline") ){
   followDao.getCirclesForMailbox(mailboxId, (err, result) => {
-    if (err) { return { message: 'err' }; }
-   
+    if (err) { return { message: 'err' } ; }
     const rows = result.rows;
 
     rows.forEach((element) => {
       const obj = {
-        circleid: element.circleid.toString(),
-        mailboxid: mailboxId,
+        circleId: element.circleid.toString(),
+        mailboxId: mailboxId,
         command,
       };
       const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj), partition: 0 }];
@@ -42,31 +39,30 @@ if ((status == "useronline") ||(status=="useroffline") ){
         if (err) { return { message: 'err' }; }
         console.log(data);
       });
-      producer.on('error', err => ({ message: 'err' }));
+      producer.on('error', err => ( return { message: 'err' }));
     });
 
   });
 }
 
-if ((status == "addCircle") ||(status=="removeCircle") ){
+if ((status == "addcircle") ||(status=="removecircle") ){
   followDao.getMailboxIdForCircle(circleId, (err, result) => {
     if (err) { return { message: 'err' }; }
     const circleMailboxId = result;
-  
-      const obj = {
-        circleMailboxId: circleMailboxId,
-       command,
-      };
-      const payloads = [{ topic: routes_Topic, messages: JSON.stringify(obj), partition: 0 }];
-      producer.send(payloads, (err, data) => {
-        if (err) { return { message: 'err' }; }
-         console.log("data");
-      });
-      producer.on('error', err => ({ message: 'err' }));
-    });
+    const obj = {
+      circleId: circleId,
+      mailboxId: circleMailboxId,
+      command,
+    };
 
+    const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj), partition: 0 }];
+    producer.send(payloads, (err, data) => {
+      if (err) { return { message: 'err' }; }
+      console.log(data);
+    });
+    producer.on('error', err => ({ message: 'err' }));
+  });
 }
 
-  consumer.on('error', err => ({ message: 'err' }));
+consumer.on('error', err => ({ message: 'err' }));
 });
-
