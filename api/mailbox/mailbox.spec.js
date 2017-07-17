@@ -1,4 +1,4 @@
-/* eslint prefer-arrow-callback:0, func-names:0 */
+/* eslint prefer-arrow-callback:0, func-names:0, no-loop-func:0 */
 const app = require('../../app');
 
 const expect = require('chai').expect;
@@ -77,16 +77,30 @@ describe('/mailbox api', () => {
         });
     });
   });
+});
+
+describe('/mailbox api', () => {
+  let mailboxId;
+  let token;
+  before(function (done) {
+    token = authorize.generateJWTToken();
+    for (let i= 0; i<=10; i +=1) {
+      mailboxDao.createMailbox((err, result) => {
+        mailboxId = result.mailboxId;
+      });
+    }
+    done();
+  });
 
   it('should return mailbox with limit', (done) => {
     request(app)
-      .get('/mailbox/getallmailboxes?limit=5')
+      .get('/mailbox/getallmailboxes?limit=2')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err1, res) => {
-        expect(res.body.totalItems).to.be.equal(5);
-        for (let i = 0; i < 5; i += 1) {
+        expect(res.body.totalItems).to.be.equal(2);
+        for (let i = 0; i < 2; i += 1) {
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
         }
         done();

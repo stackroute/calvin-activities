@@ -67,22 +67,18 @@ describe('/activity API', () => {
   });
 
 
-  it('should retrieve message from Mailbox', (done) => {
+  it('should retrieve activities from Mailbox', (done) => {
     mailboxDao.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
       if (err) { done(err); return; }
       expect(doesMailboxExists).be.equal(true);
       request(app)
-        .get(`/circle/getallactivities/${mailboxId}?before='2017-07-15'&after='2017-07-10'`)
+        .get(`/circle/getallactivities/${mailboxId}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(201)
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-          let mailboxActivity = res.body;
-          let b = (mailboxActivity[0].payload);
-            let c = JSON.parse(b);
-            let result = c.payload.link;
-            expect(result).to.equal('www.facebook.com');
+            expect(res.body.items[0].payload).to.contain('www.facebook.com');
           done();
         });
     });
@@ -101,3 +97,6 @@ describe('/activity API', () => {
       });
   });
 });
+
+
+

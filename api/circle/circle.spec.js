@@ -10,7 +10,6 @@ const request = require('supertest');
 const circleDAO = require('../../dao').circle;
 
 const authorize = require('../../authorize');
-
 describe('/circle api', function () {
   let circleId;
   let token;
@@ -27,9 +26,9 @@ describe('/circle api', function () {
       .expect('Content-Type', /json/)
       .end(function (err, res) {
         if (err) { done(err); return; }
-        expect(res.body).to.have.property('circleId');
-        expect(res.body).to.have.property('mailboxId');
-        expect(res.body).to.have.property('createdOn');
+        expect(res.body).to.be.an('object').to.have.property('circleId');
+        expect(res.body).to.be.an('object').to.have.property('mailboxId');
+        expect(res.body).to.be.an('object').to.have.property('createdOn');
         circleId = res.body.circleId;
         circleDAO.checkIfCircleExists(circleId, (error, circleExists) => {
           if (err) { done(err); return; }
@@ -80,20 +79,6 @@ describe('/circle api', function () {
         });
     });
   });
-});
-
-describe('/circle api with pagination', function () {
-  let circleId;
-  let token;
-  before(function (done) {
-    token = authorize.generateJWTToken();
-    done();
-    for (let i = 0; i <= 5; i++) {
-      circleDAO.createCircle((err, result) => {
-        circleId = result.circleId;
-      });
-    }
-  });
 
   it('should return circle with limit', (done) => {
     request(app)
@@ -102,10 +87,8 @@ describe('/circle api with pagination', function () {
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err1, res) => {
-        console.log(res.body.text.items[0]);
         expect(res.body.totalItems).to.be.equal(5);
         for (let i = 0; i < 5; i += 1) {
-          console.log(res)
           expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');

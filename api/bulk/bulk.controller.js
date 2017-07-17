@@ -7,7 +7,8 @@ const mailboxDAO = require('../../dao').mailbox;
 function getOpenMailboxes(req, res) {
     const offset = req.params.offset;
     const count = req.params.count;
-    bulkDao.getOpenMailboxes({ offset, count }, (err, users) => {
+    console.log(" In controller", bulkDAO);
+    bulkDAO.getOpenMailboxes({ offset, count }, (err, users) => {
         if (err) { res.status(404).json({ message: `${err}` }); return; }
         if (!users.record_count) { res.status(404).json({ message: 'Not found' }); return; }
         res.status(200).json({ users });
