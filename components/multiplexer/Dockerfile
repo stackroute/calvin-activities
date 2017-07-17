@@ -1,9 +1,15 @@
 FROM mhart/alpine-node-auto
 
-RUN mkdir -p /app
-WORKDIR /app
+RUN mkdir -p /app/multiplexer
+RUN mkdir -p /app/lib
 
-COPY package.json .
+WORKDIR /app/lib
+
+COPY ./lib .
+
+WORKDIR /app/multiplexer
+
+COPY ./multiplexer .
 
 RUN npm install
 

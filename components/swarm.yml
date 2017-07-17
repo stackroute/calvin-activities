@@ -1,0 +1,15 @@
+version: "3"
+services:
+  multiplexer:
+    image: 192.168.99.1:5000/multiplexer
+#    build:
+#      context: .
+#      dockerfile: ./multiplexer/Dockerfile
+#    links:
+#      - redis
+#      - kafka
+    environment:
+      REDIS_HOST: 192.168.99.1
+      ZOOKEEPER_HOST: 192.168.99.1
+      CONSUMER_GROUP: m1
+

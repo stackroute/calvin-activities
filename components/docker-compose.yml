@@ -1,17 +1,19 @@
 version: "2"
 services:
   multiplexer:
-    image: multiplexer
-    build: multiplexer
+    image: 192.168.99.1:5000/multiplexer
+    build:
+      context: .
+      dockerfile: ./multiplexer/Dockerfile
     links:
       - redis
       - kafka
     environment:
       REDIS_HOST: redis
-      ZOOKEEPER_HOST: kafka 
+      ZOOKEEPER_HOST: kafka
       CONSUMER_GROUP: m1
   multiplexer-delivery:
-    image: multiplexer-delivery
+    image: 192.168.99.1:5000/multiplexer-delivery
     build: multiplexer-delivery
     links:
       - redis
@@ -24,7 +26,7 @@ services:
       DSE_KEYSPACE: testdb
       CONSUMER_GROUP: m1D
   l1r:
-    image: l1r
+    image: 192.168.99.1:5000/l1r
     build: l1r
     links:
       - redis
@@ -38,14 +40,14 @@ services:
     ports:
       - 6379:6379
   kafka:
-    image: spotify/kafka
+    image: 192.168.99.1:5000/spotify-kafka
     build: spotify-kafka/kafka
     environment:
       ADVERTISED_HOST: kafka
   dse:
     image: cassandra
   produce:
-    image: capacity-test-data
+    image: 192.168.99.1:5000/capacity-test-data
     build: capacity-test-data
     links:
       - redis
@@ -56,7 +58,7 @@ services:
       REDIS_HOST: redis
       CONSUMER_GROUP: m1
   produce-multiplexer-delivery:
-    image: capacity-test-data
+    image: 192.168.99.1:5000/capacity-test-data
     build: capacity-test-data
     links:
       - redis
@@ -67,7 +69,7 @@ services:
       REDIS_HOST: redis
       CONSUMER_GROUP: m1D
   produce-l1r:
-    image: capacity-test-data
+    image: 192.168.99.1:5000/capacity-test-data
     build: capacity-test-data
     links:
       - redis
