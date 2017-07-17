@@ -3,17 +3,16 @@ const secret = require('../secret.js');
 module.exports = {
   connectionString: {
     keyspace: 'testdb',
-    contact: '127.0.0.1',
+    contact: '172.23.238.134',
     port: '9042',
   },
   secretKey: secret,
   dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: '127.0.0.1',
+    host: '172.23.238.134',
     port: '2181',
     activitiesTopic: 'activities',
-    eventsTopic: 'events',
-    monitoringTopic: 'monitor',
+    routesTopic: 'routes',
   },
   redis: {
     host: '172.23.238.134',

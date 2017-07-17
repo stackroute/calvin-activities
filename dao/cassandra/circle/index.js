@@ -1,5 +1,6 @@
 const start = require('../../../db');
 const config = require('../../../config');
+const {producer} = require('../../../client/kafkaclient');
 
 const client = start.client;
 const uuid = start.uuid;
@@ -13,7 +14,12 @@ function createCircle(callback) {
   const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
   client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
     if (err) { return callback(err, null); }
-    return callback(err, newCircle);
+
+    producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
+      if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
+
+      return callback(err, newCircle);
+    });
   });
 }
 
@@ -26,10 +32,16 @@ function checkIfCircleExists(circleId, callback) {
 }
 
 function deleteCircle(circleId, callback) {
-  const query = (`DELETE from circle where circleId =${circleId}`);
-  client.execute(query, (error, result) => {
-    if (error) { return callback(error, null); }
-    return callback(null, { id: circleId });
+  client.execute(`SELECT mailboxid from circle where circleId = ${circleId}`, (err, result) => {
+    //TODO pass this circleMailboxId to remove route - result.rows[0].mailboxid.toString()
+      if(err) { return callback(err); }
+      if(result.rowLength == 0) {return callback('Circle not found'); }
+      const query = (`DELETE from circle where circleId =${circleId}`);
+      client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+
+      return callback(null, { id: circleId });
+    });
   });
 }
 

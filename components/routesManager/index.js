@@ -6,7 +6,6 @@ const routesManagerDao =require('./dao/routes_service');
 
 
 consumer.on('message', function (message) {
-
   const messages= JSON.parse(message.value) ;
   const circleId= messages.circleId;
   const mailboxId = messages.mailboxId;
@@ -19,10 +18,10 @@ consumer.on('message', function (message) {
   }
 
   else if (messages.command== 'removeRoute'){
-    routesManagerDao.removeRoute(circleId,mailboxId,(err,result)=>{
+    /*routesManagerDao.removeRoute(circleId,mailboxId,(err,result)=>{
       if(err){return { message: 'err' } }
       else {return { message: 'result' } }
-    })
+    })*/
   }
 });
 
