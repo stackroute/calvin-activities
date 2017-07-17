@@ -35,7 +35,7 @@ consumer.on('message', (message) => {
     setStartTime();
   }
 
-  const receiver =JSON.parse(message.value).mailboxId;
+  const receiver = JSON.parse(message.value).mailboxId;
   const newActivity = {
     payload: JSON.parse(message.value).payload,
     timestamp: new Date(),

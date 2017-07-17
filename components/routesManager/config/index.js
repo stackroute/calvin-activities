@@ -1,14 +1,14 @@
 module.exports = {
   connectionString: {
     keyspace: 'testdb',
-    contact: '127.0.0.1',
+    contact: '172.23.238.134',
     port: '9042',
   },
   dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: '127.0.0.1',
+    host: '172.23.238.134',
     port: '2181',
-    topics: { topic: 'routeTest' },
+    topics: { topic: 'routes' },
     options: {
       autoCommit: false,
       fromOffset: true,
@@ -16,7 +16,7 @@ module.exports = {
 
   },
   redis: {
-    host: '127.0.0.1',
+    host: '172.23.238.134',
     port: '6379',
   },
   namespace: 'L1R',

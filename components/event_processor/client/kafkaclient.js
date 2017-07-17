@@ -6,7 +6,7 @@ const client = new kafka.Client(`${config.host}:${config.port}`);
 
 const topics = config.topics;
 
-const routesTopic =config.routesTopic;
+const routesTopic = config.routesTopic;
 
 const options = config.options;
 
