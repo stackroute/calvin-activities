@@ -43,11 +43,7 @@ function getAllActivities(req, res) {
   const mailboxId = req.params.mailboxId;
   activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-<<<<<<< HEAD
-    res.status(201).json({totalItems: result.a, items: result.b});
-=======
-    res.status(201).json({ totalItems: result.length, items: result });
->>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+res.status(201).json({totalItems: result.a, items: result.b});
   });
 }
 

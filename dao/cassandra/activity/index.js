@@ -57,6 +57,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
     if (err) { return callback(err, null); }
     if (MailIdExists && limit != 0) {
 <<<<<<< HEAD
+<<<<<<< HEAD
        if (limit == -1 && before != undefined && after == undefined) {
         const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before}`);
 =======
@@ -65,12 +66,17 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
       if (after != undefined && limit === undefined) {
         const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > ${after} limit ${config.defaultLimit}`);
 >>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+=======
+       if (limit == -1 && before != undefined && after == undefined) {
+        const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before}`);
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
           let a = result.rows.length;
           let b = result.rows;
           return callback(null, { a, b });
         });
+<<<<<<< HEAD
 <<<<<<< HEAD
       }
 
@@ -79,6 +85,11 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
       } else if (after != undefined && limit == -1) {
         console.log(2);
 >>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+=======
+      }
+
+      else if (limit == -1 && after != undefined && before == undefined) {
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
         const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > ${after}`);
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
@@ -87,6 +98,9 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
           return callback(null, { a, b });
         });
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
         return;
       }
 
@@ -210,6 +224,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
       return callback(null, { a, b });
     });
   }
+<<<<<<< HEAD
 =======
       } else if (limit != undefined && after != undefined) {
         console.log(3);
@@ -245,6 +260,8 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
       }
       // before and after
 >>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+=======
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
 
       else if (after != undefined && before != undefined && limit === undefined) {
         console.log(7);

@@ -3,9 +3,6 @@ const followDAO = require('../../index').follow;
 const circleDAO = require('../../index').circle;
 
 function getOpenMailboxes(range, callback) {
-  console.log("In cassandra");
-  console.log(range.offset);
-  console.log("count",range.count);
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
   const users = (Object.keys(activityDAO.listeners)).slice(offset, (offset+count));
@@ -37,7 +34,11 @@ function getAllActivitiesOfACircle(circleId, range, callback) {
 module.exports = {
   getOpenMailboxes,
 <<<<<<< HEAD
+<<<<<<< HEAD
   getAllActivitiesOfACircle,
 =======
 >>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+=======
+  getAllActivitiesOfACircle,
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
 };

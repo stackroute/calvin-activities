@@ -78,15 +78,7 @@ describe('/activity API', () => {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
-<<<<<<< HEAD
             expect(res.body.items[0].payload).to.contain('www.facebook.com');
-=======
-          const mailboxActivity = res.body;
-          const b = (mailboxActivity[0].payload);
-          const c = JSON.parse(b);
-          const result = c.payload.link;
-          expect(result).to.equal('www.facebook.com');
->>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
           done();
         });
     });

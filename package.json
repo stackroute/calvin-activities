@@ -5,15 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node start",
-<<<<<<< HEAD
-    "test": "  DAO=mock ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
-    "eslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js'",
-    "fixeslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js' --fix",
-=======
     "test": " npm run eslint && npm run yamllint && DAO=cassandra ./node_modules/.bin/mocha **/*.spec.js && DAO=mock ./node_modules/.bin/mocha **/*.spec.js",
     "eslint": "./node_modules/.bin/eslint *.js '**/*.js'",
     "fixeslint": "./node_modules/.bin/eslint *.js '**/*.js' --fix",
->>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
     "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'",
     "activitytest": " DAO=cassandra ./node_modules/.bin/mocha **/activity.spec.js",
     "circletest": "  DAO=cassandra ./node_modules/.bin/mocha **/circle.spec.js",

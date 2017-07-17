@@ -14,6 +14,9 @@ const bootstrapSocketServer = require('../socket/socketserver');
 
 describe('/getOpenMailboxes API', () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081
     const sockets = [];
     const mailboxIds = [];
     let io;
@@ -96,6 +99,7 @@ describe('/getOpenMailboxes API', () => {
     //         console.log(`mailbox${mailboxId}`);
     //     });
     // });
+<<<<<<< HEAD
 =======
   //   const sockets = [];
   //   const mailboxIds =[];
@@ -182,3 +186,5 @@ describe('/getOpenMailboxes API', () => {
   });
 });
 >>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
+=======
+>>>>>>> 1ed3f6b3bfd8c63f05d21972a3db27b45bc75081

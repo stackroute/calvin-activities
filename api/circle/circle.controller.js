@@ -26,11 +26,7 @@ function deleteCircle(req, res) {
 function getAllCircles(req, res) {
   circleDAO.getAllCircles(req.query.limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-<<<<<<< HEAD
     res.status(200).json({totalItems: result.a, items: result.b});
-=======
-    res.status(201).json({ totalItems: result.a, items: result.b });
->>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
   });
 }
 

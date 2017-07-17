@@ -4,24 +4,13 @@ const bulkDAO = require('../../dao').bulk;
 const mailboxDAO = require('../../dao').mailbox;
 
 function getOpenMailboxes(req, res) {
-<<<<<<< HEAD
     const offset = req.params.offset;
     const count = req.params.count;
-    console.log(" In controller", bulkDAO);
     bulkDAO.getOpenMailboxes({ offset, count }, (err, users) => {
         if (err) { res.status(404).json({ message: `${err}` }); return; }
         if (!users.record_count) { res.status(404).json({ message: 'Not found' }); return; }
         res.status(200).json({ users });
     });
-=======
-  const offset = req.params.offset;
-  const count = req.params.count;
-  bulkDAO.getOpenMailboxes({ offset, count }, (err, users) => {
-    if (err) { res.status(404).json({ message: `${err}` }); return; }
-    if (!users.record_count) { res.status(404).json({ message: 'Not found' }); return; }
-    res.status(200).json({ users });
-  });
->>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
 }
 
 function bulkFollow(req, res) {

@@ -89,10 +89,6 @@ describe('/circle api', function () {
       .end((err1, res) => {
         expect(res.body.totalItems).to.be.equal(5);
         for (let i = 0; i < 5; i += 1) {
-<<<<<<< HEAD
-=======
-          console.log(res);
->>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
           expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
           expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
