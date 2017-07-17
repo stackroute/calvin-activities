@@ -39,8 +39,18 @@ app.use('/l1route', require('./api/l1r'));
 
 app.use('/', require('./api/bulk'));
 
+app.use('/events', require('./api/event'));
+
 app.use('/multiplexerRoute', require('./api/multiplexer-route'));
 
-app.use('/adapter', require('./api/adapter'));
+app.use('/adapter', require('./api/adapter/circle'));
+
+app.use('/adapter', require('./api/adapter/follow'));
+
+app.use('/adapter', require('./api/adapter/mailbox'));
+
+app.use('/adapter', require('./api/adapter/activity'));
+
+app.use('/adapter', require('./api/adapter/route'));
 
 module.exports = app;

@@ -36,6 +36,7 @@ function deleteFollow(follower, callback) {
   });
 }
 
+<<<<<<< HEAD
 function getFollowersMailboxesOfACircle(circleId, limit, before, after, callback) {
   const config = require('../../../config');
   if (limit == 0) {
@@ -74,6 +75,20 @@ function getFollowersMailboxesOfACircle(circleId, limit, before, after, callback
   }
 
  else if (limit == -1 && after == undefined && before == undefined) {
+=======
+function splitMailId(circleId, callback) {
+  const query = (`SELECT * from follow where circleid = ${circleId}`);
+  client.execute(query, (err, result) => {
+    if (err) { return callback(err); }
+    return callback(null, result.rows);
+  });
+}
+
+function getFollowersMailboxesOfACircle(circleId, limit, callback) {
+  if (limit === 0) {
+    return callback('limit is set to 0', null);
+  } else if (limit === -1) {
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
@@ -83,6 +98,7 @@ function getFollowersMailboxesOfACircle(circleId, limit, before, after, callback
     });
   }
 
+<<<<<<< HEAD
 
 
 
@@ -193,6 +209,13 @@ else if (limit != undefined && before != undefined && after == undefined) {
       return callback(null, { a, b });
     });
   }
+=======
+  const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} limit ${limit}`);
+  client.execute(query, (err, result) => {
+    if (err) { throw err; }
+    return callback(err, result);
+  });
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
 }
 
 

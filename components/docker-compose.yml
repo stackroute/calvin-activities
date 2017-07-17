@@ -8,7 +8,31 @@ services:
       - kafka
     environment:
       REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka 
+      CONSUMER_GROUP: m1
+  multiplexer-delivery:
+    image: multiplexer-delivery
+    build: multiplexer-delivery
+    links:
+      - redis
+      - kafka
+      - dse
+    environment:
+      REDIS_HOST: redis
       ZOOKEEPER_HOST: kafka
+      DSE_HOST: dse
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: m1D
+  l1r:
+    image: l1r
+    build: l1r
+    links:
+      - redis
+      - kafka
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka 
+      CONSUMER_GROUP: activities
   redis:
     image: redis
     ports:
@@ -18,6 +42,8 @@ services:
     build: spotify-kafka/kafka
     environment:
       ADVERTISED_HOST: kafka
+  dse:
+    image: cassandra
   produce:
     image: capacity-test-data
     build: capacity-test-data
@@ -25,6 +51,29 @@ services:
       - redis
       - kafka
     environment:
-      NUMBER_OF_MESSAGES: 1000000
+      NUMBER_OF_MESSAGES: 10000
       ZOOKEEPER_HOST: kafka
       REDIS_HOST: redis
+      CONSUMER_GROUP: m1
+  produce-multiplexer-delivery:
+    image: capacity-test-data
+    build: capacity-test-data
+    links:
+      - redis
+      - kafka
+    environment:
+      NUMBER_OF_MESSAGES: 10000
+      ZOOKEEPER_HOST: kafka
+      REDIS_HOST: redis
+      CONSUMER_GROUP: m1D
+  produce-l1r:
+    image: capacity-test-data
+    build: capacity-test-data
+    links:
+      - redis
+      - kafka
+    environment:
+      NUMBER_OF_MESSAGES: 10000
+      ZOOKEEPER_HOST: kafka
+      REDIS_HOST: redis
+      CONSUMER_GROUP: activities

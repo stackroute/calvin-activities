@@ -329,6 +329,7 @@ describe('/follow api with pagination', () => {
     done();
   });
 
+<<<<<<< HEAD
   it('should return all followers with limit', (done) => {
     request(app)
       .get(`/mailbox/getfollowers/circle/${circleId}?limit=5`)
@@ -364,3 +365,56 @@ describe('/follow api with pagination', () => {
       });
   });
   });
+=======
+  // it('should return all followers with limit', (done) => {
+  //   for (let i = 0; i <= 5; i++) {
+  //     mailboxDAO.createMailbox((err, result) => {
+  //       if (err) { throw err; }
+  //       mailboxId = result.mailboxId;
+  //       console.log(mailboxId);
+  //       const follower = { circleId, mailboxId };
+  //       let startedFollowing = new Date();
+  //       followDAO.addFollow(follower, startedFollowing, (err, result) => {
+
+  //         if (err) { throw err; }
+  //       });
+  //     });
+  //   }
+  //   console.log(result);
+  //   request(app)
+  //     .get(`/mailbox/getfollowers/${circleId}?limit=2`)
+  //     .set('Authorization', `Bearer ${token}`)
+  //     .expect(200)
+  //     .expect('Content-Type', /json/)
+  //     .end((err1, res) => {
+  //       console.log(res.body);
+  //       expect(res.body.totalItems).to.be.equal(5);
+  //       for (let i = 0; i < res.body.totalItems; i += 1) {
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('startedFollowing');
+  //       }
+  //       done();
+  //     });
+  // });
+
+
+  // it('should return circle without limit', (done) => {
+  //   request(app)
+  //     .get('/circle/getallcircles')
+  //     .set('Authorization', `Bearer ${token}`)
+  //     .expect(200)
+  //     .expect('Content-Type', /json/)
+  //     .end((err1, res) => {
+  //       expect(res.body.totalItems).to.be.above(0);
+  //       for (let i = 0; i < res.body.totalItems; i += 1) {
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('lastpublishedactivity');
+  //         expect(res.body.items[i]).to.be.an('object').to.have.property('createdon');
+  //       }
+  //       done();
+  //     });
+  // });
+});
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246

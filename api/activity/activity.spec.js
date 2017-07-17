@@ -18,7 +18,7 @@ describe('/activity API', () => {
   let circleId;
   let mailboxId;
   let token;
-  let startedFollowing = new Date();
+  const startedFollowing = new Date();
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
@@ -56,9 +56,9 @@ describe('/activity API', () => {
           activityDao.checkActivityPublished(mailboxId, (error, mailboxActivity) => {
             if (error) { done(error); return; }
             expect(mailboxActivity).to.have.lengthOf(1);
-            let b = (mailboxActivity[0].payload);
-            let c = JSON.parse(b);
-            let result = c.payload.link;
+            const b = (mailboxActivity[0].payload);
+            const c = JSON.parse(b);
+            const result = c.payload.link;
             expect(result).to.equal('www.facebook.com');
             done();
           });
@@ -78,7 +78,15 @@ describe('/activity API', () => {
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
+<<<<<<< HEAD
             expect(res.body.items[0].payload).to.contain('www.facebook.com');
+=======
+          const mailboxActivity = res.body;
+          const b = (mailboxActivity[0].payload);
+          const c = JSON.parse(b);
+          const result = c.payload.link;
+          expect(result).to.equal('www.facebook.com');
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
           done();
         });
     });

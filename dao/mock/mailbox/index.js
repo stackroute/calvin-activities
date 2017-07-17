@@ -24,31 +24,27 @@ function deleteMailbox(mailboxId, callback) {
 }
 
 function getAllMailboxes(limit, callback) {
-  if (limit == 0) {
-    return callback("limit is set to 0", null);
-  }
-
-  else if (limit == -1) {
-    let a = mailboxes.length;
-    let b = mailboxes;
-    return callback(null, {a,b});
-  }
-  else if (limit === undefined) {
-    limit = config.defaultLimit;
-    for (let i = 0; i < limit; i++) {
+  if (limit === 0) {
+    return callback('limit is set to 0', null);
+  } else if (limit === -1) {
+    const a = mailboxes.length;
+    const b = mailboxes;
+    return callback(null, { a, b });
+  } else if (limit === undefined) {
+    const defaultLimit = config.defaultLimit;
+    for (let i = 0; i < defaultLimit; i += 1) {
       result.push(mailboxes[i]);
     }
-    let a = result.length;
-    let b = result;
-    return callback(null, {a,b});
-  }
-  else {
-    for (let i = 0; i < limit; i++) {
+    const a = result.length;
+    const b = result;
+    return callback(null, { a, b });
+  } else {
+    for (let i = 0; i < limit; i +=1) {
       result.push(mailboxes[i]);
     }
-    let a = result.length;
-    let b = result;
-    return callback(null, {a,b});
+    const a = result.length;
+    const b = result;
+    return callback(null, { a, b });
   }
 }
 

@@ -36,5 +36,8 @@ function getAllActivitiesOfACircle(circleId, range, callback) {
 
 module.exports = {
   getOpenMailboxes,
+<<<<<<< HEAD
   getAllActivitiesOfACircle,
+=======
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
 };

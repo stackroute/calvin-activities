@@ -5,12 +5,16 @@ const result = [];
 const config = require('../../../config');
 
 function addFollow(follower, startedFollowing, callback) {
+<<<<<<< HEAD
   const followers = {
     circleId: follower.circleId,
     mailboxId: follower.mailboxId,
     startedFollowing: startedFollowing
   }
   followapi.push(followers);
+=======
+  followapi.push(follower.circleId, follower.mailboxId, startedFollowing);
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
   return callback(null, follower);
 }
 

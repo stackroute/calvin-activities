@@ -6,9 +6,8 @@ function createDomain(req, res) {
   const newdomain = req.params.domain;
   adapterDAO.createDomain(newdomain, (err, domain) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({domain});
+    res.status(201).json({ domain });
   });
-
 }
 
 function deleteDomain(req, res) {

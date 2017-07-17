@@ -12,11 +12,10 @@ const Consumer = kafka.Consumer;
 
 const consumer = new Consumer(client, [topics], options);
 
-const Producer = kafka.Producer;
+const Producer = kafka.HighLevelProducer;
 
 const producer = new Producer(client);
 
 module.exports = {
-  consumer,
   producer,
 };

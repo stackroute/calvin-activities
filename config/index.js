@@ -11,12 +11,9 @@ module.exports = {
   kafka: {
     host: '127.0.0.1',
     port: '2181',
-    topics: { topic: 'm2', partition: 0, offset: 0 },
-    options: {
-      autoCommit: false,
-      fromOffset: true,
-    },
     activitiesTopic: 'activities',
+    eventsTopic: 'events',
+    monitoringTopic: 'monitor',
   },
   redis: {
     host: '127.0.0.1',

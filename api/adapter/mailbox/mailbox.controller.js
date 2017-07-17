@@ -6,9 +6,8 @@ function createUser(req, res) {
   const newUser = req.params.user;
   adapterDAO.createUser(newUser, (err, user) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({user});
+    res.status(201).json({ user });
   });
-
 }
 
 function deleteUser(req, res) {

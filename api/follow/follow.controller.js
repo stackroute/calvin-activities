@@ -84,8 +84,13 @@ function unfollow(req, res) {
   });
 }
 
+<<<<<<< HEAD
    function getFollowersMailboxesOfACircle(req, res) {
   followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit,req.query.before, req.query.after, (err, result) => {
+=======
+function getFollowersMailboxesOfACircle(req, res) {
+  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit, (err, result) => {
+>>>>>>> 1859679a77dd2ea08a15a556a9535c010dd4a246
     if (err) { res.status(500).json({ message: `${err}` }); return; }
     res.status(201).json({totalItems: result.a, items: result.b});
   });
