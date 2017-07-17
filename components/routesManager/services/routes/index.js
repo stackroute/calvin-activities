@@ -2,7 +2,7 @@ const express = require('express');
 const redis = require('thunk-redis');
 const namespace = require('../../config').namespaceroutemanager;
 
-const client = redis.createClient();
+const client = require('../../client/redisclient').client;
 
 const multiplexerService = require('../../services/multiplexer');
 const l1rService = require('../../services/l1r');

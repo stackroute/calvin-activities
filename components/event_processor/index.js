@@ -10,7 +10,7 @@ const routesTopic = kafkaClient.routesTopic;
 
 consumer.on('message', (message) => {
 
-  const mailboxId= JSON.parse(message.value).mailboxId;
+  const mailId= JSON.parse(message.value).mailboxId;
   const circleId = JSON.parse(message.value).circleId;
  
   let command;
@@ -24,22 +24,24 @@ consumer.on('message', (message) => {
     command = 'undefined';
   }
 if ((status == "useronline") ||(status=="useroffline") ){
-  followDao.getCirclesForMailbox(mailboxId, (err, result) => {
+  followDao.getCirclesForMailbox(mailId, (err, result) => {
     if (err) { return { message: 'err' } ; }
     const rows = result.rows;
 
     rows.forEach((element) => {
       const obj = {
         circleId: element.circleid.toString(),
-        mailboxId: mailboxId,
+        mailboxId: mailId,
         command,
       };
       const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj), partition: 0 }];
       producer.send(payloads, (err, data) => {
         if (err) { return { message: 'err' }; }
-        console.log(data);
+        followDao.syncMailbox(mailId, (err, result) => {
+          if(err) {console.log(err);}
+        })
       });
-      producer.on('error', err => ( return { message: 'err' }));
+      producer.on('error', err => ( console.log({ message: 'err' })));
     });
 
   });
