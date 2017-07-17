@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-around start" >
-    <div fxLayout="column" fxLayoutAlign="space-around start" >
+    <!--<div flex fxLayout="column" fxLayoutAlign="space-around start" >
     <md-card flex *ngFor="let msg of producer">
     <md-card-title>
         <h1>Topic - {{msg.topic}}</h1>
@@ -8,14 +8,14 @@
         <span>No of Message : {{msg.count}}/sec</span>
     </md-card-content>
     </md-card>
-    </div>
-    <div fxLayout="column" fxLayoutAlign="space-around start" >
-    <md-card flex *ngFor="let msg of producer">
+    </div>-->
+    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
+    <md-card flex *ngFor="let msg of topics">
     <md-card-title>
-        <h1>Topic - {{msg.topic}}</h1>
+        <h1>Topic - {{msg}}</h1>
     </md-card-title>  
     <md-card-content>
-        <span>No of Message : {{msg.count}}/sec</span>
+        <!--<span>No of Message : {{msg.count}}/sec</span>-->
     </md-card-content>
     </md-card>
     </div>
