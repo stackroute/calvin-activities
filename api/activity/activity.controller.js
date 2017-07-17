@@ -37,6 +37,7 @@ function createPublishActivityToMailbox(req, res) {
 
 
 function getAllActivities(req, res) {
+  console.log("controller");
   const limit = req.query.limit;
   const before = req.query.before;
   const after = req.query.after;
