@@ -144,6 +144,8 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
       let b = result.rows;
+      console.log(a);
+      console.log(b);
       return callback(null, { a, b });
     });
   }
@@ -203,6 +205,8 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
         const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before} and createdAt > ${after} limit ${config.defaultLimit}`);
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
+          let a = result.rows.length;
+      let b = result.rows;
           return callback(null, result.rows);
         });
       } else if (after != undefined && before != undefined && limit == -1) {
@@ -210,7 +214,9 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
         const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt < ${before} and createdAt > ${after}`);
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
-          return callback(null, result.rowst);
+          let a = result.rows.length;
+      let b = result.rows;
+          return callback(null, result.rows);
         });
       } else if (limit != undefined && before != undefined && after != undefined) {
         console.log(9);
@@ -221,9 +227,8 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
         });
       }
     }
-    // else { return callback(null, "limit is 0");} 
+    else { return callback(null, "limit is 0");} 
   });
-  return callback(null, 'limit is 0 or maiboxid does not exists');
 }
 
 function addListnerToMailbox(mid, socket) {
