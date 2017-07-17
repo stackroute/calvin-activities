@@ -2,7 +2,7 @@
   swagger: "2.0"
   tags:
     - name: "Circle API"
-      description: "API to create and delete circles"
+      description: "API to create a circle ,delete a circle, get list of all circles"
     - name : "Mailbox API"
       description: "API to create and delete mailbox"
     - name: "Follow API"
@@ -41,7 +41,7 @@
             type: "string"
         responses: 
           201: 
-            description: Creates a circle.           
+            description: circle created.           
     /circle/{circleId}:
       delete:
         tags:
@@ -63,7 +63,46 @@
           type: "string"
         responses:
           200:
-            description: Deletes a circle.
+            description: circle deleted.
+    /circle/getallcircles:
+      get:
+        tags:
+          - "Circle API"
+        summary: "Gets the list of  Circles available"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "limit"
+          in: "query"
+          description: "Number of circles need to be displayed"
+          required: false
+          type: "string"
+          format: "int64"        
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+        responses:
+          200:
+            description: List of circles.
+    /circle/getallcircles:
+      get:
+        tags:
+          - "Circle API"
+        summary: "Gets the list of  Circles available"        
+        produces:
+          -"application/json"
+        parameters:
+        
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+        responses:
+          200:
+            description: Number of circles need to be displayed.            
     /mailbox:
       post:
         tags:

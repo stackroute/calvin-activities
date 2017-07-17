@@ -1,7 +1,16 @@
 const followapi = [];
 
+const result = [];
+
+const config = require('../../../config');
+
 function addFollow(follower, startedFollowing, callback) {
-  followapi.push(follower.circleId, follower.mailboxId, startedFollowing);
+  const followers = {
+    circleId: follower.circleId,
+    mailboxId: follower.mailboxId,
+    startedFollowing: startedFollowing
+  }
+  followapi.push(followers);
   return callback(null, follower);
 }
 
@@ -22,10 +31,45 @@ function splitMailId(circleId, callback) {
   return callback(null, splitMailIdd);
 }
 
+function getFollowersMailboxesOfACircle(circleId, limit, callback) {
+  const filterData = follow => follow.circleId === circleId;
+  const result = followapi.filter(filterData);
+  if (limit == 0) {
+    return callback("limit is set to 0", null);
+    return;
+  }
+
+  else if (limit === -1) {
+    let a = followapi.length;
+    let b = followapi;
+    return callback(null, { a, b });
+  }
+
+  else if (limit === undefined) {
+    const defaultLimit = config.defaultLimit;
+    for (let i = 0; i < limit; i++) {
+      result.push(followapi[i]);
+    }
+    let a = result.length;
+    let b = result;
+    return callback(null, { a, b });
+  }
+
+  else {
+    for (let i = 0; i < limit; i++) {
+      result.push(followapi[i]);
+    }
+    let a = result.length;
+    let b = result;
+    return callback(null, { a, b });
+  }
+}
+
+
 module.exports = {
   deleteFollow,
   addFollow,
   checkIfFollowExists,
   splitMailId,
-  followapi,
+  getFollowersMailboxesOfACircle,
 };

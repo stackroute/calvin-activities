@@ -1,4 +1,4 @@
-const start = require('../../../db');
+  const start = require('../../../db');
 
 const mailboxDao = require('../../index').mailbox;
 
@@ -9,7 +9,6 @@ const result = [];
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  console.log('mock');
   const newCircle = {
     circleId: uuid().toString(),
     mailboxId: uuid().toString(),
