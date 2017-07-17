@@ -197,6 +197,46 @@
         responses:
           200:
             description: Unfollow a circle.
+    /mailbox/getfollowers/circle/{circleId}:            
+      get:
+        tags:
+          - "Follow API"
+        summary: "List of followers"
+        produces:
+          -"application/json"
+        parameters:
+        - name: "circleId"
+          in: "path"
+          description: "Circle id"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "limit"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "before"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "after"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64"                     
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: true
+          type: "string" 
+        responses:
+          200:
+            description: List of followers.
     /circle/{circleId}/activity:
        post:
         tags:
