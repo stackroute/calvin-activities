@@ -49,7 +49,7 @@ function getAllActivities(req, res) {
     console.log(firstActivityTime);
     console.log(lastActivityTime);
 console.log(`/circle/getallactivities/${mailboxId}?after=${firstActivityTime}&limit=${limit}`);
-    res.status(201).json({totalItems: result.a, items: result.b, next: `/circle/getallactivities/${mailboxId}?after=${firstActivityTime}&limit=${limit}`, prev: `/circle/getallactivities/${mailboxId}?before=${lastActivityTime}&limit=${limit}`});
+    res.status(200).json({totalItems: result.a, items: result.b, next: `/circle/getallactivities/${mailboxId}?after=${firstActivityTime}&limit=${limit}`, prev: `/circle/getallactivities/${mailboxId}?before=${lastActivityTime}&limit=${limit}`});
   });
 }
 

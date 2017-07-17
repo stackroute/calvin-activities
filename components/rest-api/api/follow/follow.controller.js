@@ -87,7 +87,7 @@ function unfollow(req, res) {
    function getFollowersMailboxesOfACircle(req, res) {
   followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit,req.query.before, req.query.after, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(201).json({totalItems: result.a, items: result.b});
+    res.status(200).json({totalItems: result.a, items: result.b});
   });
 }
 

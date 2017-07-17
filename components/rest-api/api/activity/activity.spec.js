@@ -74,7 +74,7 @@ describe('/activity API', () => {
       request(app)
         .get(`/circle/getallactivities/${mailboxId}`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(201)
+        .expect(200)
         .expect('Content-Type', /json/)
         .end((err1, res) => {
           if (err1) { done(err1); return; }
