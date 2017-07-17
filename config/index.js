@@ -9,7 +9,7 @@ module.exports = {
   secretKey: secret,
   dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: '172.23.238.134',
+    host: '127.0.0.1',
     port: '2181',
     activitiesTopic: 'activities',
     routesTopic: 'routes',
