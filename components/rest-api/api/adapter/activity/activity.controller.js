@@ -56,7 +56,9 @@ function getAllActivities(req, res) {
     console.log(mailboxId);
     activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
-      res.status(201).json({ totalItems: result.length, items: result });
+       const firstActivityTime = result.b[0].createdat;
+       const lastActivityTime = result.b[result.b.length - 1].createdat;
+       res.status(201).json({totalItems: result.a, items: result.b, next: '/adapter/getallactivities/user/' + req.params.user, prev: '/adapter/getallactivities/user/' + req.params.user});
     });
   });
 }
