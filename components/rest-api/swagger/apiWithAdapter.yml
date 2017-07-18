@@ -871,16 +871,28 @@
         produces:
           -"application/json"
         parameters:
-        - name: "limit"
-          in: "query"
-          description: "Number of activities to be displayed"
-          required: false
-          type: "string"
-          format: "int64"
         - name: "user"
           in: "path"
           description: "user name to get activity"
           required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "limit"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "before"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "after"
+          in: "query"
+          description: "date"
+          required: false
           type: "string"
           format: "int64"      
         responses:
@@ -894,18 +906,30 @@
         produces:
           -"application/json"
         parameters:
-        - name: "limit"
-          in: "query"
-          description: "Number of activities to be displayed"
-          required: false
-          type: "string"
-          format: "int64"
         - name: "domain"
           in: "path"
           description: "domain name to get activity"
           required: true
           type: "string"
-          format: "int64"      
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "limit"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "before"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "after"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64"    
         responses:
           200:
             description: List of activities.
