@@ -41,65 +41,37 @@ export class AppComponent {
    errorRate : 21333
    },
    capacity : 121112100
-  },
+  },  
   
   );
   topics = new Set();
   consumerGroups = new Set();
-  fillRate = new Array();
-  drainRate = new Array();
-  errorRate = new Array();
-  
   constructor() {
-  //   const socket = io('localhost:3000');
-  //   socket.on('msg', (value) => {
-  //   let res = checkIfTopicExists(value.topic)
-  //   if(res) { addTopic(value.topic); }
-  //   console.log(res);
-  // });
-  
-  this.producer.forEach(element => {
-    if(element.topic){
-    if(this.topics.size == 0) { new Array(element.topic); this.topics.add(element.topic) }
-    let flag = true;
-    this.topics.forEach(topicName => {
-      if(topicName == element.topic) { flag = false; } ;
-    });
-    if(flag) { new Array(element.topic); this.topics.add(element.topic); }
-    }  
+    let topicCount = 0 ;
+    const socket = io('localhost:3000');
+    socket.on('msg', (data) => {
+    let newTopic = JSON.parse(data.value).topic;
+    if(newTopic){
+      if(this.topics.size == 0) { 
+        this.topics.add(newTopic); 
+        topicCount += 1; 
+        var $newTopic = new Array();
+        $newTopic.push(JSON.parse(data.value).count);
+      }
+      this.topics.forEach(topicName => {
+        if(!(topicName == newTopic)) { 
+          this.topics.add(newTopic); 
+          topicCount += 1;
+          var $newTopic = new Array();
+       };
+      });
+      $newTopic.push(JSON.parse(data.value).count);
+      // console.log(newTopic);
+      // console.log(JSON.parse(data.value).count);
+      // console.log($newTopic);
+      // console.log(topicCount); 
+    } 
   });
-
-  function checkIfTopicExists(topicName){
-     this.topics.forEach(element => {
-       if(topicName.equals(element)) { return true;  }
-       return false;
-     });
-   }
-
-   function addConsumerGroup(consumerGroupName){
-     this.consumerGroups.add(consumerGroupName);
-   }
-
-   function checkIfCGExists(consumerGroupName){
-     this.consumerGroups.forEach(element => {
-       if(consumerGroupName.equals(element)) { return true;  }
-       return false;
-     });
-   }
-
-  function checkArrayLength(arrayName){
-    if (arrayName.length <10){ return "push" }
-    return arrayName+":"+arrayName.length;
-  }
-
-
-  function addAvg(currentFillRate){
-    this.fillRate.push(currentFillRate);
-  }
-
-  function removeAvg(currentErrorRate){
-    this.errorRate.pop(currentErrorRate);
-  }
 
   function calculateAverage(arrayName){
     let sum = 0 ;
