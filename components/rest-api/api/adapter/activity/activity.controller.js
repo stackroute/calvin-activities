@@ -53,13 +53,12 @@ function getAllActivities(req, res) {
       return;
     }
     const mailboxId = (doesUserExists.mailboxid).toString();
-    console.log(mailboxId);
     activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
-       const firstActivityTime = result.b[0].createdat;
-       const lastActivityTime = result.b[result.b.length - 1].createdat;
-       res.status(201).json({totalItems: result.a, items: result.b, next: '/adapter/getallactivities/user/' + req.params.user, prev: '/adapter/getallactivities/user/' + req.params.user});
-    });
+         const firstActivity = result.b[0];
+        const lastActivity = result.b[result.b.length - 1];
+        res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
+      });
   });
 }
 
