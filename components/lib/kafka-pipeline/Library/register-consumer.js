@@ -9,6 +9,8 @@ const producer = new HighLevelProducer(client);
 const consumerId = Math.random() * 123456789;
 
 function registerConsumer(topic, groupId, consumer) {
+  console.log('registering: (topic, groupId)', topic, groupId);
+
   const monitor = {
     F: 0,
     E: 0,
@@ -39,8 +41,11 @@ function registerConsumer(topic, groupId, consumer) {
     fromOffset: 'earliest',
   };
 
+  console.log('Creating a Consumer Group');
   const consumerGroup = new ConsumerGroup(options, topic);
+  console.log('Created Consumer group');
   consumerGroup.on('message', (msg) => {
+
     console.log('inside consumerGroup pipeline');
     monitor.F++;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
