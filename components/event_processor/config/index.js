@@ -6,10 +6,11 @@ module.exports = {
   },
   dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: '127.0.0.1',
-    port: '2181',
-    topics: { topic: 'eventsTest' },
+    ost: process.env.ZOOKEEPER_HOST || '127.0.0.1',
+    port: process.env.ZOOKEEPER_PORT || '2181',
+    topics: [ process.env.CONSUMER_GROUP || 'eventsTest'  ], 
     options: {
+      groupId: process.env.CONSUMER_GROUP || 'eventsTest',
       autoCommit: false,
       fromOffset: true,
     },

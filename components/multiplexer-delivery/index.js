@@ -6,6 +6,10 @@ const activityDAO = require('./dao/activity');
 const mailboxDAO = require('./dao/mailbox');
 const topic =require('./config').kafka.topics[0];
 
+const groupName = require('./config').kafka.options.groupId;
+
+const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer');
+
 const consumer = kafkaClient.consumer;
 
 let startTimeAlreadySet = false;
@@ -30,8 +34,8 @@ function setEndTime(endTime) {
   });
 }
 
-consumer.on('message', (message) => {
-  if (!startTimeAlreadySet) {
+registerConsumer(topic, groupName, (message, done) => {
+if (!startTimeAlreadySet) {
     setStartTime();
   }
 
@@ -51,6 +55,5 @@ consumer.on('message', (message) => {
       }
     });
   });
+  done();
 });
-
-consumer.on('error', err => ({ message: `${err}` }));

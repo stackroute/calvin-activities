@@ -8,7 +8,12 @@ const topic =require('./config').kafka.topics[0];
 
 const producer = kafkaClient.producer;
 
-const consumer = kafkaClient.consumer;
+// const consumer = kafkaClient.consumer;
+
+const groupName = require('./config').kafka.options.groupId;
+
+const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer')
+
 
 let startTimeAlreadySet = false;
 
@@ -32,7 +37,7 @@ function setEndTime(endTime) {
   });
 }
 
-consumer.on('message', (message) => {
+registerConsumer(topic,groupName,(message, done)=> {
   if (!startTimeAlreadySet) {
     setStartTime();
   }
@@ -55,4 +60,5 @@ consumer.on('message', (message) => {
       });
     });
   });
+  done();
 });

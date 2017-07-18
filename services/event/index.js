@@ -1,6 +1,9 @@
 const kafkaClient = require('../../client/kafkaclient');
 
-const producer = kafkaClient.producer;
+// const producer = kafkaClient.producer;
+
+const producer = require('../../components/lib/kafka-pipeline/Library/register-producer');
+const {send} = producer;
 
 function sendevent(event) {
   const messages = JSON.stringify(event);
@@ -9,10 +12,9 @@ function sendevent(event) {
       topic: 'eventsTest', messages, partition: 0,
     },
   ];
-  producer.send(payloads, (err, data) => {
-    console.log(data);
+  producer.ready(function() { 
+  sends(payloads);
   });
-  producer.on('error', (err) => { console.log('errr'); });
 }
 
 module.exports = {

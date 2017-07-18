@@ -9,6 +9,7 @@ const producer = new HighLevelProducer(client);
 const consumerId = Math.random() * 123456789;
 
 function registerConsumer(topic, groupId, consumer) {
+  console.log('inside pipeline');
   const monitor = {
     F: 0,
     E: 0,
@@ -16,22 +17,22 @@ function registerConsumer(topic, groupId, consumer) {
     FC: parseInt(process.env.FC) || '-',
     DC: parseInt(process.env.DC) || '-',
     groupId,
-    consumerId
+    consumerId,
   };
 
- producer.on('ready', () => {
-    setInterval(function() {
+  producer.on('ready', () => {
+    console.log('inside ready');
+    setInterval(() => {
       const monitorCopy = JSON.parse(JSON.stringify(monitor));
       monitor.F -= monitorCopy.F;
       monitor.E -= monitorCopy.E;
       monitor.D -= monitorCopy.D;
-     producer.send([{topic: 'monitor', messages: JSON.stringify(monitorCopy)}], (err, result) => {
-        if(err) { console.error('ERR:', err); return; }
+      producer.send([{ topic: 'monitor', messages: JSON.stringify(monitorCopy) }], (err, result) => {
+        if (err) { console.error('ERR:', err); }
       });
     }, 1000);
   });
-
- const options = {
+  const options = {
     host: `${host}:${port}`,
     groupId,
     sessionTimeout: 15000,
@@ -39,11 +40,12 @@ function registerConsumer(topic, groupId, consumer) {
     fromOffset: 'earliest',
   };
 
- const consumerGroup = new ConsumerGroup(options, topic);
+  const consumerGroup = new ConsumerGroup(options, topic);
   consumerGroup.on('message', (msg) => {
+    console.log('inside consumerGroup pipeline');
     monitor.F++;
-    consumer(JSON.parse(JSON.stringify(msg.value)), function(err) {
-      if(err) { monitor.E++; console.log('nok'); return; }
+    consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
+      if (err) { monitor.E++; console.log('nok'); return; }
       monitor.D++;
       console.log('ok');
     });
@@ -51,3 +53,4 @@ function registerConsumer(topic, groupId, consumer) {
 }
 
 module.exports = registerConsumer;
+

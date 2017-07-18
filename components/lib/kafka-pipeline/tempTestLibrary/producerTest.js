@@ -12,5 +12,5 @@ producer.ready(function() {
 		count -= count;
 		count++;
 	send([{topic: 't1', messages: [JSON.stringify({foo: 'bar'})]}]);
-	},1000);
+	},5000);
 });

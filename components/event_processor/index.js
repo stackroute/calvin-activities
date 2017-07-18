@@ -7,9 +7,13 @@ const producer = kafkaClient.producer;
 const followDao = require('./dao/getCircles');
 
 const routesTopic = kafkaClient.routesTopic;
+const topic = require('./config').kafka.topics[0];
+const groupName = require('./config').kafka.options.groupId;
+const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer');
 
-consumer.on('message', (message) => {
-
+// consumer.on('message', (message) => {
+registerConsumer(topic,groupName,(message,done)=>{
+  console.log('inside registerConsumer==>',topic,'GROUP ==>',groupName);
   const mailboxId= JSON.parse(message.value).mailboxId;
   const circleId = JSON.parse(message.value).circleId;
  
@@ -39,7 +43,6 @@ if ((status == "useronline") ||(status=="useroffline") ){
         if (err) { return { message: 'err' }; }
         console.log(data);
       });
-      producer.on('error', err => ( return { message: 'err' }));
     });
 
   });
@@ -60,9 +63,9 @@ if ((status == "addcircle") ||(status=="removecircle") ){
       if (err) { return { message: 'err' }; }
       console.log(data);
     });
-    producer.on('error', err => ({ message: 'err' }));
   });
 }
-
-consumer.on('error', err => ({ message: 'err' }));
-});
+done();
+})
+  
+// });
