@@ -33,6 +33,7 @@ function setEndTime(endTime) {
 }
 
 consumer.on('message', (message) => {
+  console.log(messages);
   if (!startTimeAlreadySet) {
     setStartTime();
   }
