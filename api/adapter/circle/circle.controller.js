@@ -12,7 +12,7 @@ function createDomain(req, res) {
 
 function deleteDomain(req, res) {
   adapterDAO.checkIfDomainExists(req.params.domain, (error, doesDomainExists) => {
-    console.log(doesDomainExists);
+    //console.log(doesDomainExists);
     if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesDomainExists) {
       res.status(404).json({ message: 'Domain does not exist' });

@@ -5,6 +5,6 @@ require('./api/socket/socketserver')(io);
 
 const winston = require('./winston');
 
-server.listen(5000, () => {
-  winston.log('info', 'Express server listening on port:', 5000);
+server.listen(4000, () => {
+  winston.log('info', 'Express server listening on port:', 4000);
 });

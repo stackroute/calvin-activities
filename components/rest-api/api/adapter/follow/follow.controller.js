@@ -21,7 +21,11 @@ function addFollow(req, res) {
       const startFollowing = new Date();
       followDAO.addFollow(obj, startFollowing, (error2, addfollower) => {
         if (error2) { res.status(500).json({ message: `${error2}` }); return; }
-        res.status(201).json(obj);
+        const msg = {
+          domain : req.params.domain,
+          user : req.params.user,
+        }
+        res.status(201).json(msg);
       });
     });
   });

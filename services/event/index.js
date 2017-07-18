@@ -1,18 +1,18 @@
-const kafkaClient = require('../../client/kafkaclient');
-
-const producer = kafkaClient.producer;
+const producer = require('../../client/kafkaclient').producer;
 
 function sendevent(event) {
   const messages = JSON.stringify(event);
-  payloads = [
+  const payloads = [
     {
       topic: 'eventsTest', messages, partition: 0,
     },
   ];
   producer.send(payloads, (err, data) => {
-    console.log(data);
+    if (err) { throw err; }
   });
-  producer.on('error', (err) => { console.log('errr'); });
+  producer.on('error', (err) => { 
+    if (err) { throw err; }
+  });
 }
 
 module.exports = {
