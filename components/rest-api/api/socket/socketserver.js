@@ -1,5 +1,7 @@
 const authorize = require('../../authorize');
 const subscriber = require('../../client/redisclient').client;
+const producer = require('../../client/kafkaclient').producer;
+const eventService = require('../../services/event');
 const adapter = require('../../dao/cassandra/adapter');
 
 function bootstrapSocketServer(io) {
@@ -13,17 +15,25 @@ function bootstrapSocketServer(io) {
           if (id.mid !== null) {
             socket.join(id.mid);
             subscriber.subscribe(id.mid);
-          }
-
-          else if (id.user!== null) {
+            const obj = {
+              mailboxId: id.mid,
+              event: 'useronline',
+            };
+            eventService.sendevent(obj);
+          } else if (id.user !== null) {
             adapter.checkIfUserExists(id.user, (err, result) => {
-              if (err) { throw err; }
+              if (err) {
+                throw err;
+              }
               socket.join(result.mailboxid);
               subscriber.unsubscribe(result.mailboxid);
+              const obj = {
+                mailboxId: id.user,
+                event: 'useronline',
+              };
+              eventService.sendevent(obj);
             });
-          }
-
-          else {
+          } else {
             socket.emit('message', 'User mapping does not exists');
           }
         });
@@ -31,17 +41,25 @@ function bootstrapSocketServer(io) {
           if (id.mid !== null) {
             socket.leave(id.mid);
             subscriber.unsubscribe(id.mid);
-          }
-
-          else if (id.mid === null && id.user!== null) {
+            const obj = {
+              mailboxId: id.mid,
+              event: 'useroffline',
+            };
+            eventService.sendevent(obj);
+          } else if (id.mid === null && id.user !== null) {
             adapter.checkIfUserExists(id.user, (err, result) => {
-              if (err) { throw err; }
+              if (err) {
+                throw err;
+              }
               socket.leave(result.mailboxid);
               subscriber.unsubscribe(result.mailboxid);
+              const obj = {
+                mailboxId: id.mid,
+                event: 'useroffline',
+              };
+              eventService.sendevent(obj);
             });
-          }
-          
-          else {
+          } else {
             socket.emit('message', 'User mapping does not exists');
           }
         });
@@ -51,4 +69,3 @@ function bootstrapSocketServer(io) {
 }
 
 module.exports = bootstrapSocketServer;
-
