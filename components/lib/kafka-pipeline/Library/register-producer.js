@@ -30,11 +30,15 @@ function send(...args) {
     // console.log('count==>', count);
     if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
     topicCount[topic] += count;
-  }); producer.send(args[0], (err, reply) => {
+  }); 
+  setInterval(() => {
+    producer.send(args[0], (err, reply) => {
      // console.log('args', args[0]);
     if (err) { console.error('err:', err); return; }
   //  console.log('reply:', reply);
   });
+  },1000);
+  
 }
 function ready(callback) {
   producer.on('ready', callback);
