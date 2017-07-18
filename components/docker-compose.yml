@@ -10,7 +10,7 @@ services:
       REDIS_PORT: 6379
       NAMESPACE_ROUTESMANAGER: routesmanager
       NAMESPACE_L1R: L1R
-      NAMESPACE_MULTIPLEXER: multiplexer
+      NAMESPACE_MULTIPLEXER: multiplexer1
       ZOOKEEPER_HOST: 172.23.238.134
       ZOOKEEPER_PORT: 2181
       ACTIVITIES_TOPIC: activities1
@@ -65,7 +65,7 @@ services:
       REDIS_PORT: 6379
       NAMESPACE_ROUTESMANAGER: routesmanager
       NAMESPACE_L1R: L1R
-      NAMESPACE_MULTIPLEXER: multiplexer
+      NAMESPACE_MULTIPLEXER: multiplexer1
       ZOOKEEPER_HOST: 172.23.238.134
       ZOOKEEPER_PORT: 2181
       ROUTES_TOPIC: routes1

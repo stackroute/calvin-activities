@@ -1,26 +1,29 @@
 const start = require('../../../db');
 const config = require('../../../config');
 const {producer} = require('../../../client/kafkaclient');
+const mailboxDAO = require('../mailbox');
 
 const client = start.client;
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  const newCircle = {
-    circleId: uuid().toString(),
-    mailboxId: uuid().toString(),
-    createdOn: new Date(),
-  };
-  const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
-  client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
-    if (err) { return callback(err, null); }
+  mailboxDAO.createMailbox(function(err, newUser){
+    if(err) { return callback(err); }
+    const newCircle = {
+      circleId: uuid().toString(),
+      mailboxId: newUser.mailboxId.toString(),
+      createdOn: new Date()
+    }
+    const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
+    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
+      if (err) { return callback(err, null); }
 
-    producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
-      if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
-
-      return callback(err, newCircle);
+      producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
+        if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
+        return callback(err, newCircle);
+      });
     });
-  });
+  })
 }
 
 function checkIfCircleExists(circleId, callback) {

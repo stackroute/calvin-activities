@@ -52,6 +52,7 @@ function checkIfMailboxExists(mid, callback) {
 function retriveMessageFromMailbox(mid, before, after, limit, callback) {
   checkIfMailboxExists(mid, (err, MailIdExists) => {
     if (err) { return callback(err, null); }
+    if(!MailIdExists) { return callback(null, { a : 0, b : []});};
     if (MailIdExists && limit != 0) {
 
       //limit -1
@@ -198,7 +199,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
   }
 
     }
-    else { return callback(null, "limit is 0"); }
+    else { return callback("limit is 0"); }
   });
 }
 
