@@ -33,7 +33,7 @@ function setEndTime(endTime) {
 }
 
 kafkaPipeline.producer.ready(function() {
-
+  console.log('topic:', topic);
   kafkaPipeline.registerConsumer(topic,groupName,(message, done)=> {
     console.log(message);
     if (!startTimeAlreadySet) {
@@ -56,7 +56,7 @@ kafkaPipeline.producer.ready(function() {
         });
         kafkaPipeline.producer.send(payloads, (err, data) => {
           if (err) { done(err); return; }
-          console.log(data);
+          console.log('data:', data);
           if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
           setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
         });

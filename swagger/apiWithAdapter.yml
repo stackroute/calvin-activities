@@ -709,6 +709,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
        delete:
         tags:
           - "Domain API"
@@ -725,6 +730,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /adapter/user/{user}:
        post:
         tags:
@@ -742,6 +752,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
        delete:
         tags:
           - "User API"
@@ -758,6 +773,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /adapter/user/{user}/domain/{domain}:
        post:
         tags:
@@ -781,6 +801,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
        delete:
         tags:
           - "Adapter Follow API"
@@ -803,6 +828,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /adapter/domain/{domain}/activity:
        post:
         tags:
@@ -833,6 +863,11 @@
               - payload
             properties:
               - type: string
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /adapter/user/{user}/activity:
        post:
         tags:
@@ -863,6 +898,11 @@
               - payload
             properties:
               - type: string
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /adapter/getallactivities/user/{user}:
        get:
         tags:
@@ -894,7 +934,12 @@
           description: "date"
           required: false
           type: "string"
-          format: "int64"      
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"      
         responses:
           200:
             description: List of activities.
@@ -929,7 +974,12 @@
           description: "date"
           required: false
           type: "string"
-          format: "int64"    
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"   
         responses:
           200:
             description: List of activities.
@@ -956,6 +1006,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /adapter/domain/{domain}/status/{status}:
        post:
         tags:
@@ -979,11 +1034,8 @@
           required: true
           type: "string"
           format: "int64"
-
-
-
-      
-
-
-
-    
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
