@@ -17,7 +17,9 @@ function publishActivityToDomain(req, res) {
     const circleId = (doesDomainExists.circleid).toString();
     activityDao.createPublishActivity(circleId, newActivity, (error1, data1) => {
       if (error1) { res.status(404).json({ message: `${error1}` }); return; }
-      res.status(201).json(newActivity);
+      //console.log(newActivity);
+      res.status(201).json(data1);
+     
     });
   });
 }

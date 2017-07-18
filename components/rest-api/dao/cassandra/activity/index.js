@@ -24,6 +24,7 @@ function publishToMailbox(mid, activity, callback) {
 }
 
 function createPublishActivity(mid, activity, callback) {
+  const msg = JSON.parse(JSON.stringify(activity));
   activity.circleId = mid;
   kafkaClient.addActivity(activity, (err, data) => {
     if (err) { return callback(err, null); }
@@ -34,7 +35,7 @@ function createPublishActivity(mid, activity, callback) {
       const query = ('UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?');
       client.execute(query, [new Date(), mid, c], (err, result) => {
         if (err) { return callback(err, null); }
-        callback(null, data);
+        callback(null, msg);
       });
     });
   });
