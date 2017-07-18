@@ -34,14 +34,14 @@ function createRoute(circleId, userId, callback) {
 }
 
 function deleteRoute(circleId, userId, callback) {
-  client.srem(`${namespace}`, circleId, userId)((err, res) => {
+  client.srem(`${namespace}:${circleId}`, userId)((err, res) => {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
 }
 
 function addRoute(circleId, userId, callback) {
-  console.log(`inside addRoute---->${circleId}userId---->-${userId}`);
+  // console.log(`inside addRoute---->${circleId}userId---->-${userId}`);
   createRoute(circleId, userId, (err, result) => {
     if (err) { return callback(err, null); }
     getMultiplexerStatus((err1, selectedMultiplexer) => {
@@ -69,30 +69,34 @@ function addRoute(circleId, userId, callback) {
 }
 
 
-function removeRoute(circleId, userId, multiplexerId, callback) {
-  const route = {
-    circleId,
-    multiplexerId,
+
+function removeRoute(circleId, userId, callback) {
+  const circle = {
+    circleId: circleId,
   };
-  l1rService.deleteRoute(route, (err5, res2) => {
-    if (res2 === 0) { return callback(err5, 'No routes present'); }
-    if (err5) { throw err5; }
-    multiplexerService.deleteMultiplexer(multiplexerId, (err6, res3) => {
-      if (err6) { throw err6; }
-      const route1 = {
-        namespace: multiplexerId,
-        circleId,
-        mailboxId: userId,
-      };
-      multiplexerRouteService.deleteRoute(route1, (err7, res4) => {
-        if (err7) { throw err7; }
-        return callback(null, 'Routes deleted');
-      });
-      return callback(null, { circleId, userId, multiplexerId });
-    });
-    return callback(null, res2);
+
+  deleteRoute(circleId, userId, (err, result) => {
+    if (err) { throw err; }
+     l1rService.getRoutesForCircle(circle, (err, multiplexerList) => {
+    for (let i = 0; i < multiplexerList.length; i += 1) {
+       multiplexerRouteService.checkIfCircleIsPresentinCache({namespace:multiplexerList[i], circleId:circle.circleId}, (err, res) => {
+        if (res === 1) { multiplexerRouteService.getMultiplexer(multiplexerList[i], circle.circleId, userId, (err, result) => {
+          if (err) { throw err; }
+        });
+        }
+       });
+    }
   });
+});
+return callback ( null, "del");
 }
+
+
+
+
+
+
+
 
 module.exports = {
   createRoute,

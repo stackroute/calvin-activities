@@ -9,13 +9,13 @@ module.exports = {
   secretKey: secret,
   dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: '127.0.0.1',
+    host: '172.23.238.134',
     port: '2181',
     activitiesTopic: 'activities',
     routesTopic: 'routes',
   },
   redis: {
-    host: '127.0.0.1',
+    host: '172.23.238.134',
     port: '6379',
   },
   namespace: 'L1R',

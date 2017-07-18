@@ -15,10 +15,8 @@ function createRoute(req, res) {
 function deleteRoute(req, res) {
   const circleId = req.params.circleId;
   const mailboxId = req.params.userId;
-  const multiplexerId = req.params.multiplexerId;
-  routesService.removeRoute(circleId, mailboxId, multiplexerId, (err4, result) => {
-    if (result === 'No routes present') { res.status(404).json({ message: `No routes present for ${circleId} ${mailboxId}` }); }
-    if (result === 'Routes deleted') { res.status(201).json({ message: 'Routes deleted' }); }
+  routesService.removeRoute(circleId, mailboxId, (err4, result) => {
+    if (result === "del") { res.status(201).json({ message: 'Routes deleted' }); }
     if (err4) { res.status(500).json({ message: `${err4}` }); }
   });
 }
