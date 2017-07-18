@@ -1,12 +1,14 @@
 FROM mhart/alpine-node-auto
 
-RUN mkdir -p /app
-WORKDIR /app
-
-COPY package.json .
+RUN mkdir -p /app/routes-manager
+RUN mkdir -p /app/lib
+WORKDIR /app/lib
+COPY lib .
+WORKDIR /app/routes-manager
+COPY routesManager/package.json .
 
 RUN npm install
 
-COPY . .
+COPY routesManager .
 
 CMD ["npm", "start", "--production"]

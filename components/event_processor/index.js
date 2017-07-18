@@ -1,106 +1,71 @@
-const kafkaClient = require('./client/kafkaclient');
-
-const consumer = kafkaClient.consumer;
-
-const producer = kafkaClient.producer;
-
 const followDao = require('./dao/getCircles');
+console.log('routesTopic:', routesTopic);
 
+const topic = require('./config').kafka.topics[0];
+console.log('topic:', topic);
+const routesTopic = kafkaClient.routesTopic;
 const mailboxDao = require('./dao/mailboxDao');
 const activityDao = require('./dao/activityDao');
-
-const routesTopic = kafkaClient.routesTopic;
-
 const adapterDao = require('./dao/adapter');
 const circleDao = require('./dao/circleDao');
 const flwDao = require('./dao/followDao');
 
-consumer.on('message', (message) => {
+const groupName = require('./config').kafka.options.groupId;
 
-  console.log(message);
-  const mailId = JSON.parse(message.value).mailboxId;
-  const circleId = JSON.parse(message.value).circleId;
+const kafkaPipeline = require('kafka-pipeline');
+  
+  kafkaPipeline.producer.ready(function() {
+    kafkaPipeline.registerConsumer(topic,groupName,(message,done)=>{
+    const mailboxId= JSON.parse(message.value).mailboxId;
+    const circleId = JSON.parse(message.value).circleId;
+   
+    let command;
+    let status = JSON.parse(message.value).event;
 
-  let command;
-  let status = JSON.parse(message.value).event;
-
-  if ((status == "useronline") || (status == "addcircle")) {
-    command = 'addRoute';
-  } else if ((status == 'useroffline') || (status == 'removecircle')) {
-    command = 'removeRoute';
-  } else {
-    command = 'undefined';
-  }
-  if ((status == "useronline") || (status == "useroffline")) {
-    followDao.getCirclesForMailbox(mailId, (err, result) => {
-      if (err) {
-        return {
-          message: 'err'
-        };
-      }
+    if ((status == "useronline") || (status == "addcircle")) {
+      command = 'addRoute';
+    } else if ((status == 'useroffline')||(status == 'removecircle')) {
+      command = 'removeRoute';
+    } else {
+      command = 'undefined';
+    }
+  if ((status == "useronline") ||(status=="useroffline") ){
+    followDao.getCirclesForMailbox(mailboxId, (err, result) => {
+      if (err) { return { message: 'err' } ; }
       const rows = result.rows;
 
       rows.forEach((element) => {
         const obj = {
           circleId: element.circleid.toString(),
-          mailboxId: mailId,
+          mailboxId: mailboxId,
           command,
         };
-        const payloads = [{
-          topic: routesTopic,
-          messages: JSON.stringify(obj),
-          partition: 0
-        }];
-        producer.send(payloads, (err, data) => {
-          if (err) {
-            return {
-              message: 'err'
-            };
-          }
-          followDao.syncMailbox(mailId, (err, result) => {
-            if (err) {
-              console.log(err);
-            }
+        const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj) }];
+        kafkaPipeline.producer.send(payloads, (err, data) => {
+          if (err) { return { message: 'err' }; }
+          followDao.syncMailbox(mailboxIdmailboxId, (err, result) => {
+            if(err) {console.log(err);}
           })
         });
-        producer.on('error', err => (console.log({
-          message: 'err'
-        })));
       });
 
     });
   }
 
-  else if ((status == "addcircle") || (status == "removecircle")) {
+  if ((status == "addcircle") ||(status=="removecircle") ){
     followDao.getMailboxIdForCircle(circleId, (err, result) => {
-      if (err) {
-        return {
-          message: 'err'
-        };
-      }
+      if (err) { return { message: 'err' }; }
       const circleMailboxId = result;
       const obj = {
         circleId: circleId,
         mailboxId: circleMailboxId,
         command,
       };
-
-      const payloads = [{
-        topic: routesTopic,
-        messages: JSON.stringify(obj),
-        partition: 0
-      }];
-      producer.send(payloads, (err, data) => {
-        if (err) {
-          return {
-            message: 'err'
-          };
-        }
+      const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj),}];
+      kafkaPipeline.producer.send(payloads, (err, data) => {
+        if (err) { return { message: 'err' }; }
         console.log(data);
       });
-      producer.on('error', err => ({
-        message: 'err'
-      }));
     });
   }
 
@@ -199,9 +164,10 @@ consumer.on('message', (message) => {
             const activity = {};
             activity.payload = JSON.parse(message.value);
             activity.circleId = circleId;
-            producer.send([ {topic: config.kafka.activitiesTopic, messages: JSON.stringify(activity)}], (err, data) => {
-              if (err) { console.log(err); }
-              activityDao.updateLastPublishedDate(circleId, function(err, res){
+            const payloads = [ {topic: config.kafka.activitiesTopic, messages: JSON.stringify(activity)}];
+            kafkaPipeline.producer.send(payloads, (err, data) => {
+            if (err) { return { message: 'err' }; }
+            activityDao.updateLastPublishedDate(circleId, function(err, res){
                 if(err) {console.log(err);}
               })
             });
@@ -211,36 +177,16 @@ consumer.on('message', (message) => {
           const circleId = circle.circleid;
           const activity = {};
           activity.payload = JSON.parse(message.value);
-           activity.circleId = circleId;
-           producer.send([ {topic: config.kafka.activitiesTopic, messages: JSON.stringify(activity)}], (err, data) => {
-             if (err) { console.log(err); }
-             activityDao.updateLastPublishedDate(circleId, function(err, res){
-               if(err) {console.log(err);}
-             })
-           });
+          activity.circleId = circleId;
+          const payloads = [ {topic: config.kafka.activitiesTopic, messages: JSON.stringify(activity)}];
+          kafkaPipeline.producer.send(payloads, (err, data) => {
+            if (err) { return { message: 'err' }; }
+          });
         }
       })
 
     }
   }
-  
-
-
-const domain = JSON.parse(message.value).domain;
-  if (status == "newmemberadded") {
-    adapterDao.checkIfDomainExists(domain, (error, doesDomainExists) => {
-    if (error) { res.status(500).json({ message: `${error}` }); return; }
-    if (!doesDomainExists) {
-      res.status(404).json({ message: 'Domain does not exist' });
-      return;
-    }
-    mailboxDao.createMailbox((err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(result)
-      }
-    })
+  done();
+    });
   });
-}
-});

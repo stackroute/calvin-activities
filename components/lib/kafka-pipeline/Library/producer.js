@@ -5,6 +5,11 @@ const { host, port } = require('../config').kafka;
 
 const client = new kafka.Client(`${host}:${port}`);
 const producer = new HighLevelProducer(client);
+
+let isReady = false;
+producer.on('ready', () => {
+  isReady = true;
+});
 const topicCount = {};
 setInterval(() => {
   const topicCountCopy = JSON.parse(JSON.stringify(topicCount));
@@ -18,22 +23,26 @@ setInterval(() => {
   });
   producer.send([{ topic: 'monitor', messages: send.map(msg => JSON.stringify(msg)) }], (err, reply) => {
     if (err) { console.error('err:', err); return; }
-    console.log('reply:', reply);
+  console.log('reply:', reply);
   });
-  console.log('topic');
-}, 5000); function send(...args) {
-  args[0].forEach((payloadItem) => {
+}, 1000); 
+
+function send(msgs, done) {
+  msgs.forEach((payloadItem) => {
     const topic = payloadItem.topic;
     const count = payloadItem.messages.length;
-    console.log('count==>', count);
     if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
     topicCount[topic] += count;
-  }); producer.send(args[0], (err, reply) => {
-    console.log('args', args[0]);
-    if (err) { console.error('err:', err); return; }
-    console.log('reply:', reply);
   });
+  producer.send(msgs, done);
 }
+
 function ready(callback) {
-  producer.on('ready', callback);
-}module.exports = { send, ready };
+  if(isReady) { callback(); return; }
+
+  const interval = setInterval(() => {
+    if(isReady) { clearInterval(interval); callback(); }
+  }, 1000);
+}
+
+module.exports = { send, ready };

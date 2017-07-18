@@ -4,7 +4,7 @@ const circleDAO = require('../../dao').circle;
 
 function createCircle(req, res) {
   circleDAO.createCircle((err, newCircle) => {
-    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    if (err) { res.status(500).json({ message: `${err}` }); console.error('ERR:', err); return; }
     res.status(201).json(newCircle);
   });
 }

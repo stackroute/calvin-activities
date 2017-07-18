@@ -1,15 +1,16 @@
-
 const redisClient = require('./client/redisclient').client;
 
 const topic =require('./config').kafka.topics[0];
 
 const kafkaClient = require('./client/kafkaclient');
 
-const consumer = kafkaClient.consumer;
-
 const producer = kafkaClient.producer;
 
 const thisConsumerId = kafkaClient.thisConsumerId;
+
+const groupName = require('./config').kafka.options.groupId;
+
+const kafkaPipeline = require('kafka-pipeline');
 
 let startTimeAlreadySet = false;
 
@@ -33,28 +34,32 @@ function setEndTime(endTime) {
     if (err) { console.log(err); } else { console.log('EndTime Set'); }
   });
 }
-
-consumer.on('message', (message) => {
-  console.log(message);
-  if (!startTimeAlreadySet) {
-    setStartTime();
-  }
-
-  const activity = JSON.parse(message.value);
-  const circleId = activity.circleId;
-  let followers;
-  redisClient.incr(`${thisConsumerId}:count`)((err, result) => { });
-  redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
-    followers = result;
-    const arr = [];
-    followers.forEach((data) => {
-      const newActivity = activity;
-      newActivity.mailboxId = data;
-      arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
-    });
-    producer.send(arr, (error, data) => {
-      if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
-      setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+kafkaPipeline.producer.ready(function() {
+  kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
+    console.log(message);
+    if (!startTimeAlreadySet) {
+      setStartTime();
+    }
+    const activity = JSON.parse(message.value);
+    const circleId = activity.circleId;
+    let followers;
+    redisClient.incr(`${thisConsumerId}:count`)((err, result) => { });
+    redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
+      if(err) { done(err); return; }
+      followers = result;
+      const arr = [];
+      followers.forEach((data) => {
+        const newActivity = activity;
+        newActivity.mailboxId = data;
+        arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
+      });
+      kafkaPipeline.producer.send(arr, (error, data) => {
+        if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
+        setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+      });
+      done();
     });
   });
 });
+
+

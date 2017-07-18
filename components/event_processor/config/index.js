@@ -8,9 +8,14 @@ module.exports = {
   kafka: {
     host: process.env.ZOOKEEPER_HOST || '172.23.238.134',
     port: process.env.ZOOKEEPER_PORT || '2181',
-    topics: { topic: process.env.EVENTS_TOPIC || 'event'},
+    topics: [ process.env.EVENTS_TOPIC || 'events' ],
     routesTopic: process.env.ROUTES_TOPIC || 'routes',
-    activitiesTopic: process.env.ACTIVITIES_TOPIC || 'activities'
+    activitiesTopic: process.env.ACTIVITIES_TOPIC || 'activities',
+    options: {
+      groupId: process.env.CONSUMER_GROUP || 'eventsTest',
+      autoCommit: false,
+      fromOffset: true,
+    },
   },
   redis: {
     host: process.env.REDIS_HOST || '172.23.238.134',

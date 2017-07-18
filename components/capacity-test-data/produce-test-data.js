@@ -1,8 +1,11 @@
-const { producer } = require('./client/kafkaclient');
 const config = require('./config').kafka;
 
+const kafkaPipeline = require('kafka-pipeline');
+
 const topic = config.topics.topic;
+
 const n = config.numberOfMessages;
+
 let msg = null;
 
 if (topic.indexOf('D') > -1) {
@@ -29,17 +32,17 @@ function addActivity(n, callback) {
   }
 
   console.log(`PRODUCING ${n} records`);
-  producer.on('ready', () => {
-    const send = [];
+  const send = [];
+  kafkaPipeline.producer.ready(function() { 
+ 
     for (let i=0; i<10; i++) {
       send.push({ topic, partition: i, messages: i===9 ? messages : messages.splice(0, n/10) });
     }
-
-    producer.send(send, (err, data) => callback(err, data));
-  });
+    kafkaPipeline.producer.send([{topic: topic, messages:[JSON.stringify({send})]}]);
+ });
 }
 
-addActivity(n, (err, result) => {
+  addActivity(n, (err, result) => {
   if (err) { console.log('error:', err); return; }
   console.log('PRODUCED ${n} records');
 });

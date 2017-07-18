@@ -2,7 +2,14 @@ module.exports = {
   kafka: {
     host: process.env.ZOOKEEPER_HOST || '172.23.238.134',
     port: process.env.ZOOKEEPER_PORT || '2181',
-    topics: { topic: process.env.ROUTES_TOPIC || 'routes'},
+    topics: [process.env.ROUTES_TOPIC || 'routes'],
+    options: {
+      host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
+      groupId: process.env.CONSUMRER_GROUP || 'm1',
+      autoCommit: false,
+      fromOffset: true,
+    },
+
   },
   redis: {
     host: process.env.REDIS_HOST || '172.23.238.134',
