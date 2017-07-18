@@ -46,10 +46,7 @@ function getAllActivities(req, res) {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
     const firstActivityTime = result.b[0].createdat;
     const lastActivityTime = result.b[result.b.length - 1].createdat;
-    console.log(firstActivityTime);
-    console.log(lastActivityTime);
-console.log(`/circle/getallactivities/${mailboxId}?after=${firstActivityTime}&limit=${limit}`);
-    res.status(200).json({totalItems: result.a, items: result.b, next: `/circle/getallactivities/${mailboxId}?after=${firstActivityTime}&limit=${limit}`, prev: `/circle/getallactivities/${mailboxId}?before=${lastActivityTime}&limit=${limit}`});
+    res.status(201).json({totalItems: result.a, items: result.b, next: `/circle/getallactivities/${mailboxId}?after=${firstActivityTime}&limit=${limit}`, prev: `/circle/getallactivities/${mailboxId}?before=${lastActivityTime}&limit=${limit}`});
   });
 }
 

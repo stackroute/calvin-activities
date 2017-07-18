@@ -24,22 +24,53 @@ services:
     image: multiplexer
     build: multiplexer
     environment:
-      REDIS_HOST: redis
-      ZOOKEEPER_HOST: kafka 
+      REDIS_HOST: 172.23.238.134
+      ZOOKEEPER_HOST: 172.23.238.134 
       CONSUMER_GROUP: m1
   multiplexer-delivery:
     image: multiplexer-delivery
     build: multiplexer-delivery
     environment:
-      REDIS_HOST: redis
-      ZOOKEEPER_HOST: kafka
-      DSE_HOST: dse
+      REDIS_HOST: 172.23.238.134
+      ZOOKEEPER_HOST: 172.23.238.134
+      DSE_HOST: 172.23.238.134
       DSE_KEYSPACE: testdb
       CONSUMER_GROUP: m1D
   l1r:
     image: l1r
     build: l1r
     environment:
-      REDIS_HOST: redis
-      ZOOKEEPER_HOST: kafka 
+      REDIS_HOST: 172.23.238.134
+      ZOOKEEPER_HOST: 172.23.238.134 
       CONSUMER_GROUP: activities
+  event-processor:
+    image: event-processor
+    build: event_processor
+    environment:
+      REDIS_HOST: 172.23.238.134
+      REDIS_PORT: 6379
+      ZOOKEEPER_HOST: 172.23.238.134
+      ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: events
+      ROUTES_TOPIC: routes
+      DSE_HOST: 172.23.238.134
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+  routes-manager:
+    image: routes-manager
+    build: routesManager
+    environment:
+      REDIS_HOST: 172.23.238.134
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.23.238.134
+      ZOOKEEPER_PORT: 2181
+      ROUTES_TOPIC: routes
+      DSE_HOST: 172.23.238.134
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      DEFAULT_CIRCLE: 10

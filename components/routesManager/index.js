@@ -17,7 +17,7 @@ consumer.on('message', function (message) {
     })
   }
 
-  else if (messages.command== 'removeRoute'){
+  else if (messages.command == 'removeRoute'){
     /*routesManagerDao.removeRoute(circleId,mailboxId,(err,result)=>{
       if(err){return { message: 'err' } }
       else {return { message: 'result' } }
