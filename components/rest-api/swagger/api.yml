@@ -385,8 +385,8 @@
           type: "string"
           format: "int64"
 
-    /bulk/:circleId
-       get:
+    /bulk/{circleId}:
+      post:
         tags:
           - "Bulk API"
         summary: "Add more than one followers for a circle"
@@ -396,8 +396,30 @@
           200:
             description: Add more than one followers for a circle
         parameters:
-   
-
+        - name: "circleId"
+          in: "path"
+          description: "circle id"
+          required: true
+          type: "uuid"
+          format: "int64"        
+        - in: "body"
+          name: "body"
+          description: "Enter the mailbox id"
+          required: "true"
+          paramType: "body"
+          type: "uuid"
+          format: "int64"
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              - type: uuid
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: true
+          type: "string"        
     /l1route/{circleId}/{multiplexerId}:
        post:
         tags:
