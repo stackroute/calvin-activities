@@ -4,7 +4,7 @@ services:
     image: rest-api
     build: rest-api
     ports:
-      - 3000:3000
+      - 4000:4000
     environment:
       REDIS_HOST: 172.23.238.134
       REDIS_PORT: 6379
@@ -13,8 +13,8 @@ services:
       NAMESPACE_MULTIPLEXER: multiplexer
       ZOOKEEPER_HOST: 172.23.238.134
       ZOOKEEPER_PORT: 2181
-      ACTIVITIES_TOPIC: activities
-      ROUTES_TOPIC: routes
+      ACTIVITIES_TOPIC: activities1
+      ROUTES_TOPIC: routes1
       DSE_HOST: 172.23.238.134
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb
@@ -26,7 +26,7 @@ services:
     environment:
       REDIS_HOST: 172.23.238.134
       ZOOKEEPER_HOST: 172.23.238.134 
-      CONSUMER_GROUP: m1
+      CONSUMER_GROUP: mx1
   multiplexer-delivery:
     image: multiplexer-delivery
     build: multiplexer-delivery
@@ -35,14 +35,14 @@ services:
       ZOOKEEPER_HOST: 172.23.238.134
       DSE_HOST: 172.23.238.134
       DSE_KEYSPACE: testdb
-      CONSUMER_GROUP: m1D
+      CONSUMER_GROUP: mx1D
   l1r:
     image: l1r
     build: l1r
     environment:
       REDIS_HOST: 172.23.238.134
       ZOOKEEPER_HOST: 172.23.238.134 
-      CONSUMER_GROUP: activities
+      CONSUMER_GROUP: activities1
   event-processor:
     image: event-processor
     build: event_processor
@@ -51,8 +51,8 @@ services:
       REDIS_PORT: 6379
       ZOOKEEPER_HOST: 172.23.238.134
       ZOOKEEPER_PORT: 2181
-      EVENTS_TOPIC: events
-      ROUTES_TOPIC: routes
+      EVENTS_TOPIC: events1
+      ROUTES_TOPIC: routes1
       DSE_HOST: 172.23.238.134
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb
@@ -68,9 +68,8 @@ services:
       NAMESPACE_MULTIPLEXER: multiplexer
       ZOOKEEPER_HOST: 172.23.238.134
       ZOOKEEPER_PORT: 2181
-      ROUTES_TOPIC: routes
+      ROUTES_TOPIC: routes1
       DSE_HOST: 172.23.238.134
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb
       DAO: cassandra
-      DEFAULT_CIRCLE: 10
