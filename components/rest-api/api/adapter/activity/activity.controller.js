@@ -56,8 +56,8 @@ function getAllActivitiesForUser(req, res) {
     activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
          const firstActivity = result.b[0];
-        const lastActivity = result.b[result.b.length - 1];
-        res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
+         const lastActivity = result.b[result.b.length - 1];
+         res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
       });
   });
 }
@@ -75,8 +75,10 @@ function getAllActivitiesForDomain(req,res){
     const mailboxId = (doesDomainExists.mailboxid).toString();
      activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
-      res.status(201).json({ totalItems: result.length, items: result });
-    });
+       const firstActivity = result.b[0];
+       const lastActivity = result.b[result.b.length - 1];
+       res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
+     });
    });
 }
 
