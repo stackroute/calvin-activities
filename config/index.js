@@ -3,7 +3,7 @@ const secret = require('../secret.js');
 module.exports = {
   connectionString: {
     keyspace: 'testdb',
-    contact: '127.0.0.1',
+    contact: '172.23.238.134',
     port: '9042',
   },
   secretKey: secret,
@@ -12,8 +12,7 @@ module.exports = {
     host: '127.0.0.1',
     port: '2181',
     activitiesTopic: 'activities',
-    eventsTopic: 'events',
-    monitoringTopic: 'monitor',
+    routesTopic: 'routes',
   },
   redis: {
     host: '127.0.0.1',

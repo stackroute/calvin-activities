@@ -1,14 +1,8 @@
 module.exports = {
-  connectionString: {
-    keyspace: 'testdb',
-    contact: '127.0.0.1',
-    port: '9042',
-  },
-  dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
-    port: process.env.ZOOKEEPER_HOST || '2181',
-    topics: [process.env.CONSUMRER_GROUP || 'routeTest'], 
+    host: process.env.ZOOKEEPER_HOST || '172.23.238.134',
+    port: process.env.ZOOKEEPER_PORT || '2181',
+    topics: [process.env.ROUTES_TOPIC || 'routes'],
     options: {
       host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
       groupId: process.env.CONSUMRER_GROUP || 'm1',
@@ -18,10 +12,10 @@ module.exports = {
 
   },
   redis: {
-    host: '127.0.0.1',
-    port: '6379',
+    host: process.env.REDIS_HOST || '172.23.238.134',
+    port: process.env.REDIS_PORT || '6379',
   },
-  namespace: 'L1R',
-  namespacemul: 'multiplexer',
-  namespaceroutemanager: 'routesmanager',
+  namespace: process.env.NAMESPACE_L1R || 'L1R',
+  namespacemul: process.env.NAMESPACE_MULTIPLEXER || 'multiplexer',
+  namespaceroutemanager: process.env.NAMESPACE_ROUTESMANAGER || 'routesmanager',
 };

@@ -11,7 +11,6 @@ const topic = require('./config').kafka.topics[0];
 const groupName = require('./config').kafka.options.groupId;
 const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer');
 
-// consumer.on('message', (message) => {
 registerConsumer(topic,groupName,(message,done)=>{
   console.log('inside registerConsumer==>',topic,'GROUP ==>',groupName);
   const mailboxId= JSON.parse(message.value).mailboxId;
@@ -41,7 +40,9 @@ if ((status == "useronline") ||(status=="useroffline") ){
       const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj), partition: 0 }];
       producer.send(payloads, (err, data) => {
         if (err) { return { message: 'err' }; }
-        console.log(data);
+        followDao.syncMailbox(mailboxIdmailboxId, (err, result) => {
+          if(err) {console.log(err);}
+        })
       });
     });
 
