@@ -12,6 +12,7 @@
   "dependencies": {
     "kafka-node": "^2.0.0",
     "thunk-redis": "^2.1.2",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "kafka-pipeline": "file:../lib/kafka-pipeline"
   }
 }

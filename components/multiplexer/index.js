@@ -1,11 +1,8 @@
-
 const redisClient = require('./client/redisclient').client;
 
 const topic =require('./config').kafka.topics[0];
 
 const kafkaClient = require('./client/kafkaclient');
-
-// const consumer = kafkaClient.consumer;
 
 const producer = kafkaClient.producer;
 
@@ -13,7 +10,7 @@ const thisConsumerId = kafkaClient.thisConsumerId;
 
 const groupName = require('./config').kafka.options.groupId;
 
-const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer');
+const kafkaPipeline = require('kafka-pipeline');
 
 let startTimeAlreadySet = false;
 
@@ -37,13 +34,13 @@ function setEndTime(endTime) {
     if (err) { console.log(err); } else { console.log('EndTime Set'); }
   });
 }
+kafkaPipeline.producer.ready(function() {
 
+  kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
 
-  registerConsumer(topic, groupName, (message, done) => {
-if (!startTimeAlreadySet) {
+  if (!startTimeAlreadySet) {
     setStartTime();
   }
-
   const activity = JSON.parse(message.value);
   const circleId = activity.circleId;
   let followers;
@@ -55,12 +52,14 @@ if (!startTimeAlreadySet) {
       const newActivity = activity;
       newActivity.mailboxId = data;
       arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
-    });
-    producer.send(arr, (error, data) => {
+      });
+      kafkaPipeline.producer.send(arr, (error, data) => {
       if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
       setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
     });
   });
   done();
-    });
+  });
+});
+
 

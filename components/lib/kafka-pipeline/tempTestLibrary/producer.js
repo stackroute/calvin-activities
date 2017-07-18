@@ -1,4 +1,4 @@
-const producer = require('../Library/register-producer');
+const producer = require('../Library/producer');
 const {send} = producer;
 const kafka = require('kafka-node');
 const Consumer = kafka.Consumer;

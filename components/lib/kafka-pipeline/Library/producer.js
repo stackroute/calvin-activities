@@ -20,22 +20,18 @@ setInterval(() => {
     if (err) { console.error('err:', err); return; }
   console.log('reply:', reply);
   });
-  // console.log('topic');
 }, 1000); 
 
 function send(...args) {
   args[0].forEach((payloadItem) => {
     const topic = payloadItem.topic;
     const count = payloadItem.messages.length;
-    // console.log('count==>', count);
     if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
     topicCount[topic] += count;
   }); 
   setInterval(() => {
     producer.send(args[0], (err, reply) => {
-     // console.log('args', args[0]);
     if (err) { console.error('err:', err); return; }
-  //  console.log('reply:', reply);
   });
   },1000);
   

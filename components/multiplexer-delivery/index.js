@@ -8,9 +8,7 @@ const topic =require('./config').kafka.topics[0];
 
 const groupName = require('./config').kafka.options.groupId;
 
-const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer');
-
-const consumer = kafkaClient.consumer;
+const kafkaPipeline = require('kafka-pipeline');
 
 let startTimeAlreadySet = false;
 
@@ -34,7 +32,7 @@ function setEndTime(endTime) {
   });
 }
 
-registerConsumer(topic, groupName, (message, done) => {
+kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
 if (!startTimeAlreadySet) {
     setStartTime();
   }

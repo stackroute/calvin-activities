@@ -1,12 +1,11 @@
-// const { producer } = require('./client/kafkaclient');
 const config = require('./config').kafka;
 
-const producer = require('../lib/kafka-pipeline/Library/register-producer');
-const {send} = producer;
-
+const kafkaPipeline = require('kafka-pipeline');
 
 const topic = config.topics.topic;
+
 const n = config.numberOfMessages;
+
 let msg = null;
 
 if (topic.indexOf('D') > -1) {
@@ -33,18 +32,17 @@ function addActivity(n, callback) {
   }
 
   console.log(`PRODUCING ${n} records`);
-  const sends = [];
-  producer.ready(function() { 
+  const send = [];
+  kafkaPipeline.producer.ready(function() { 
  
     for (let i=0; i<10; i++) {
-      sends.push({ topic, partition: i, messages: i===9 ? messages : messages.splice(0, n/10) });
-      
+      send.push({ topic, partition: i, messages: i===9 ? messages : messages.splice(0, n/10) });
     }
-    send([{topic: topic, messages:[JSON.stringify({sends})]}]);
+    kafkaPipeline.producer.send([{topic: topic, messages:[JSON.stringify({send})]}]);
  });
 }
 
-addActivity(n, (err, result) => {
+  addActivity(n, (err, result) => {
   if (err) { console.log('error:', err); return; }
   console.log('PRODUCED ${n} records');
 });

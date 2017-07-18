@@ -6,14 +6,9 @@ const kafkaClient = require('./client/kafkaclient');
 
 const topic =require('./config').kafka.topics[0];
 
-const producer = kafkaClient.producer;
-
-// const consumer = kafkaClient.consumer;
-
 const groupName = require('./config').kafka.options.groupId;
 
-const registerConsumer = require('../lib/kafka-pipeline/Library/register-consumer')
-
+const kafkaPipeline = require('kafka-pipeline');
 
 let startTimeAlreadySet = false;
 
@@ -37,28 +32,32 @@ function setEndTime(endTime) {
   });
 }
 
-registerConsumer(topic,groupName,(message, done)=> {
-  if (!startTimeAlreadySet) {
-    setStartTime();
-  }
-  redis.incr(`${topic}:count`)((err, reply) => {
-    const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleId}`;
-    redis.info('server')(function (error, res) {
-      return this.select(0);
-    })(function (error, res) {
-      return this.smembers(key);
-    })((error, res) => {
-      const payloads =[];
-      res.forEach((element) => {
-        payloads.push({ topic: element, messages: [message.value] });
-      });
-      producer.send(payloads, (err, data) => {
-        if (err) { throw err; }
-        console.log(data);
-        if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
-        setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+kafkaPipeline.producer.ready(function() {
+
+  kafkaPipeline.registerConsumer(topic,groupName,(message, done)=> {
+    if (!startTimeAlreadySet) {
+      setStartTime();
+    }
+    redis.incr(`${topic}:count`)((err, reply) => {
+      const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleId}`;
+      redis.info('server')(function (error, res) {
+        return this.select(0);
+      })(function (error, res) {
+        return this.smembers(key);
+      })((error, res) => {
+        const payloads =[];
+        res.forEach((element) => {
+          payloads.push({ topic: element, messages: [message.value] });
+        });
+
+        kafkaPipeline.producer.send(payloads, (err, data) => {
+          if (err) { throw err; }
+          console.log(data);
+          if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
+          setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+        });
       });
     });
+    done();
   });
-  done();
 });

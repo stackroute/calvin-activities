@@ -9,7 +9,6 @@ const producer = new HighLevelProducer(client);
 const consumerId = Math.random() * 123456789;
 
 function registerConsumer(topic, groupId, consumer) {
-  console.log('inside pipeline');
   const monitor = {
     F: 0,
     E: 0,
@@ -22,7 +21,6 @@ function registerConsumer(topic, groupId, consumer) {
   };
 
   producer.on('ready', () => {
-    console.log('inside ready');
     setInterval(() => {
       const monitorCopy = JSON.parse(JSON.stringify(monitor));
       monitor.F -= monitorCopy.F;

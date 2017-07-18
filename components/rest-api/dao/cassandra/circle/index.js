@@ -1,10 +1,11 @@
 const start = require('../../../db');
+
 const config = require('../../../config');
-// const {producer} = require('../../../client/kafkaclient');
-const producer = require('../../../../lib/kafka-pipeline/Library/register-producer');
-const {send} = producer;
+
+const kafkaPipeline = require('kafka-pipeline');
 
 const client = start.client;
+
 const uuid = start.uuid;
 
 function createCircle(callback) {
@@ -17,21 +18,12 @@ function createCircle(callback) {
   client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
     if (err) { return callback(err, null); }
 
-
-    producer.ready(function() {
-      send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
+    kafkaPipeline.producer.ready(function() {
+      kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
       if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
       return callback(err, newCircle);
     });
     });
-
-
-  //   producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
-  //     if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
-
-  //     return callback(err, newCircle);
-  //   });
-  // });
 });
 }
 

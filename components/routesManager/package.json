@@ -21,6 +21,7 @@
     "cassandra-driver": "^3.2.2",
     "express": "^4.15.3",
     "kafka-node": "^2.0.1",
-    "thunk-redis": "^2.1.2"
+    "thunk-redis": "^2.1.2",
+    "kafka-pipeline": "file:../lib/kafka-pipeline"
   }
 }
