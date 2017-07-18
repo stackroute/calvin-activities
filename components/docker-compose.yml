@@ -2,7 +2,9 @@ version: "2"
 services:
   rest-api:
     image: rest-api
-    build: rest-api
+    build: 
+      context: .
+      dockerfile: rest-api/Dockerfile
     ports:
       - 4000:4000
     environment:
@@ -22,14 +24,18 @@ services:
       DEFAULT_CIRCLE: 10
   multiplexer:
     image: multiplexer
-    build: multiplexer
+    build: 
+      context: .
+      dockerfile: multiplexer/Dockerfile
     environment:
       REDIS_HOST: 172.23.238.134
       ZOOKEEPER_HOST: 172.23.238.134 
       CONSUMER_GROUP: mx1
   multiplexer-delivery:
     image: multiplexer-delivery
-    build: multiplexer-delivery
+    build:
+      context: .
+      dockerfile: multiplexer-delivery/Dockerfile
     environment:
       REDIS_HOST: 172.23.238.134
       ZOOKEEPER_HOST: 172.23.238.134
@@ -38,14 +44,18 @@ services:
       CONSUMER_GROUP: mx1D
   l1r:
     image: l1r
-    build: l1r
+    build:
+      context: .
+      dockerfile: l1r/Dockerfile
     environment:
       REDIS_HOST: 172.23.238.134
       ZOOKEEPER_HOST: 172.23.238.134 
       CONSUMER_GROUP: activities1
   event-processor:
     image: event-processor
-    build: event_processor
+    build: 
+      context: .
+      dockerfile: event_processor/Dockerfile
     environment:
       REDIS_HOST: 172.23.238.134
       REDIS_PORT: 6379
@@ -59,7 +69,9 @@ services:
       DAO: cassandra
   routes-manager:
     image: routes-manager
-    build: routesManager
+    build: 
+      context: .
+      dockerfile: routesManager/Dockerfile
     environment:
       REDIS_HOST: 172.23.238.134
       REDIS_PORT: 6379
