@@ -1,14 +1,11 @@
-const kafkaClient = require('./client/kafkaclient');
-
-const consumer = kafkaClient.consumer;
-
-const producer = kafkaClient.producer;
-
 const followDao = require('./dao/getCircles');
 
-const routesTopic = kafkaClient.routesTopic;
+const routesTopic = require('./config').kafka.routesTopic;
+
+console.log('routesTopic:', routesTopic);
 
 const topic = require('./config').kafka.topics[0];
+console.log('topic:', topic);
 
 const groupName = require('./config').kafka.options.groupId;
 

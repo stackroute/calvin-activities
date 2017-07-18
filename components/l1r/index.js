@@ -35,29 +35,33 @@ function setEndTime(endTime) {
 kafkaPipeline.producer.ready(function() {
 
   kafkaPipeline.registerConsumer(topic,groupName,(message, done)=> {
+    console.log(message);
     if (!startTimeAlreadySet) {
       setStartTime();
     }
     redis.incr(`${topic}:count`)((err, reply) => {
+      if (err) { done(err); return; }
       const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleId}`;
       redis.info('server')(function (error, res) {
+        if(error) { done(error); return; }
         return this.select(0);
       })(function (error, res) {
+        if(error) { done(error); return; }
         return this.smembers(key);
       })((error, res) => {
+        if(error) { done(error); return; }
         const payloads =[];
         res.forEach((element) => {
           payloads.push({ topic: element, messages: [message.value] });
         });
-
         kafkaPipeline.producer.send(payloads, (err, data) => {
-          if (err) { throw err; }
+          if (err) { done(err); return; }
           console.log(data);
           if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
           setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
         });
+        done();
       });
     });
-    done();
   });
 });

@@ -5,6 +5,11 @@ const { host, port } = require('../config').kafka;
 
 const client = new kafka.Client(`${host}:${port}`);
 const producer = new HighLevelProducer(client);
+
+let isReady = false;
+producer.on('ready', () => {
+  isReady = true;
+});
 const topicCount = {};
 setInterval(() => {
   const topicCountCopy = JSON.parse(JSON.stringify(topicCount));
@@ -22,20 +27,22 @@ setInterval(() => {
   });
 }, 1000); 
 
-function send(...args) {
-  args[0].forEach((payloadItem) => {
+function send(msgs, done) {
+  msgs.forEach((payloadItem) => {
     const topic = payloadItem.topic;
     const count = payloadItem.messages.length;
     if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
     topicCount[topic] += count;
-  }); 
-  setInterval(() => {
-    producer.send(args[0], (err, reply) => {
-    if (err) { console.error('err:', err); return; }
   });
-  },1000);
-  
+  producer.send(msgs, done);
 }
+
 function ready(callback) {
-  producer.on('ready', callback);
-}module.exports = { send, ready };
+  if(isReady) { callback(); return; }
+
+  const interval = setInterval(() => {
+    if(isReady) { clearInterval(interval); callback(); }
+  }, 1000);
+}
+
+module.exports = { send, ready };

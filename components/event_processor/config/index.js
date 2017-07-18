@@ -8,7 +8,7 @@ module.exports = {
   kafka: {
    host: process.env.ZOOKEEPER_HOST || '172.23.238.134',
     port: process.env.ZOOKEEPER_PORT || '2181',
-    topics: [process.env.EVENTS_TOPIC || 'events'],
+    topics: [ process.env.EVENTS_TOPIC || 'events' ],
     routesTopic: process.env.ROUTES_TOPIC || 'routes',
     options: {
       groupId: process.env.CONSUMER_GROUP || 'eventsTest',

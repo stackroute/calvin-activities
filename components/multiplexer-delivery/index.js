@@ -33,7 +33,8 @@ function setEndTime(endTime) {
 }
 
 kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
-if (!startTimeAlreadySet) {
+  console.log(message);
+  if (!startTimeAlreadySet) {
     setStartTime();
   }
 
@@ -44,14 +45,14 @@ if (!startTimeAlreadySet) {
   };
 
   mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
-    if (err) { console.log({ message: `${err}` }); return; }
+    if (err) { console.log({ message: `${err}` }); done(err); return; }
     redisClient.publish(receiver, JSON.stringify(newActivity));
     activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {
-      if (error) { console.log({ message: `${error}` }); } else {
+      if (error) { console.log({ message: `${error}` }); done(err); return; } else {
         if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
         setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+        done();
       }
     });
   });
-  done();
 });

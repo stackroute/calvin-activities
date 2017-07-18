@@ -1,30 +1,35 @@
 const start = require('../../../db');
 
 const config = require('../../../config');
-
 const kafkaPipeline = require('kafka-pipeline');
+const mailboxDAO = require('../mailbox');
 
 const client = start.client;
+
+console.log('routesTopic:', config.kafka.routesTopic);
 
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  const newCircle = {
-    circleId: uuid().toString(),
-    mailboxId: uuid().toString(),
-    createdOn: new Date(),
-  };
-  const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
-  client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
-    if (err) { return callback(err, null); }
-
-    kafkaPipeline.producer.ready(function() {
+  mailboxDAO.createMailbox(function(err, newUser){
+    if(err) { console.log('ERR:', err); return callback(err); }
+    const newCircle = {
+      circleId: uuid().toString(),
+      mailboxId: newUser.mailboxId.toString(),
+      createdOn: new Date()
+    }
+    const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
+    console.log('query:', query);
+    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
+      if (err) { console.log('ERR:', err); return callback(err, null); }
+      console.log('Executed Query Successfully');
       kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
-      if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
-      return callback(err, newCircle);
+        if(err){console.log('ERR:', err); return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
+        console.log('Produced');
+        return callback(err, newCircle);
+      });
     });
-    });
-});
+  });
 }
 
 function checkIfCircleExists(circleId, callback) {

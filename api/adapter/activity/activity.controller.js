@@ -42,7 +42,7 @@ function publishActivityToUser(req, res) {
 }
 
 
-function getAllActivities(req, res) {
+function getAllActivitiesForUser(req, res) {
   const limit = req.query.limit;
   const before = req.query.before;
   const after = req.query.after;
@@ -61,6 +61,27 @@ function getAllActivities(req, res) {
   });
 }
 
+function getAllActivitiesForDomain(req,res){
+  const limit = req.query.limit;
+  const before = req.query.before;
+  const after = req.query.after;
+   adapterDAO.checkIfDomainExists(req.params.domain, (error, doesDomainExists) => {
+    if (error) { res.status(500).json({ message: `${error}` }); return; }
+    if (!doesDomainExists) {
+      res.status(404).json({ message: 'Domain does not exist' });
+      return;
+    }
+    const mailboxId = (doesDomainExists.mailboxid).toString();
+     activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
+      if (err) { res.status(500).json({ message: `${err}` }); return; }
+      res.status(201).json({ totalItems: result.a, items: result.b });
+    });
+   });
+
+}
+
+
+
 module.exports = {
-  publishActivityToDomain, publishActivityToUser, getAllActivities,
+  publishActivityToDomain, publishActivityToUser, getAllActivitiesForUser,getAllActivitiesForDomain,
 };

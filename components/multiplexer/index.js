@@ -35,30 +35,30 @@ function setEndTime(endTime) {
   });
 }
 kafkaPipeline.producer.ready(function() {
-
   kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
-
-  if (!startTimeAlreadySet) {
-    setStartTime();
-  }
-  const activity = JSON.parse(message.value);
-  const circleId = activity.circleId;
-  let followers;
-  redisClient.incr(`${thisConsumerId}:count`)((err, result) => { });
-  redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
-    followers = result;
-    const arr = [];
-    followers.forEach((data) => {
-      const newActivity = activity;
-      newActivity.mailboxId = data;
-      arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
+    console.log(message);
+    if (!startTimeAlreadySet) {
+      setStartTime();
+    }
+    const activity = JSON.parse(message.value);
+    const circleId = activity.circleId;
+    let followers;
+    redisClient.incr(`${thisConsumerId}:count`)((err, result) => { });
+    redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
+      if(err) { done(err); return; }
+      followers = result;
+      const arr = [];
+      followers.forEach((data) => {
+        const newActivity = activity;
+        newActivity.mailboxId = data;
+        arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
       });
       kafkaPipeline.producer.send(arr, (error, data) => {
-      if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
-      setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+        if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
+        setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
+      });
+      done();
     });
-  });
-  done();
   });
 });
 

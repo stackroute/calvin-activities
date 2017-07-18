@@ -1,5 +1,3 @@
-const kafkaClient = require('./client/kafkaclient');
-
 const routesManagerDao =require('./dao/routes_service');
 
 const topic =require('./config').kafka.topics[0];
