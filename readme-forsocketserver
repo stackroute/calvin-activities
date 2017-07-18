@@ -37,7 +37,7 @@ Events, the server will emit:
 Steps:
 ------
 
-1.Make connection to the port 4000.
+1.Make connection to the port 172.23.238.141:4000.
 
 2.Emit 'authorize' event using the key shared with you.
 
