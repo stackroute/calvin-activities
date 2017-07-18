@@ -75,6 +75,7 @@ function getAllActivitiesForDomain(req,res){
       return;
     }
     const mailboxId = (doesDomainExists.mailboxid).toString();
+    console.log(mailboxId);
      activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
        const firstActivity =  (result.a !== 0) ? result.b[0] : [];
