@@ -16,7 +16,6 @@ function addFollow(req, res) {
       }
       const obj = {
         circleId: (doesDomainExists.circleid).toString(),
-        domain : (doesDomainExists.domain),
         mailboxId: (doesUserExists.mailboxid).toString(),
       };
       const startFollowing = new Date();
