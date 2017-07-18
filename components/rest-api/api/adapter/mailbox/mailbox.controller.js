@@ -19,7 +19,7 @@ function deleteUser(req, res) {
     }
     adapterDAO.deleteUser(req.params.user, (err, deletedUser) => {
       if (err) { res.status(500).json({ message: `${err}` }); }
-      res.status(200).json(deletedUser);
+      res.status(200).json({user:req.params.user});
     });
   });
 }
