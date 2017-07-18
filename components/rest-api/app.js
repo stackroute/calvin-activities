@@ -24,7 +24,9 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/swaggerforadapter', swaggerUi.serve, swaggerUi.setup(swaggerDocumentForAdapter));
 
-app.use('/circle', authorize.verifyToken, require('./api/circle'));
+app.use(authorize.verifyToken);
+
+app.use('/circle', require('./api/circle'));
 
 app.use('/mailbox', require('./api/mailbox'));
 
