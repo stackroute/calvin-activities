@@ -7,6 +7,7 @@ function publishActivityToDomain(req, res) {
     payload: req.body,
     timestamp: new Date(),
   };
+   //console.log(newActivity);
 
   adapterDAO.checkIfDomainExists(req.params.domain, (error, doesDomainExists) => {
     if (error) { res.status(500).json({ message: `${error}` }); return; }
@@ -18,6 +19,7 @@ function publishActivityToDomain(req, res) {
     activityDao.createPublishActivity(circleId, newActivity, (error1, data1) => {
       if (error1) { res.status(404).json({ message: `${error1}` }); return; }
       res.status(201).json(newActivity);
+     
     });
   });
 }
