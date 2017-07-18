@@ -56,7 +56,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
 
       //limit -1
        if (limit == -1 && before != undefined && after == undefined) {
-        const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before}`);
+        const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}'`);
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
           let a = result.rows.length;
@@ -65,7 +65,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
         });
       }
       else if (limit == -1 && after != undefined && before == undefined) {
-        const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > ${after}`);
+        const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after}'`);
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
           let a = result.rows.length;
@@ -77,7 +77,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
 
       else if (limit == -1 && after != undefined && before != undefined) {
      
-        const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > ${after} and createdAt < ${before}`);
+        const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after}' and createdAt < '${before}'`);
         client.execute(query, (err1, result) => {
           if (err1) { return callback(err1); }
           let a = result.rows.length;
@@ -102,7 +102,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
   else if (limit == undefined && before != undefined && after == undefined) {
 
     const defaultLimit = config.defaultLimit;
-    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before} limit ${defaultLimit}`);
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
@@ -114,7 +114,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
   else if (limit == undefined && after != undefined && before == undefined) {
 
     const defaultLimit = config.defaultLimit;
-    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > ${after} limit ${defaultLimit}`);
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > '${after}' limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
@@ -126,7 +126,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
  else if (limit == undefined && after != undefined && before != undefined) {
 
     const defaultLimit = config.defaultLimit;
-    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before} and createdAt > ${after} limit ${defaultLimit}`);
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' and createdAt > '${after}' limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
@@ -152,7 +152,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
 
 
   else if (limit != undefined && before != undefined && after == undefined) {
-    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before} limit ${limit}`);
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
@@ -164,7 +164,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
   else if (limit != undefined && after != undefined && before == undefined) {
 
     const defaultLimit = config.defaultLimit;
-    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > ${after} limit ${limit}`);
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > '${after}' limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
@@ -176,7 +176,7 @@ function retriveMessageFromMailbox(mid, before, after, limit, callback) {
  else if (limit != undefined && after != undefined && before != undefined) {
 
     const defaultLimit = config.defaultLimit;
-    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < ${before} and createdAt > ${after} limit ${limit}`);
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' and createdAt > '${after}' limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) { return callback(error, null); }
       let a = result.rows.length;
