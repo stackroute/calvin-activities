@@ -17,6 +17,7 @@ function registerConsumer(topic, groupId, consumer) {
     FC: parseInt(process.env.FC) || '-',
     DC: parseInt(process.env.DC) || '-',
     groupId,
+    topic,
     consumerId,
   };
 
