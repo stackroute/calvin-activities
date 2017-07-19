@@ -26,5 +26,3 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
   }
   done();
 });
-
-

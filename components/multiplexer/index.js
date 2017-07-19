@@ -2,12 +2,6 @@ const redisClient = require('./client/redisclient').client;
 
 const topic =require('./config').kafka.topics[0];
 
-const kafkaClient = require('./client/kafkaclient');
-
-const producer = kafkaClient.producer;
-
-const thisConsumerId = kafkaClient.thisConsumerId;
-
 const groupName = require('./config').kafka.options.groupId;
 
 const kafkaPipeline = require('kafka-pipeline');
@@ -34,6 +28,7 @@ function setEndTime(endTime) {
     if (err) { console.log(err); } else { console.log('EndTime Set'); }
   });
 }
+
 kafkaPipeline.producer.ready(function() {
   kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
     console.log(message);
@@ -43,7 +38,6 @@ kafkaPipeline.producer.ready(function() {
     const activity = JSON.parse(message);
     const circleId = activity.circleId;
     let followers;
-    redisClient.incr(`${thisConsumerId}:count`)((err, result) => { });
     redisClient.smembers(`${topic}:${circleId}`)((err, result) => {
       if(err) { done(err); return; }
       followers = result;
@@ -61,5 +55,3 @@ kafkaPipeline.producer.ready(function() {
     });
   });
 });
-
-
