@@ -1,22 +1,42 @@
-<div fxLayout="row" fxLayoutAlign="space-around start" >
-    <!--<div flex fxLayout="column" fxLayoutAlign="space-around start" >
-    <md-card flex *ngFor="let msg of producer">
+<div flex fxLayout="row" fxLayoutAlign="space-around start" >
+    <md-card fxFlex="50" >
     <md-card-title>
-        <h1>Topic - {{msg.topic}}</h1>
+        <h2>Activities</h2>
     </md-card-title>  
     <md-card-content>
-        <span>No of Message : {{msg.count}}/sec</span>
+        <h4>No of Message Produced : {{ topicsData.get("activities") }} /sec</h4>
     </md-card-content>
     </md-card>
-    </div>-->
-    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
-    <md-card flex *ngFor="let msg of topics">
+    <md-card fxFlex="50" >
     <md-card-title>
-        <h1>Topic - {{msg}}</h1>
+        <h2>M1</h2>
     </md-card-title>  
     <md-card-content>
-        
+        <h4>No of Message Produced : {{ topicsData.get("m1") }} /sec</h4>
     </md-card-content>
     </md-card>
-    </div>
+    <md-card fxFlex="50" >
+    <md-card-title>
+        <h2>M1D</h2>
+    </md-card-title>  
+    <md-card-content>
+        <h4>No of Message Produced : {{ topicsData.get("m1D") }} /sec</h4>
+    </md-card-content>
+    </md-card>
+    <md-card fxFlex="50" >
+    <md-card-title>
+        <h2>Events Processor</h2>
+    </md-card-title>  
+    <md-card-content>
+        <h4>No of Message Produced : {{ topicsData.get("eventsProcessor") }} /sec</h4>
+    </md-card-content>
+    </md-card>
+    <md-card fxFlex="50" >
+    <md-card-title>
+        <h2>Routes Manager</h2>
+    </md-card-title>  
+    <md-card-content>
+        <h4>No of Message Produced : {{ topicsData.get("routesManager") }} /sec</h4>
+    </md-card-content>
+    </md-card>
 </div>
