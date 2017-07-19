@@ -17,6 +17,7 @@ services:
       ZOOKEEPER_PORT: 2181
       ACTIVITIES_TOPIC: activities1
       ROUTES_TOPIC: routes1
+      EVENTS_TOPIC: events1
       DSE_HOST: 172.23.238.134
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb

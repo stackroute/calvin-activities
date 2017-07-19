@@ -1,4 +1,9 @@
 const redisClient = require('./client/redisclient').client;
+const config =require('./config').redis;
+
+const redis = require('redis');
+console.log(`${config.host}:${config.port}`);
+const redisPublisher = redis.createClient({host:config.host, port: config.port});
 
 const topic =require('./config').kafka.topics[0];
 
@@ -45,7 +50,7 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
 
   mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
     if (err) { console.log({ message: `${err}` }); done(err); return; }
-    redisClient.publish(receiver, JSON.stringify(newActivity));
+    redisPublisher.publish(receiver, JSON.stringify(newActivity));
     activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {
       if (error) { console.log({ message: `${error}` }); done(err); return; } else {
         if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }

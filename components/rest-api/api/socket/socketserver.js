@@ -1,8 +1,12 @@
 const authorize = require('../../authorize');
-const subscriber = require('../../client/redisclient').client;
-const producer = require('../../client/kafkaclient').producer;
 const eventService = require('../../services/event');
 const adapter = require('../../dao/cassandra/adapter');
+
+const config =require('../../config').redis;
+
+const redis = require('redis');
+
+const subscriber = redis.createClient({host:config.host, port: config.port});
 
 function bootstrapSocketServer(io) {
   io.on('connection', (socket) => {
@@ -12,7 +16,7 @@ function bootstrapSocketServer(io) {
     socket.on('authorize', (auth) => {
       if (authorize.verify(auth, 'mailbox:all')) {
         socket.on('startListeningToMailbox', (id) => {
-          if (id.mid !== null) {
+          if (id.mid !== null && id.mid != undefined) {
             socket.join(id.mid);
             subscriber.subscribe(id.mid);
             const obj = {
@@ -25,10 +29,10 @@ function bootstrapSocketServer(io) {
               if (err) {
                 throw err;
               }
-              socket.join(result.mailboxid);
-              subscriber.unsubscribe(result.mailboxid);
+              socket.join(result.mailboxid.toString());
+              subscriber.subscribe(result.mailboxid.toString());
               const obj = {
-                mailboxId: id.user,
+                mailboxId: result.mailboxid.toString(),
                 event: 'useronline',
               };
               eventService.sendevent(obj);
@@ -38,7 +42,7 @@ function bootstrapSocketServer(io) {
           }
         });
         socket.on('stopListeningToMailbox', (id) => {
-          if (id.mid !== null) {
+          if (id.mid !== null && id.mid != undefined) {
             socket.leave(id.mid);
             subscriber.unsubscribe(id.mid);
             const obj = {
@@ -51,10 +55,10 @@ function bootstrapSocketServer(io) {
               if (err) {
                 throw err;
               }
-              socket.leave(result.mailboxid);
-              subscriber.unsubscribe(result.mailboxid);
+              socket.leave(result.mailboxid.toString());
+              subscriber.unsubscribe(result.mailboxid.toString());
               const obj = {
-                mailboxId: id.mid,
+                mailboxId: result.mailboxid.toString(),
                 event: 'useroffline',
               };
               eventService.sendevent(obj);

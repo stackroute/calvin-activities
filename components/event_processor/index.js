@@ -3,6 +3,7 @@ const followDao = require('./dao/getCircles');
 const topic = require('./config').kafka.topics[0];
 console.log('topic:', topic);
 const routesTopic = require('./config').kafka.routesTopic;
+const activitiesTopic = require('./config').kafka.activitiesTopic;
 console.log('routesTopic:', routesTopic);
 const mailboxDao = require('./dao/mailboxDao');
 const activityDao = require('./dao/activityDao');
@@ -31,7 +32,8 @@ kafkaPipeline.producer.ready(function() {
   }
 
   if ((status == "useronline") ||(status=="useroffline") ){
-    followDao.getCirclesForMailbox(mailboxId, (err, result) => {
+    if(mailboxId != null && mailboxId != undefined){
+      followDao.getCirclesForMailbox(mailboxId, (err, result) => {
       if (err) { return { message: 'err' } ; }
       const rows = result.rows;
 
@@ -51,6 +53,7 @@ kafkaPipeline.producer.ready(function() {
       });
 
     });
+    }
   }
 
   if ((status == "addcircle") ||(status=="removecircle") ){
@@ -74,7 +77,7 @@ kafkaPipeline.producer.ready(function() {
     const domainName = JSON.parse(message).domain;
     if(domainName !== null){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
-         if(circle == 0){
+         if(circle == 0 || circle == null){
            adapterDao.createDomain(domainName, function(err, data){
              if(err) {console.log(err);}
            })
@@ -96,7 +99,7 @@ kafkaPipeline.producer.ready(function() {
                 let user = element.member;
                 adapterDao.checkIfUserExists(user, function(err, userObj){
                   if(err) { console.log(err);}
-                  if(userObj == 0){
+                  if(userObj == 0 || userObj == null){
                     adapterDao.createUserGetMailbox(user, function(err, mailboxId){
                       flwDao.addFollow({circleId, mailboxId}, new Date(), function(err, result){
                         if(err) {console.log(err);}
@@ -160,12 +163,12 @@ kafkaPipeline.producer.ready(function() {
       const domain = JSON.parse(message).domain;
       adapterDao.checkIfDomainExists(domain, function(err, circle){
         if(err) {console.log(err);}
-        if(circle == 0){
+        if(circle == 0 || circle == null){
           adapterDao.createDomainGetCircleId(domain, function(err, circleId){
             const activity = {};
             activity.payload = JSON.parse(message);
             activity.circleId = circleId;
-            const payloads = [ {topic: config.kafka.activitiesTopic, messages: JSON.stringify(activity)}];
+            const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
             kafkaPipeline.producer.send(payloads, (err, data) => {
             if (err) { return { message: 'err' }; }
             activityDao.updateLastPublishedDate(circleId, function(err, res){
@@ -179,9 +182,10 @@ kafkaPipeline.producer.ready(function() {
           const activity = {};
           activity.payload = JSON.parse(message);
           activity.circleId = circleId;
-          const payloads = [ {topic: config.kafka.activitiesTopic, messages: JSON.stringify(activity)}];
+          const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
           kafkaPipeline.producer.send(payloads, (err, data) => {
             if (err) { return { message: 'err' }; }
+            console.log(data);
           });
         }
       })
