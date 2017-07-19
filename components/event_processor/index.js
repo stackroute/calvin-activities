@@ -1,9 +1,9 @@
 const followDao = require('./dao/getCircles');
-console.log('routesTopic:', routesTopic);
 
 const topic = require('./config').kafka.topics[0];
 console.log('topic:', topic);
-const routesTopic = kafkaClient.routesTopic;
+const routesTopic = require('./config').kafka.routesTopic;
+console.log('routesTopic:', routesTopic);
 const mailboxDao = require('./dao/mailboxDao');
 const activityDao = require('./dao/activityDao');
 const adapterDao = require('./dao/adapter');

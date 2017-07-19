@@ -1,4 +1,6 @@
-const 
+const start = require('../client/dse');
+
+const client = start.client;
 
 function updateLastPublishedDate(mid, callback) {
     const query1 = (`select createdOn from circle where circleId = ${mid}`);
