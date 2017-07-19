@@ -41,8 +41,8 @@ function bootstrapSocketServer(io) {
           } else if (id.domain !== null && id.domain !== undefined) {
             adapter.checkIfDomainExists(id.domain, (err, result) => {
               if (err) { throw err; }
-              socket.join(result.circleid.toString());
-              subscriber.subscribe(result.circleid.toString());
+              socket.join(result.mailboxid.toString());
+              subscriber.subscribe(result.mailboxid.toString());
             });
           } else {
             socket.emit('message', 'mapping does not exists');
@@ -69,10 +69,10 @@ function bootstrapSocketServer(io) {
               eventService.sendevent(obj);
             });
           } else if (id.domain === null && id.domain !== null) {
-            adapter.checkIfUserExists(id.domain, (err, result) => {
+            adapter.checkIfDomainExists(id.domain, (err, result) => {
               if (err) { throw err; }
-              socket.leave(result.circleid.toString());
-              subscriber.unsubscribe(result.circleid.toString());
+              socket.leave(result.mailboxid.toString());
+              subscriber.unsubscribe(result.mailboxid.toString());
             });
           } else {
             socket.emit('message', 'mapping does not exists');
