@@ -87,7 +87,7 @@ kafkaPipeline.producer.ready(function() {
     const domainName = JSON.parse(message).domain;
     if(domainName !== null){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
-         const circleId = circle.circleid;
+         const circleId = circle.circleid.toString();
          if(err) {console.log(err); }
          if(circle != 0 && circle){
            const allMembers = JSON.parse(message).members;
@@ -98,17 +98,17 @@ kafkaPipeline.producer.ready(function() {
                   if(err) { console.log(err);}
                   if(userObj == 0){
                     adapterDao.createUserGetMailbox(user, function(err, mailboxId){
-                      flwDao.addFollow({circleId, mailboxId}, function(err, result){
+                      flwDao.addFollow({circleId, mailboxId}, new Date(), function(err, result){
                         if(err) {console.log(err);}
                       })
                     })
                   }
                   else{
-                      let mailboxId = userObj.mailboxid;
+                      let mailboxId = userObj.mailboxid.toString();
                       flwDao.checkIfFollowExists({circleId, mailboxId}, function(err, flwExists){
                        if(err) {console.log(err);}
                        if(!flwExists){
-                         flwDao.addFollow({circleId, mailboxId}, function(err, result){
+                         flwDao.addFollow({circleId, mailboxId}, new Date(), function(err, result){
                            if(err) {console.log(err);}
                          })
                        }

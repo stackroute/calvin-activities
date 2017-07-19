@@ -5,12 +5,12 @@ const client = start.client;
 
 function addFollow(follower, startedFollowing, callback) {
   const query = ('INSERT INTO mailboxesFollowingCircle (circleid, mailboxid, startedFollowing ) values(?, ?, ? )');
-  client.execute(query, [follower.circleId, follower.mailboxId, startedFollowing], (err, result) => {
+  client.execute(query, [follower.circleId.toString(), follower.mailboxId.toString(), startedFollowing], (err, result) => {
     if (err) {
       throw err;
     }
     const query2 = ('INSERT INTO circlesFollowedByMailbox (mailboxid, circleid, startedFollowing ) values(?, ?, ? )');
-    client.execute(query2, [follower.mailboxId, follower.circleId, startedFollowing], (err2, result2) => {
+    client.execute(query2, [follower.mailboxId.toString(), follower.circleId.toString(), startedFollowing], (err2, result2) => {
       if (err2) {
         throw err2;
       }

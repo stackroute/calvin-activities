@@ -78,7 +78,7 @@ function createUserGetMailbox(user, callback) {
     const query = ('INSERT INTO user (user, mailboxid) values( ?, ?)');
     client.execute(query, [user, newUser.mailboxId], (err1, result) => {
       if (err1) { return callback(err1); }
-      return callback(null, newUser.mailboxId);
+      return callback(null, newUser.mailboxId.toString());
     });
     return 0;
   });
