@@ -8,6 +8,37 @@ const producer = new HighLevelProducer(client);
 
 const consumerId = Math.random() * 123456789;
 
+let startTime = null;
+
+const redisClient = require('../client/redisclient').client;
+
+function setStartTime(groupId) {
+  startTime = new Date().getTime();
+  redisClient.get(`monitor:${groupId}:startTime`)(function(err, reply) {
+    if(err) { console.log('ERR:', err); return; }
+    console.log('reply:', reply);
+    if(!reply) {
+      console.log('Setting Start Time:');
+      redisClient.set(`monitor:${groupId}:startTime`, startTime)(function(err, reply) {
+        if(err) { console.log('ERR:', err); return; }
+        console.log('Set Start Time');
+      });
+    } else {
+      console.log('Start Time already set');
+    }
+  });
+}
+
+let timeout = null;
+
+function setEndTime(groupId) {
+  const endTime = new Date().getTime();
+  if(timeout) { clearTimeout(timeout); }
+  timeout = setTimeout(function() {
+    redisClient.set(`monitor:${groupId}:endTime`, endTime)(function(err, reply) { console.log('End Time Set'); })
+  }, 5000);
+}
+
 function registerConsumer(topic, groupId, consumer) {
   console.log('registering: (topic, groupId)', topic, groupId);
 
@@ -45,11 +76,13 @@ function registerConsumer(topic, groupId, consumer) {
   const consumerGroup = new ConsumerGroup(options, topic);
   console.log('Created Consumer group');
   consumerGroup.on('message', (msg) => {
-
+    if(!startTime) { setStartTime(groupId); }
+    redisClient.incr(`monitor:${groupId}:count`)(() => {});
     console.log('inside consumerGroup pipeline');
     monitor.F++;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
       if (err) { monitor.E++; console.log('nok:', err); return; }
+      setEndTime(groupId);
       monitor.D++;
       console.log('ok');
     });

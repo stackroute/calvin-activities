@@ -25,10 +25,10 @@ if (topic.indexOf('D') > -1) {
 }
 
 function addActivity(n, callback) {
-  console.log(`PREPARING ${n} records`);
+  console.log(`PREPARING ${n} records for topic ${topic}`);
   const messages = [];
   for (let i=0; i<n; i++) {
-    messages.push(msg);
+    messages.push(JSON.stringify({circleId: 'baz'}));
   }
 
   console.log(`PRODUCING ${n} records`);
@@ -36,13 +36,14 @@ function addActivity(n, callback) {
   kafkaPipeline.producer.ready(function() { 
  
     for (let i=0; i<10; i++) {
-      send.push({ topic, partition: i, messages: i===9 ? messages : messages.splice(0, n/10) });
+      send.push({ topic, messages: i===9 ? messages : messages.splice(0, n/10) });
     }
-    kafkaPipeline.producer.send([{topic: topic, messages:[JSON.stringify({send})]}]);
+    console.log(`PUSHING: ${JSON.stringify(send)}`);
+    kafkaPipeline.producer.send(send, callback);
  });
 }
 
-  addActivity(n, (err, result) => {
+addActivity(n, (err, result) => {
   if (err) { console.log('error:', err); return; }
-  console.log('PRODUCED ${n} records');
+  console.log(`PRODUCED ${n} records`);
 });

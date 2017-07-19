@@ -757,6 +757,10 @@ request@2:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
+respjs@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/respjs/-/respjs-4.1.1.tgz#7fcc04752c479bf378bfc6c1f0e3e0db4db97fd7"
+
 retry@^0.10.1:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/retry/-/retry-0.10.1.tgz#e76388d217992c252750241d3d3956fed98d8ff4"
@@ -848,6 +852,17 @@ tar@^2.0.0:
     block-stream "*"
     fstream "^1.0.2"
     inherits "2"
+
+thunk-redis@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/thunk-redis/-/thunk-redis-2.1.2.tgz#09962b5105b753db668467e5cda33f00461e1233"
+  dependencies:
+    respjs "^4.1.1"
+    thunks "^4.8.0"
+
+thunks@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/thunks/-/thunks-4.8.0.tgz#63d5fff7f6a957d6953c46dc72829dd5462a8ab4"
 
 tough-cookie@~2.3.0:
   version "2.3.2"

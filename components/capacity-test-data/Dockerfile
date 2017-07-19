@@ -1,11 +1,16 @@
 FROM mhart/alpine-node-auto
 
-RUN mkdir -p /app
-WORKDIR /app
+RUN mkdir -p /app/capacity-test
+RUN mkdir -p /app/lib
 
-COPY package.json .
+WORKDIR /app/lib
+COPY lib .
+
+WORKDIR /app/capacity-test
+
+COPY capacity-test-data/package.json .
 RUN npm install
 
-COPY . .
+COPY capacity-test-data .
 
 CMD ["npm", "start", "--production"]

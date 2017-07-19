@@ -4,18 +4,16 @@ set -e
 
 docker-compose down --remove-orphans
 
-docker-compose up -d --build kafka
+docker-compose -f services.yml up -d
 
-echo "Sleeping for 5s after kafka starts"
-sleep 5
+echo "Sleeping for 10s after kafka starts"
+sleep 10
 
 ./bootstrap.sh
-
-docker-compose up -d --build redis
 
 # Setup routes
 for i in $( seq 0 99 ); do redis-cli SADD m1:baz $i; done;
 
-docker-compose up -d --build multiplexer
-docker-compose scale multiplexer=10
-docker-compose up -d --build produce
+docker-compose -f docker-compose-capacity.yml up -d --build multiplexer
+docker-compose scale multiplexer=1
+docker-compose -f docker-compose-capacity.yml up -d --build produce
