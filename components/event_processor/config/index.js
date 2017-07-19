@@ -12,7 +12,7 @@ module.exports = {
     routesTopic: process.env.ROUTES_TOPIC || 'routes',
     activitiesTopic: process.env.ACTIVITIES_TOPIC || 'activities',
     options: {
-      groupId: process.env.CONSUMER_GROUP || 'eventsTest',
+      groupId: process.env.CONSUMER_GROUP || 'events',
       autoCommit: false,
       fromOffset: true,
     },

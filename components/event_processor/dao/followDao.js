@@ -1,5 +1,6 @@
-const start = require('../../../db');
-const config = require('../../../config');
+const config = require('../config');
+const start = require('../client/dse');
+
 const client = start.client;
 
 function addFollow(follower, startedFollowing, callback) {

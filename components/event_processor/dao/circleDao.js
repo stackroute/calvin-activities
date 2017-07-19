@@ -1,8 +1,9 @@
-const start = require('../../../db');
-const config = require('../../../config');
-const {producer} = require('../../../client/kafkaclient');
+const start = require('../client/dse');
 
 const client = start.client;
+const config = require('../config');
+const {producer} = require('../client/kafkaclient');
+
 const uuid = start.uuid;
 
 function createCircle(callback) {

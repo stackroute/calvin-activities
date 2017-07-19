@@ -49,7 +49,7 @@ function registerConsumer(topic, groupId, consumer) {
     console.log('inside consumerGroup pipeline');
     monitor.F++;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
-      if (err) { monitor.E++; console.log('nok'); return; }
+      if (err) { monitor.E++; console.log('nok:', err); return; }
       monitor.D++;
       console.log('ok');
     });
