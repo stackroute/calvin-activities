@@ -29,9 +29,7 @@ function bootstrapSocketServer(io) {
             eventService.sendevent(obj);
           } else if (id.user !== null && id.mid !== undefined) {
             adapter.checkIfUserExists(id.user, (err, result) => {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
               socket.join(result.mailboxid.toString());
               subscriber.subscribe(result.mailboxid.toString());
               const obj = {
@@ -42,16 +40,9 @@ function bootstrapSocketServer(io) {
             });
           } else if (id.domain !== null && id.domain !== undefined) {
             adapter.checkIfDomainExists(id.domain, (err, result) => {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
               socket.join(result.circleid.toString());
               subscriber.subscribe(result.circleid.toString());
-              const obj = {
-                mailboxId: result.circleid.toString(),
-                event: 'useronline',
-              };
-              eventService.sendevent(obj);
             });
           } else {
             socket.emit('message', 'mapping does not exists');
@@ -68,9 +59,7 @@ function bootstrapSocketServer(io) {
             eventService.sendevent(obj);
           } else if (id.mid === null && id.user !== null) {
             adapter.checkIfUserExists(id.user, (err, result) => {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
               socket.leave(result.mailboxid.toString());
               subscriber.unsubscribe(result.mailboxid.toString());
               const obj = {
@@ -81,16 +70,9 @@ function bootstrapSocketServer(io) {
             });
           } else if (id.domain === null && id.domain !== null) {
             adapter.checkIfUserExists(id.domain, (err, result) => {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
               socket.leave(result.circleid.toString());
               subscriber.unsubscribe(result.circleid.toString());
-              const obj = {
-                mailboxId: result.circleid.toString(),
-                event: 'useroffline',
-              };
-              eventService.sendevent(obj);
             });
           } else {
             socket.emit('message', 'mapping does not exists');
