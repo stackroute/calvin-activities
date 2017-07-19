@@ -10,11 +10,23 @@ function createMultiplexer(req, res) {
 }
 
 function deleteMultiplexer(req, res) {
-  multiplexerService.deleteMultiplexer(req.params.mx, (err, result) => {
-    if (err) { res.status(500).send({ message: `${err}` }); return; }
-    if (result === 1) { res.status(201).send({ message: `Multiplexer ${req.params.mx} deleted` }); } else res.status(404).send({ message: `Multiplexer ${req.params.mx} not found` });
+  multiplexerService.getMultiplexerCount(req.params.mx, (err, result) => {
+    console.log(result);
+    if (result > 1){
+      multiplexerService.decrementMultiplexerCount(req.params.mx, (err, result1) => {
+        if (err) { res.status(500).send({ message: `${err}` }); return; }
+        res.status(201).send({ message: `Multiplexer ${req.params.mx} decremented` });
+      });
+    }
+     else{ 
+       multiplexerService.deleteMultiplexer(req.params.mx, (err, result2) => {
+      if (err) { res.status(500).send({ message: `${err}` }); return; }
+    res.status(201).send({ message: `Multiplexer ${req.params.mx} deleted` });
   });
+   }
+ });
 }
+
 
 function getAllMultiplexer(req, res) {
   multiplexerService.getAllMultiplexer((err, result) => {
