@@ -1,14 +1,12 @@
-const L1RCacheNamespace = require('./config').redis.namespace;
-
-const redis = require('./client/redisclient').client;
-
-const kafkaClient = require('./client/kafkaclient');
-
 const topic =require('./config').kafka.topics[0];
 
 const groupName = require('./config').kafka.options.groupId;
 
 const kafkaPipeline = require('kafka-pipeline');
+
+const L1RCacheNamespace = require('./config').redis.namespace;
+
+const redis = require('./client/redisclient').client;
 
 let startTimeAlreadySet = false;
 
@@ -33,7 +31,7 @@ function setEndTime(endTime) {
 }
 
 kafkaPipeline.producer.ready(function() {
-
+  console.log('topic:', topic);
   kafkaPipeline.registerConsumer(topic,groupName,(message, done)=> {
     console.log(message);
     if (!startTimeAlreadySet) {
@@ -41,7 +39,7 @@ kafkaPipeline.producer.ready(function() {
     }
     redis.incr(`${topic}:count`)((err, reply) => {
       if (err) { done(err); return; }
-      const key = `${L1RCacheNamespace}:${JSON.parse(message.value).circleId}`;
+      const key = `${L1RCacheNamespace}:${JSON.parse(message).circleId}`;
       redis.info('server')(function (error, res) {
         if(error) { done(error); return; }
         return this.select(0);
@@ -52,11 +50,11 @@ kafkaPipeline.producer.ready(function() {
         if(error) { done(error); return; }
         const payloads =[];
         res.forEach((element) => {
-          payloads.push({ topic: element, messages: [message.value] });
+          payloads.push({ topic: element, messages: [message] });
         });
         kafkaPipeline.producer.send(payloads, (err, data) => {
           if (err) { done(err); return; }
-          console.log(data);
+          console.log('data:', data);
           if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
           setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
         });

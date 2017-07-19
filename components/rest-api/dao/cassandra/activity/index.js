@@ -27,7 +27,8 @@ function createPublishActivity(mid, activity, callback) {
   const msg = JSON.parse(JSON.stringify(activity));
   activity.circleId = mid;
   kafkaClient.addActivity(activity, (err, data) => {
-    if (err) { return callback(err, null); }
+    if (err) {console.log('err:', err); return callback(err, null); }
+    console.log('data:', data);
     const query1 = (`select createdOn from circle where circleId = ${mid}`);
     client.execute(query1, (err, result) => {
       if (err) { return callback(err, null); }

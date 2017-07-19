@@ -9,6 +9,8 @@
       description: "API to unfollow and follow circles" 
     - name: "Publish API"
       description: "API to Publish Activity" 
+    - name: "Receive Notification"
+      description: "API to receive the notification"
     - name: "Bulk API"
       description: "API to receive the notification"
     - name: "L1R Routes API"
@@ -316,7 +318,7 @@
     /mailbox/{mailboxId}/activity:
        get:
         tags:
-          - "Activity API"
+          - "Publish Activity API"
         summary: "GET Activity"
         produces:
           - "application/json"
@@ -570,6 +572,18 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailbox Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
     /multiplexer_route/{namespace}/{circleId}:
        get:
         tags:
@@ -662,8 +676,3 @@
           required: true
           type: "string"
           format: "int64"
-   
-        
-
-
-    

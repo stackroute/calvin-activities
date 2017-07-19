@@ -23,7 +23,6 @@ setInterval(() => {
   });
   producer.send([{ topic: 'monitor', messages: send.map(msg => JSON.stringify(msg)) }], (err, reply) => {
     if (err) { console.error('err:', err); return; }
-  console.log('reply:', reply);
   });
 }, 1000); 
 
