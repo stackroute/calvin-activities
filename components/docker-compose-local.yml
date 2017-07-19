@@ -59,3 +59,17 @@ services:
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb
       DAO: cassandra
+  event-adapter:
+    image: event-adapter
+    build:
+      context: .
+      dockerfile: events-adapter/Dockerfile
+    environment:
+      COMMUNITY_ZOOKEEPER_HOST: 172.17.0.1
+      COMMUNITY_ZOOKEEPER_PORT: 2181
+      COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycle
+      COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvent
+      ACTIVITY_ZOOKEEPER_HOST: 172.17.0.1
+      ACTIVITY_ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: events1
+      CONSUMER_GROUP: community
