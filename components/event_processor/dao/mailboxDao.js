@@ -1,7 +1,8 @@
-const start = require('../../../db');
-const config = require('../../../config');
+const start = require('../client/dse');
 
 const client = start.client;
+const config = require('../config');
+
 const uuid = start.uuid;
 
 // Function to create a mailbox which contains id
