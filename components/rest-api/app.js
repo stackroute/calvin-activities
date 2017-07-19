@@ -8,8 +8,6 @@ const req = require('require-yml');
 
 const swaggerDocument = req('./swagger/api.yml');
 
-const swaggerDocumentForAdapter = req('./swagger/apiWithAdapter.yml');
-
 app.use(require('body-parser').json());
 
 const authorize = require('./authorize');
@@ -21,8 +19,6 @@ app.use(function(req, res, next) {
  });
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-app.use('/swaggerforadapter', swaggerUi.serve, swaggerUi.setup(swaggerDocumentForAdapter));
 
 app.use(authorize.verifyToken);
 
