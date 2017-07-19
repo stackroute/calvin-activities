@@ -2,11 +2,14 @@ const authorize = require('../../authorize');
 const eventService = require('../../services/event');
 const adapter = require('../../dao/cassandra/adapter');
 
-const config =require('../../config').redis;
+const config = require('../../config').redis;
 
 const redis = require('redis');
 
-const subscriber = redis.createClient({host:config.host, port: config.port});
+const subscriber = redis.createClient({
+  host: config.host,
+  port: config.port,
+});
 
 function bootstrapSocketServer(io) {
   io.on('connection', (socket) => {
@@ -16,7 +19,7 @@ function bootstrapSocketServer(io) {
     socket.on('authorize', (auth) => {
       if (authorize.verify(auth, 'mailbox:all')) {
         socket.on('startListeningToMailbox', (id) => {
-          if (id.mid !== null && id.mid != undefined) {
+          if (id.mid !== null && id.mid !== undefined) {
             socket.join(id.mid);
             subscriber.subscribe(id.mid);
             const obj = {
@@ -24,11 +27,9 @@ function bootstrapSocketServer(io) {
               event: 'useronline',
             };
             eventService.sendevent(obj);
-          } else if (id.user !== null) {
+          } else if (id.user !== null && id.mid !== undefined) {
             adapter.checkIfUserExists(id.user, (err, result) => {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
               socket.join(result.mailboxid.toString());
               subscriber.subscribe(result.mailboxid.toString());
               const obj = {
@@ -37,12 +38,18 @@ function bootstrapSocketServer(io) {
               };
               eventService.sendevent(obj);
             });
+          } else if (id.domain !== null && id.domain !== undefined) {
+            adapter.checkIfDomainExists(id.domain, (err, result) => {
+              if (err) { throw err; }
+              socket.join(result.circleid.toString());
+              subscriber.subscribe(result.circleid.toString());
+            });
           } else {
-            socket.emit('message', 'User mapping does not exists');
+            socket.emit('message', 'mapping does not exists');
           }
         });
         socket.on('stopListeningToMailbox', (id) => {
-          if (id.mid !== null && id.mid != undefined) {
+          if (id.mid !== null && id.mid !== undefined) {
             socket.leave(id.mid);
             subscriber.unsubscribe(id.mid);
             const obj = {
@@ -52,9 +59,7 @@ function bootstrapSocketServer(io) {
             eventService.sendevent(obj);
           } else if (id.mid === null && id.user !== null) {
             adapter.checkIfUserExists(id.user, (err, result) => {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
               socket.leave(result.mailboxid.toString());
               subscriber.unsubscribe(result.mailboxid.toString());
               const obj = {
@@ -63,8 +68,14 @@ function bootstrapSocketServer(io) {
               };
               eventService.sendevent(obj);
             });
+          } else if (id.domain === null && id.domain !== null) {
+            adapter.checkIfUserExists(id.domain, (err, result) => {
+              if (err) { throw err; }
+              socket.leave(result.circleid.toString());
+              subscriber.unsubscribe(result.circleid.toString());
+            });
           } else {
-            socket.emit('message', 'User mapping does not exists');
+            socket.emit('message', 'mapping does not exists');
           }
         });
       }
