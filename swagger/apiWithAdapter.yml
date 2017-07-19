@@ -7,15 +7,15 @@
       description: "API to create and delete mailbox"
     - name: "Follow API"
       description: "API to unfollow and follow circles" 
-    - name: "Publish API"
+    - name: "Publish Activity API"
       description: "API to Publish Activity" 
     - name: "Bulk API"
       description: "API to receive the notification"
-    - name: "L1R Routes API"
+    - name: "L1R routes API"
       description: "API to add,remove,list routes"
     - name: "Multiplexer API"
       description: "API to create,delete,list all multiplexers"
-    - name: "Multiplexer Routes API"
+    - name: "Multiplexer routes API"
       description: "API to add,remove,list routes"
     - name: "Routes API"
       description: "API to create and delete routes"
@@ -93,7 +93,24 @@
           type: "string"
         responses:
           200:
-            description: List of circles.       
+            description: List of circles.
+    /circle/getallcircles:
+      get:
+        tags:
+          - "Circle API"
+        summary: "Gets the list of  Circles available"        
+        produces:
+          -"application/json"
+        parameters:
+        
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+        responses:
+          200:
+            description: Number of circles need to be displayed.            
     /mailbox:
       post:
         tags:
@@ -227,7 +244,7 @@
           type: "string" 
         responses:
           200:
-            description: List of followers.       
+            description: List of followers.
     /circle/{circleId}/activity:
        post:
         tags:
@@ -265,7 +282,7 @@
         - name: "Authorization"
           in: "header"
           description: "Authentication key"
-          required: true
+          required: false
           type: "string"
     /mailbox/{mailboxId}/activitytomailbox:
        post:
@@ -304,71 +321,30 @@
         - name: "Authorization"
           in: "header"
           description: "Authentication key"
-          required: true
+          required: false
           type: "string"
-    /mailbox/getallactivities/{mailboxId}:
-      get:
+    /mailbox/{mailboxId}/activity:
+       get:
         tags:
           - "Publish Activity API"
-        summary: "List of activities for a particular mailbox"
+        summary: "GET Activity"
         produces:
-          -"application/json"
+          - "application/json"
+        responses:
+          200:
+            description: Get Activity from Mailbox.
         parameters:
         - name: "mailboxId"
           in: "path"
-          description: "mailbox id"
+          description: "mailboxId to get activity"
           required: true
           type: "string"
-          format: "int64"
-        - name: "limit"
-          in: "query"
-          description: "limit"
-          required: false
-          type: "string"
           format: "int64" 
-        - name: "before"
-          in: "query"
-          description: "date"
-          required: false
-          type: "string"
-          format: "int64" 
-        - name: "after"
-          in: "query"
-          description: "date"
-          required: false
-          type: "string"
-          format: "int64"                     
-        - name: "Authorization"
-          in: "header"    
-    /circle/getallcircles:
-      get:
-        tags:
-          - "Circle API"
-        summary: "Gets the list of  Circles available"        
-        produces:
-          -"application/json"
-        parameters:
-        - name: "limit"
-          in: "query"
-          description: "Number of circles need to be displayed"
-          required: false
-          type: "string"
-          format: "int64"        
         - name: "Authorization"
           in: "header"
           description: "Authentication key"
           required: false
           type: "string"
-        responses:
-          200:
-            description: List of circles.
-          description: "Authentication key"
-          required: true
-          type: "string" 
-        responses:
-          200:
-            description: List of Activities.        
-
     /mailboxesopen/{offset}/{count}:
        get:
         tags:
@@ -392,42 +368,58 @@
           required: true
           type: "string"
           format: "int64"
-
-    /bulk/{circleId}:
-      post:
+    /getallcircles/{offset}/{count}:
+       get:
         tags:
           - "Bulk API"
-        summary: "Add more than one followers for a circle"
+        summary: "Get all the circles"
         produces:
           - "application/json"
         responses:
           200:
-            description: Add more than one followers for a circle
+            description: Get all the circles.
         parameters:
-        - name: "circleId"
+        - name: "offset"
           in: "path"
-          description: "circle id"
+          description: "offset value"
           required: true
-          type: "uuid"
-          format: "int64"        
-        - in: "body"
-          name: "body"
-          description: "Enter the mailbox id"
-          required: "true"
-          paramType: "body"
-          type: "uuid"
+          type: "string"
           format: "int64"
-          schema:
-            type: object
-            required:
-              - id
-            properties:
-              - type: uuid
-        - name: "Authorization"
-          in: "header"
-          description: "Authentication key"
+        - name: "count"
+          in: "path"
+          description: "count"
           required: true
-          type: "string"        
+          type: "string"
+          format: "int64"
+    /getfollowers/{circleid}/{offset}/{count}:
+       get:
+        tags:
+          - "Bulk API"
+        summary: "Get all the followers"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: Get all the followers.
+        parameters:
+        - name: "circleid"
+          in: "path"
+          description: "circleId"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "offset"
+          in: "path"
+          description: "offset value"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "count"
+          in: "path"
+          description: "count"
+          required: true
+          type: "string"
+          format: "int64"
     /l1route/{circleId}/{multiplexerId}:
        post:
         tags:
@@ -781,7 +773,7 @@
     /adapter/user/{user}/domain/{domain}:
        post:
         tags:
-          - "Adapter Follow API"
+          - "Adapter follow API"
         summary: "API to add follow"
         produces: 
           - "application/json"
@@ -808,7 +800,7 @@
           type: "string"
        delete:
         tags:
-          - "Adapter Follow API"
+          - "Adapter follow API"
         summary: "API to delete follow"
         produces: 
           - "application/json"
@@ -1039,3 +1031,4 @@
           description: "Authentication key"
           required: false
           type: "string"
+    
