@@ -68,6 +68,7 @@ services:
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb
       DAO: cassandra
+      CONSUMER_GROUP: events1
   routes-manager:
     image: routes-manager
     build: 
@@ -86,3 +87,4 @@ services:
       DSE_PORT: 9042
       DSE_KEYSPACE: testdb
       DAO: cassandra
+      CONSUMER_GROUP: routes1

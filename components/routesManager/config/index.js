@@ -5,7 +5,7 @@ module.exports = {
     topics: [process.env.ROUTES_TOPIC || 'routes'],
     options: {
       host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
-      groupId: process.env.CONSUMRER_GROUP || 'm1',
+      groupId: process.env.CONSUMER_GROUP || 'routes',
       autoCommit: false,
       fromOffset: true,
     },

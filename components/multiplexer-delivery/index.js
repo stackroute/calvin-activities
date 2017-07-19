@@ -38,9 +38,9 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
     setStartTime();
   }
 
-  const receiver = JSON.parse(message.value).mailboxId;
+  const receiver = JSON.parse(message).mailboxId;
   const newActivity = {
-    payload: JSON.parse(message.value).payload,
+    payload: JSON.parse(message).payload,
     timestamp: new Date(),
   };
 

@@ -40,7 +40,7 @@ kafkaPipeline.producer.ready(function() {
     if (!startTimeAlreadySet) {
       setStartTime();
     }
-    const activity = JSON.parse(message.value);
+    const activity = JSON.parse(message);
     const circleId = activity.circleId;
     let followers;
     redisClient.incr(`${thisConsumerId}:count`)((err, result) => { });
