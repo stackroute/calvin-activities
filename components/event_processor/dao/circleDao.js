@@ -1,25 +1,28 @@
 const start = require('../client/dse');
-
 const client = start.client;
 const config = require('../config');
-const {producer} = require('../client/kafkaclient');
-
+const kafkaPipeline = require('kafka-pipeline');
+const mailboxDAO = require('./mailboxDao');
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  const newCircle = {
-    circleId: uuid().toString(),
-    mailboxId: uuid().toString(),
-    createdOn: new Date(),
-  };
-  const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
-  client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
-    if (err) { return callback(err, null); }
-
-    producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
-      if(err){return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
-
-      return callback(err, newCircle);
+  mailboxDAO.createMailbox(function(err, newUser){
+    if(err) { console.log('ERR:', err); return callback(err); }
+    const newCircle = {
+      circleId: uuid().toString(),
+      mailboxId: newUser.mailboxId.toString(),
+      createdOn: new Date()
+    }
+    const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
+    console.log('query:', query);
+    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
+      if (err) { console.log('ERR:', err); return callback(err, null); }
+      console.log('Executed Query Successfully');
+      kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
+        if(err){console.log('ERR:', err); return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
+        console.log('Produced');
+        return callback(err, newCircle);
+      });
     });
   });
 }
