@@ -24,8 +24,9 @@ function createCircle(callback) {
       if (err) { console.log('ERR:', err); return callback(err, null); }
       console.log('Executed Query Successfully');
       kafkaPipeline.producer.ready(function() {
-        kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, res) => {});
         return callback(null, newCircle);
+        kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, res) => {});
+        // return callback(null, newCircle);
       });
     });
   });
@@ -87,3 +88,6 @@ function getAllCircles(limit, callback) {
 module.exports = {
   createCircle, checkIfCircleExists, deleteCircle, getAllCircles,
 };
+
+
+
