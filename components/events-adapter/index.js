@@ -39,9 +39,8 @@ producer.on('ready', function(){
 		console.log(message);
 		const event = JSON.parse(JSON.stringify(message.value));
 		writeToEventsTopic(event, function(err, result){
-   			if(err) { console.log(err); done(err);}
+   			if(err) { console.log(err);}
    			console.log(result);
-   			done();
    		})
 	})
 })
