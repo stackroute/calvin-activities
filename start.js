@@ -17,9 +17,30 @@ const options = {
 const consumerGroup1 = new ConsumerGroup(options, 'monitoring');
 consumerGroup1.on('message', onMessage);
 
+let messages = new Array();
+let messagesDelivered = 0;
+setInterval(function(){ 
+   let sum = 0;
+   messages.forEach(function(element) {
+     sum+=element;
+   });
+   messagesDelivered = sum;
+   messages = [];
+	}, 1000);
+
+
 function onMessage (message) {
-  console.log(message.value);
-  io.to('monitoring').emit('msg', message.value);
+  if(JSON.parse(message.value).CID){ 
+     messages.push(JSON.parse(message.value).CDR);
+     io.to('monitoring').emit('msg', { messagesDelivered  }); 
+  }
+  if(JSON.parse(message.value).topic){ 
+      io.to('monitoring').emit('msg', message.value);
+  }
+  if(JSON.parse(message.value).consumerGroup){ 
+      io.to('monitoring').emit('msg', message.value);
+  }
+  
 }
 
 process.once('SIGINT', function () {
