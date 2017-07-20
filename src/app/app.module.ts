@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';;
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RouterModule,Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { FollowerService } from './followers/followers.component.service';
 import { RoleServices } from './mailboxes/mailboxes.component.service'
 import { HttpModule, JsonpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,22 +19,24 @@ import { FollowersComponent } from './followers/followers.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ActivityComponent } from './activity/activity.component';
 import { MessageDashboardComponent } from './message-dashboard/message-dashboard.component';
+
 import { ChatService } from './activity/activity.service';
 import { OverviewComponent } from './overview/overview.component';
 
-import {Jsonp} from '@angular/http';
+import { Jsonp } from '@angular/http';
+
 
 const appRoutes: Routes = [
-    { path: '' , redirectTo : 'dashboard' ,pathMatch : 'full' },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'activities', component: ActivitiesComponent },
-    { path: 'circles', component: CirclesComponent },
-    { path: 'load-test', component: LoadtestComponent },
-    { path: 'circle/:cid/mailboxes', component: MailboxesComponent },
-    { path: 'mailboxes/:mid', component: MessageDashboardComponent },
-  ];
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'activities', component: ActivitiesComponent },
+  { path: 'circles', component: CirclesComponent },
+  { path: 'load-test', component: LoadtestComponent },
+  { path: 'circle/:cid/mailboxes', component: MailboxesComponent },
+  { path: 'mailboxes/:mid', component: MessageDashboardComponent },
+];
 
-  
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,9 +48,10 @@ const appRoutes: Routes = [
     FollowersComponent,
     MessagesComponent,
     ActivityComponent,
-    MessageDashboardComponent,
     OverviewComponent,
+    MessageDashboardComponent,
   ],
+
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -60,7 +64,8 @@ const appRoutes: Routes = [
     JsonpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [ RoleServices, ChatService],
+  providers: [RoleServices, ChatService, FollowerService],
+
 
   bootstrap: [AppComponent]
 })

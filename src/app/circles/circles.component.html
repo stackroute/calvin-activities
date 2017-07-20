@@ -1,12 +1,12 @@
 <div>
-<md-card class="cardStyle">
-  <md-card-title class="cardTitleStyle">
-    Calvin Activities
-  </md-card-title> 
-</md-card>
- <h3>List of circles:</h3>
-<md-nav-list *ngFor='let link of circleArray.items'>
-   <a md-list-item href="/circle/{{link.circleid}}/mailboxes"> {{ link.circleid }} </a>
-</md-nav-list>
+  <md-card class="cardStyle">
+    <md-card-title class="cardTitleStyle">
+      Calvin Activities
+    </md-card-title>
+  </md-card>
+  <h3>List of circles:</h3>
+  <md-nav-list *ngFor='let link of circleArray.items'>
+    <a md-list-item href="/circle/{{link.circleid}}/mailboxes"> {{ link.circleid }} </a>
+  </md-nav-list>
 
 </div>
