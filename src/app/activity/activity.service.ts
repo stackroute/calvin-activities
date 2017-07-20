@@ -27,10 +27,10 @@ authorize(){
   this.socket.emit('authorize', `Bearer ${token}`);
 }
 startListeningToMailbox(mid){
-  this.socket.emit('startListeningToMailbox', {"domain":mid});
+  this.socket.emit('startListeningToMailbox', {"mid":mid});
 }
 stopListeningToMailbox(mid){
-  this.socket.emit('stopListeningToMailbox', {"domain":mid});
+  this.socket.emit('stopListeningToMailbox', {"mid":mid});
 }
 
 getMessages() {
@@ -46,7 +46,7 @@ getMessages() {
   return observable;
 }
 getAllActivities(user) {
-  const url = `http://localhost:4000/adapter/getallactivities/domain/${user}`;
+  const url = `http://localhost:4000/mailbox/getallactivities/${user}`;
   return this.http.get(url).map((res) => {
     return res.json();
   })

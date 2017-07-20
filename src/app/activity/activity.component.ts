@@ -1,5 +1,6 @@
 import { Component, OnChanges } from '@angular/core';
 import { ChatService } from './activity.service';
+import { Params, RouterModule, Routes, Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-activity',
@@ -14,7 +15,7 @@ export class ActivityComponent {
   last;
 
 
-  constructor(private chatService: ChatService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private chatService: ChatService) { }
    get() {
     this.chatService.startListeningToMailbox(this.user);
     this.chatService.getAllActivities(this.user).subscribe(activity => {
@@ -22,6 +23,7 @@ export class ActivityComponent {
     });
   }
   ngOnInit() {
+    this.user =this.route.snapshot.params['mid'];
     this.chatService.authorize();
   }
   ngOnChanges(){
