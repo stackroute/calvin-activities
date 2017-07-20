@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';;
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule,Routes } from '@angular/router';
+import { RoleServices } from './mailboxes/mailboxes.component.service'
+import { HttpModule, JsonpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { ActivitiesComponent } from './activities/activities.component';
@@ -20,8 +21,6 @@ import { MessageDashboardComponent } from './message-dashboard/message-dashboard
 import { ChatService } from './activity/activity.service';
 import { OverviewComponent } from './overview/overview.component';
 
-
-import {JsonpModule} from '@angular/http';
 import {Jsonp} from '@angular/http';
 
 const appRoutes: Routes = [
@@ -55,12 +54,14 @@ const appRoutes: Routes = [
     FormsModule,
     JsonpModule,
     HttpModule,
+    JsonpModule,
     MaterialModule,
     FlexLayoutModule,
     JsonpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [ChatService],
+  providers: [ RoleServices, ChatService],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

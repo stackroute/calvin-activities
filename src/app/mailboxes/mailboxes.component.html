@@ -1,3 +1,13 @@
-<p>
-  mailboxes works!
-</p>
+<div>
+<md-card class="cardStyle">
+ <md-card-title class="cardTitleStyle">
+   Calvin Activities
+ </md-card-title> 
+</md-card>
+<div class= "listStyle">
+ List of Mailboxes
+<md-nav-list *ngFor="let val of resultArray.items">
+  <a md-list-item href="/mailboxes/{{val.circleid}}"> {{ val.circleid}} </a>
+ </md-nav-list>
+</div>
+</div>
