@@ -17,6 +17,7 @@ const kafkaPipeline = require('kafka-pipeline');
   
 kafkaPipeline.producer.ready(function() {
   kafkaPipeline.registerConsumer(topic,groupName,(message,done)=>{
+    console.log(message);
   const mailboxId= JSON.parse(message).mailboxId;
   const circleId = JSON.parse(message).circleId;
    
@@ -44,12 +45,9 @@ kafkaPipeline.producer.ready(function() {
             mailboxId: mailboxId,
             command,
           };
-          console.log('between');
           console.log(obj);
           const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj) }];
-          kafkaPipeline.producer.send(payloads, (err, data) => {
-            if (err) { console.log(err); return { message: 'err' }; }
-          });
+          kafkaPipeline.producer.send(payloads);
         });
 
       });
@@ -70,20 +68,22 @@ kafkaPipeline.producer.ready(function() {
         command,
       };
       const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj),}];
-      kafkaPipeline.producer.send(payloads, (err, data) => {
-        if (err) { return { message: 'err' }; }
-        console.log(data);
-      });
+      kafkaPipeline.producer.send(payloads);
     });
   }
 
   else if(status == "newcommunityadded"){
     const domainName = JSON.parse(message).domain;
+    console.log('new');
+    console.log(JSON.parse(message).domain);
     if(domainName !== null){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
+        console.log(circle);
+        console.log(domainName);
          if(circle == 0 || circle == null){
            adapterDao.createDomain(domainName, function(err, data){
              if(err) {console.log(err);}
+             console.log(data);
            })
          }
        })
@@ -173,12 +173,10 @@ kafkaPipeline.producer.ready(function() {
             activity.payload = JSON.parse(message);
             activity.circleId = circleId;
             const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
-            kafkaPipeline.producer.send(payloads, (err, data) => {
-            if (err) { return { message: 'err' }; }
+            kafkaPipeline.producer.send(payloads);
             activityDao.updateLastPublishedDate(circleId, function(err, res){
-                if(err) {console.log(err);}
-              })
-            });
+              if(err) {console.log(err);}
+            })
           })
         }
         else{
@@ -187,10 +185,7 @@ kafkaPipeline.producer.ready(function() {
           activity.payload = JSON.parse(message);
           activity.circleId = circleId;
           const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
-          kafkaPipeline.producer.send(payloads, (err, data) => {
-            if (err) { return { message: 'err' }; }
-            console.log(data);
-          });
+          kafkaPipeline.producer.send(payloads);
         }
       })
     }
