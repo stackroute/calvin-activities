@@ -32,12 +32,17 @@ function createPublishActivity(mid, activity, callback) {
     const query1 = (`select createdOn from circle where circleId = ${mid}`);
     client.execute(query1, (err, result) => {
       if (err) { return callback(err, null); }
-      const c = result.rows[0].createdon;
-      const query = ('UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?');
-      client.execute(query, [new Date(), mid, c], (err, result) => {
-        if (err) { return callback(err, null); }
-        callback(null, msg);
-      });
+      if(result && result.rows && result.rows[0]){
+        const c = result.rows[0].createdon;
+        const query = ('UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?');
+        client.execute(query, [new Date(), mid, c], (err, result) => {
+          if (err) { return callback(err, null); }
+          callback(null, msg);
+        });
+      }
+      else{
+        return callback('Circle does not exists');
+      }
     });
   });
 }

@@ -94,9 +94,9 @@ kafkaPipeline.producer.ready(function() {
     const domainName = JSON.parse(message).domain;
     if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
-         const circleId = circle.circleid.toString();
          if(err) {console.log(err); }
          if(circle != 0 && circle){
+           const circleId = circle.circleid.toString();
            const allMembers = JSON.parse(message).members;
             if(allMembers && allMembers.length > 0){
               allMembers.forEach(element => {
