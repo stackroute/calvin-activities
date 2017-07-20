@@ -42,10 +42,12 @@ const verify = (auth, claims) => {
   if (!auth) return isAllowed;
   const token = auth.split(' ').pop().toString();
   const decodeToken = jwt.decode(token, { complete: true });
-  const scopes = decodeToken.payload.scopes;
-  scopes.forEach((element) => {
-    if ((claims.indexOf(element) > -1)) { isAllowed = true; }
-  });
+  if(decodeToken !== null){
+    const scopes = decodeToken.payload.scopes;
+    scopes.forEach((element) => {
+      if ((claims.indexOf(element) > -1)) { isAllowed = true; }
+    });
+  }
   return isAllowed;
 };
 
