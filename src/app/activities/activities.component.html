@@ -1,3 +1,4 @@
+<app-overview></app-overview>
 
 <div flex fxLayout="row" fxLayoutAlign="" >
     <md-card routerLink="/dashboard" routerLinkActive="active" class="cursor" >
@@ -13,7 +14,31 @@
         <h2>L1Routes</h2>
     </md-card-title>  
     <md-card-content>
-        <span>No of Messages Produced</span>
+        <!--<span>{{ consumerGroupsData.get("l1route") }}</span>-->
     </md-card-content>
     </md-card>
 </div>
+
+<div class="container" style="margin-top:20px;" >
+    <table class="table table-bordered">
+        <tr>
+            <th>Consumer ID</th>
+            <th>Fill Rate</th>
+            <th>Drain Rate</th>
+            <th>Error Rate</th>
+            <th>FillRate Capacity</th>
+            <th>DrainRate Capacity</th>
+        </tr>
+        <tr  *ngFor="let msg of consumersData.entries()"  >
+            <td>{{ msg[0] }}</td>
+            <td>{{ msg[1].F }}</td>
+            <td>{{ msg[1].D }}</td>
+            <td>{{ msg[1].E }}</td>
+            <td>{{ msg[1].FC }}</td>
+            <td>{{ msg[1].DC }}</td>
+        </tr>
+    </table>
+    
+</div>
+
+
