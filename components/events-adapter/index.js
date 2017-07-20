@@ -43,7 +43,7 @@ producer.on('ready', function(){
    			console.log(result);
    			done();
    		})
-	}
+	})
 })
 
 function writeToEventsTopic(message, callback){

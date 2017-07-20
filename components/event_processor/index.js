@@ -33,26 +33,30 @@ kafkaPipeline.producer.ready(function() {
 
   if ((status == "useronline") ||(status=="useroffline") ){
     if(mailboxId != null && mailboxId != undefined){
+      console.log('adding routes')
       followDao.getCirclesForMailbox(mailboxId, (err, result) => {
-      if (err) { return { message: 'err' } ; }
-      const rows = result.rows;
+        if (err) { return { message: 'err' } ; }
+        const rows = result.rows;
 
-      rows.forEach((element) => {
-        const obj = {
-          circleId: element.circleid.toString(),
-          mailboxId: mailboxId,
-          command,
-        };
-        const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj) }];
-        kafkaPipeline.producer.send(payloads, (err, data) => {
-          if (err) { return { message: 'err' }; }
-          followDao.syncMailbox(mailboxId, (err, result) => {
-            if(err) {console.log(err);}
-          })
+        rows.forEach((element) => {
+          const obj = {
+            circleId: element.circleid.toString(),
+            mailboxId: mailboxId,
+            command,
+          };
+          console.log('between');
+          console.log(obj);
+          const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj) }];
+          kafkaPipeline.producer.send(payloads, (err, data) => {
+            if (err) { console.log(err); return { message: 'err' }; }
+          });
         });
-      });
 
-    });
+      });
+      console.log('syncMailbox');
+      followDao.syncMailbox(mailboxId, (err, result) => {
+        if(err) {console.log(err);}
+      })
     }
   }
 

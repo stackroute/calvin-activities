@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/stackroute/calvin-activities#readme",
   "dependencies": {
-    "kafka-node": "^2.0.1",
+    "kafka-node": "^2.0.1"
   }
 }
