@@ -25,7 +25,12 @@ const options = {
 const topics = [communityLifecycleTopic, communityActivityEventTopic];
 
 const consumergroup = new ConsumerGroup(Object.assign({'id':'consumer_xyz'}, options), topics);
-
+console.log('consumer options');
+console.log(options);
+console.log('consumer topics');
+console.log(topics);
+console.log('producer client');
+console.log(event_host + ':' + event_port);
 
 producer.on('ready', function(){
 	console.log('producer is ready');
