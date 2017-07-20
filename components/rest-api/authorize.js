@@ -14,6 +14,7 @@ const verifyToken = (req, res, next) => {
   if (!auth.includes('Bearer')) { return res.status(404).json({ message: 'Invalid Authorization' }); }
   const token = auth.split(' ').pop().toString();
   const decodeToken = jwt.decode(token, { complete: true });
+  if (!decodeToken.payload.scopes) { return res.status(404).json({ message: 'Invalid Authorization' }); }
   const scopes = decodeToken.payload.scopes;
   jwt.verify(token, config.secretKey, (err, decoded) => {
     if (err) { return res.status(404).json({ message: 'Invalid Authorization' }); }
