@@ -87,14 +87,14 @@ req.end(function (res) {
   if (res.error) throw new Error(res.error);
 
   circles.push(res.body.circleId);
-  console.log(circles);
+  
 
 });
 }
 
 // mailbox
 setTimeout(function() {
-  for ( var i = 0; i <= 100; i+=1){
+  for ( var i = 0; i <= 1000; i+=1){
   var req = unirest("POST", "http://localhost:4000/mailbox");
 
   req.headers({
@@ -112,7 +112,7 @@ setTimeout(function() {
   req.end(function (res) {
     if (res.error) throw new Error(res.error);
 
-    // console.log(res.body.mailboxId);
+
     mailboxes.push(res.body.mailboxId);
 
   });
@@ -126,12 +126,6 @@ setTimeout(function() {
 circles.forEach((circleId) => {
   mailboxes.forEach((mailboxId) => {
   var req = unirest("POST", `http://localhost:4000/mailbox/${mailboxId}/circle/${circleId}`);
-  console.log("Out");
-      console.log(circleId);
-      console.log(mailboxId);
-      console.log("out");
-
-  console.log("in");
   req.headers({
     "postman-token": "c353e818-ab76-0298-5504-c5c4762ce73c",
     "cache-control": "no-cache",
@@ -143,8 +137,6 @@ circles.forEach((circleId) => {
 
   req.end(function (res) {
     if (res.error) throw new Error(res.error);
-
-    console.log(res.body);
   });
   });
   });
