@@ -6,7 +6,6 @@ import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule,Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { JsonpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -33,8 +32,6 @@ const appRoutes: Routes = [
     { path: 'load-test', component: LoadtestComponent },
     { path: 'circle/:cid/mailboxes', component: MailboxesComponent },
     { path: 'mailboxes/:mid', component: MessageDashboardComponent },
-    
- 
   ];
 
   
