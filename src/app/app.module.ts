@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';;
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule,Routes } from '@angular/router';
+import { RoleServices } from './mailboxes/mailboxes.component.service'
+import { HttpModule, JsonpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { ActivitiesComponent } from './activities/activities.component';
@@ -47,11 +48,13 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    JsonpModule,
     MaterialModule,
     FlexLayoutModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [ RoleServices],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
