@@ -76,7 +76,7 @@ kafkaPipeline.producer.ready(function() {
     const domainName = JSON.parse(message).domain;
     console.log('new');
     console.log(JSON.parse(message).domain);
-    if(domainName !== null){
+    if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
         console.log(circle);
         console.log(domainName);
@@ -92,7 +92,7 @@ kafkaPipeline.producer.ready(function() {
 
   else if(status == "newmembersadded"){
     const domainName = JSON.parse(message).domain;
-    if(domainName !== null){
+    if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
          const circleId = circle.circleid.toString();
          if(err) {console.log(err); }
@@ -131,7 +131,7 @@ kafkaPipeline.producer.ready(function() {
 
   else if(status == "removemembers"){
     const domainName = JSON.parse(message).domain;
-    if(domainName !== null){
+    if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
          const circleId = circle.circleid;
          if(err) {console.log(err); }
@@ -165,7 +165,8 @@ kafkaPipeline.producer.ready(function() {
     const activityType = JSON.parse(message).activitytype;
     if(activityType){
       const domain = JSON.parse(message).domain;
-      adapterDao.checkIfDomainExists(domain, function(err, circle){
+      if(domain !== null && domain !== undefined){
+        adapterDao.checkIfDomainExists(domain, function(err, circle){
         if(err) {console.log(err);}
         if(circle == 0 || circle == null){
           adapterDao.createDomainGetCircleId(domain, function(err, circleId){
@@ -187,7 +188,8 @@ kafkaPipeline.producer.ready(function() {
           const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
           kafkaPipeline.producer.send(payloads);
         }
-      })
+        })
+      }
     }
   }
 
