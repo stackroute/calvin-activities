@@ -50,14 +50,13 @@ const appRoutes: Routes = [
     FollowersComponent,
     MessagesComponent,
     ActivityComponent,
+    OverviewComponent,
     MessageDashboardComponent,
-        
   ],
  
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    OverviewComponent,
     FormsModule,
     JsonpModule,
     HttpModule,
