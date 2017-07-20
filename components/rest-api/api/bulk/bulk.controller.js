@@ -14,8 +14,10 @@ function getOpenMailboxes(req, res) {
 }
 
 function bulkFollow(req, res) {
+ 
   const follower = req.body.id;
   const result = follower.slice(1, follower.length - 1).split(',');
+  console.log(follower);
   console.log(result);
   for (let i = 0; i <= result.length - 1; i += 1) {
     const mailboxId = (result[i]);
