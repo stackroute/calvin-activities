@@ -45,7 +45,7 @@ function registerConsumer(topic, groupId, consumer) {
   const monitor = {
     F: 0,
     E: 0,
-    D: 0,
+    D: 0,c
     FC: parseInt(process.env.FC) || '-',
     DC: parseInt(process.env.DC) || '-',
     groupId,
@@ -62,19 +62,19 @@ function registerConsumer(topic, groupId, consumer) {
       producer.send([{ topic: 'monitor', messages: JSON.stringify(monitorCopy) }], (err, result) => {
         if (err) { console.error('ERR:', err); }
       });
-    }, 1000);
+    }, 5000);
   });
   const options = {
     host: `${host}:${port}`,
     groupId,
     sessionTimeout: 15000,
     protocol: ['roundrobin'],
-    fromOffset: 'earliest',
+    fromOffset: 'latest',
   };
 
   console.log('Creating a Consumer Group');
   const consumerGroup = new ConsumerGroup(options, topic);
-  console.log('Created Consumer group');
+  console.log('Created Consumer group==>'topic);
   consumerGroup.on('error', (err) => {
     console.log('CG ERR:', err);
   });
