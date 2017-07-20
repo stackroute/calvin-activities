@@ -1,3 +1,16 @@
-<p>
-  followers works!
-</p>
+<div>
+  <md-toolbar class="card-style">
+    <md-toolbar-row>
+      Calvin Activity
+    </md-toolbar-row>
+  </md-toolbar>
+ <md-card >
+ <md-card-title> Circles followed by the mailbox </md-card-title>
+   <md-list-item *ngFor="let data of resultArray.totalitems">
+     {{ data.circleid }}
+      </md-list-item>
+</md-card>
+ <md-list-item *ngFor="let data of count.totalitems">
+     {{ data.item }}
+      </md-list-item>
+  </div>

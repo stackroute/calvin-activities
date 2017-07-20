@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule,Routes } from '@angular/router';
-
+import { FollowerService } from './followers/followers.component.service';
 import { AppComponent } from './app.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -16,7 +16,7 @@ import { FollowersComponent } from './followers/followers.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ActivityComponent } from './activity/activity.component';
 import { MessageDashboardComponent } from './message-dashboard/message-dashboard.component';
-
+ 
 const appRoutes: Routes = [
     { path: '' , redirectTo : 'dashboard' ,pathMatch : 'full' },
     { path: 'dashboard', component: DashboardComponent },
@@ -42,16 +42,17 @@ const appRoutes: Routes = [
     MessagesComponent,
     ActivityComponent,
     MessageDashboardComponent,
+    
   ],
   imports: [
-    BrowserModule,
+     BrowserModule,
     FormsModule,
     HttpModule,
     MaterialModule,
     FlexLayoutModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [FollowerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
