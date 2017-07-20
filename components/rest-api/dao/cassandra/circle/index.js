@@ -23,10 +23,10 @@ function createCircle(callback) {
     client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
       if (err) { console.log('ERR:', err); return callback(err, null); }
       console.log('Executed Query Successfully');
-      kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, data) => {
-        if(err){console.log('ERR:', err); return callback('Error while adding Circle route, messages published to this circle might be loosed'); }
-        console.log('Produced');
-        return callback(err, newCircle);
+      kafkaPipeline.producer.ready(function() {
+        return callback(null, newCircle);
+        kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}], (err, res) => {});
+        // return callback(null, newCircle);
       });
     });
   });
@@ -88,3 +88,6 @@ function getAllCircles(limit, callback) {
 module.exports = {
   createCircle, checkIfCircleExists, deleteCircle, getAllCircles,
 };
+
+
+

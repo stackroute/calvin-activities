@@ -17,6 +17,7 @@ const kafkaPipeline = require('kafka-pipeline');
   
 kafkaPipeline.producer.ready(function() {
   kafkaPipeline.registerConsumer(topic,groupName,(message,done)=>{
+    console.log(message);
   const mailboxId= JSON.parse(message).mailboxId;
   const circleId = JSON.parse(message).circleId;
    
@@ -33,26 +34,27 @@ kafkaPipeline.producer.ready(function() {
 
   if ((status == "useronline") ||(status=="useroffline") ){
     if(mailboxId != null && mailboxId != undefined){
+      console.log('adding routes')
       followDao.getCirclesForMailbox(mailboxId, (err, result) => {
-      if (err) { return { message: 'err' } ; }
-      const rows = result.rows;
+        if (err) { return { message: 'err' } ; }
+        const rows = result.rows;
 
-      rows.forEach((element) => {
-        const obj = {
-          circleId: element.circleid.toString(),
-          mailboxId: mailboxId,
-          command,
-        };
-        const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj) }];
-        kafkaPipeline.producer.send(payloads, (err, data) => {
-          if (err) { return { message: 'err' }; }
-          followDao.syncMailbox(mailboxId, (err, result) => {
-            if(err) {console.log(err);}
-          })
+        rows.forEach((element) => {
+          const obj = {
+            circleId: element.circleid.toString(),
+            mailboxId: mailboxId,
+            command,
+          };
+          console.log(obj);
+          const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj) }];
+          kafkaPipeline.producer.send(payloads);
         });
-      });
 
-    });
+      });
+      console.log('syncMailbox');
+      followDao.syncMailbox(mailboxId, (err, result) => {
+        if(err) {console.log(err);}
+      })
     }
   }
 
@@ -66,20 +68,22 @@ kafkaPipeline.producer.ready(function() {
         command,
       };
       const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj),}];
-      kafkaPipeline.producer.send(payloads, (err, data) => {
-        if (err) { return { message: 'err' }; }
-        console.log(data);
-      });
+      kafkaPipeline.producer.send(payloads);
     });
   }
 
   else if(status == "newcommunityadded"){
     const domainName = JSON.parse(message).domain;
-    if(domainName !== null){
+    console.log('new');
+    console.log(JSON.parse(message).domain);
+    if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
+        console.log(circle);
+        console.log(domainName);
          if(circle == 0 || circle == null){
            adapterDao.createDomain(domainName, function(err, data){
              if(err) {console.log(err);}
+             console.log(data);
            })
          }
        })
@@ -88,7 +92,7 @@ kafkaPipeline.producer.ready(function() {
 
   else if(status == "newmembersadded"){
     const domainName = JSON.parse(message).domain;
-    if(domainName !== null){
+    if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
          const circleId = circle.circleid.toString();
          if(err) {console.log(err); }
@@ -127,7 +131,7 @@ kafkaPipeline.producer.ready(function() {
 
   else if(status == "removemembers"){
     const domainName = JSON.parse(message).domain;
-    if(domainName !== null){
+    if(domainName !== null && domainName !== undefined){
        adapterDao.checkIfDomainExists(domainName, function(err, circle){
          const circleId = circle.circleid;
          if(err) {console.log(err); }
@@ -161,7 +165,8 @@ kafkaPipeline.producer.ready(function() {
     const activityType = JSON.parse(message).activitytype;
     if(activityType){
       const domain = JSON.parse(message).domain;
-      adapterDao.checkIfDomainExists(domain, function(err, circle){
+      if(domain !== null && domain !== undefined){
+        adapterDao.checkIfDomainExists(domain, function(err, circle){
         if(err) {console.log(err);}
         if(circle == 0 || circle == null){
           adapterDao.createDomainGetCircleId(domain, function(err, circleId){
@@ -169,12 +174,10 @@ kafkaPipeline.producer.ready(function() {
             activity.payload = JSON.parse(message);
             activity.circleId = circleId;
             const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
-            kafkaPipeline.producer.send(payloads, (err, data) => {
-            if (err) { return { message: 'err' }; }
+            kafkaPipeline.producer.send(payloads);
             activityDao.updateLastPublishedDate(circleId, function(err, res){
-                if(err) {console.log(err);}
-              })
-            });
+              if(err) {console.log(err);}
+            })
           })
         }
         else{
@@ -183,12 +186,10 @@ kafkaPipeline.producer.ready(function() {
           activity.payload = JSON.parse(message);
           activity.circleId = circleId;
           const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
-          kafkaPipeline.producer.send(payloads, (err, data) => {
-            if (err) { return { message: 'err' }; }
-            console.log(data);
-          });
+          kafkaPipeline.producer.send(payloads);
         }
-      })
+        })
+      }
     }
   }
 

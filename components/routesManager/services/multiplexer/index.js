@@ -22,8 +22,16 @@ function addMultiplexer(mx, callback) {
   client.hincrby(`${namespace}`, mx, 1)((err, res) => callback(null, res));
 }
 
-function deleteMultiplexer(mx, callback) {
+function getMultiplexerCount(mx,callback){
+  client.hget(`${namespace}`, mx)((err, res) => callback(null, res));
+}
+
+function decrementMultiplexerCount(mx, callback) {
   client.hincrby(`${namespace}`, mx, -1)((err, res) => callback(null, res));
+}
+
+function deleteMultiplexer(mx, callback) {
+  client.hdel(`${namespace}`, mx)((err, res) => callback(null, res));
 }
 
 
@@ -33,5 +41,7 @@ module.exports = {
   checkIfMultiplexerExists,
   addMultiplexer,
   deleteMultiplexer,
-};
+  getMultiplexerCount,
+  decrementMultiplexerCount,
 
+};

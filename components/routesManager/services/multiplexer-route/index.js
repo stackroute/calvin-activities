@@ -12,7 +12,7 @@ function checkIfRouteExists(route, callback) {
 }
 
 function addRoute(route, callback) {
-  client.sadd(`${route.namespace}:${route.circleId}`, route.mailboxId)(function (err, res) {
+  client.sadd(`${route.namespace}:${route.circleId}`, `${route.mailboxId}`)(function (err, res) {
     if (err) { callback(err, null); return; }
     callback(null, res);
   });
@@ -46,6 +46,24 @@ function deleteRoute(route, callback) {
   });
 }
 
+function getMultiplexer(namespace, circleId , userId, callback){
+    client.srem(`${namespace}:${circleId}`, userId)((err, res) => {
+    if (err) { callback(err, null); }  
+    if (res === 1){
+       getRoutesForCircle({ namespace: namespace, circleId: circleId }, (err, res) => {
+      if (res.length === 0) {
+        l1rService.deleteRoute({ circleId: circleId, multiplexerId: namespace }, (err, result1) => {
+          if (err) { throw err; }
+        })
+      }
+      multiplexerService.deleteMultiplexer(namespace, (err, result) => {
+        if (err) { throw err; }
+      });
+    });
+    }
+  });
+}
+
 module.exports = {
   addRoute,
   getRoutesForCircle,
@@ -53,4 +71,5 @@ module.exports = {
   deleteRoute,
   checkIfCircleIsPresentinCache,
   checkIfRouteExists,
+  getMultiplexer,
 };
