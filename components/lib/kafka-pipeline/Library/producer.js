@@ -32,24 +32,23 @@ let partitionId = 0;
 
 function getNextPartition() {
   const ret = partitionId;
-  partitionId = (partitionId + 1) % 10;
+  partitionId = (partitionId + 1) % 1;
   return ret;
 }
 
 const messagesToSend = [];
 
 setInterval(function() {
-  console.log('messagesToSend:', messagesToSend);
 
   const msgs = messagesToSend.splice(0, messagesToSend.length);
 
-  console.log('msgs:', msgs);
 
   msgs.forEach((payloadItem) => {
     payloadItem.partition = getNextPartition();
   });
 
   if(msgs.length > 0) {
+    console.log('msgs:', msgs);
     producer.send(msgs, (err) => {
       msgs.forEach((payloadItem) => {
         const topic = payloadItem.topic;
@@ -57,6 +56,8 @@ setInterval(function() {
         if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
         topicCount[topic] += count;
       });
+
+      console.log('Messages Produced!');
     });
   }
 }, 1000);

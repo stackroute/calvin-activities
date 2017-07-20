@@ -75,7 +75,11 @@ function registerConsumer(topic, groupId, consumer) {
   console.log('Creating a Consumer Group');
   const consumerGroup = new ConsumerGroup(options, topic);
   console.log('Created Consumer group');
+  consumerGroup.on('error', (err) => {
+    console.log('CG ERR:', err);
+  });
   consumerGroup.on('message', (msg) => {
+    console.log('MESSAGE');
     if(!startTime) { setStartTime(groupId); }
     redisClient.incr(`monitor:${groupId}:count`)(() => {});
     console.log('inside consumerGroup pipeline');
