@@ -35,7 +35,7 @@ function setEndTime(groupId) {
   const endTime = new Date().getTime();
   if(timeout) { clearTimeout(timeout); }
   timeout = setTimeout(function() {
-    redisClient.set(`monitor:${groupId}:endTime`, endTime)(function(err, reply) { console.log('End Time Set'); })
+    redisClient.set(`monitor:${groupId}:endTime`, endTime)(function(err, reply) { console.log('End Time Set'); startTime = null; });
   }, 5000);
 }
 
