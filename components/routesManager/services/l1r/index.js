@@ -48,6 +48,14 @@ function deleteRoute(route, callback) {
   });
 }
 
+function deleteNamespace(circleId, callback ){
+  client.spop(`${namespace}:${circleId}`)((err, res) => {
+    if (err) { callback(err, null); return; }
+    callback(null, res);
+  });
+}
+
+
 module.exports = {
   addRoute,
   getRoutesForCircle,

@@ -9,9 +9,14 @@ const uuid = start.uuid;
 
 function createDomain(domain, callback) {
   circleDAO.createCircle((err, newCircle) => {
+    console.log(err);
+    console.log(newCircle);
     if (err) { return err; }
     const query = ('INSERT INTO domain (domain, circleid, mailboxid) values( ?, ?, ?)');
     client.execute(query, [domain, newCircle.circleId, newCircle.mailboxId], (err1, result) => {
+      console.log(err1);
+      console.log(result);
+
       if (err1) { return callback(err1, null); }
       return callback(null, domain);
     });

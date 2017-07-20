@@ -52,12 +52,7 @@ kafkaPipeline.producer.ready(function() {
         res.forEach((element) => {
           payloads.push({ topic: element, messages: [message] });
         });
-        kafkaPipeline.producer.send(payloads, (err, data) => {
-          if (err) { done(err); return; }
-          console.log('data:', data);
-          if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
-          setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
-        });
+        kafkaPipeline.producer.send(payloads);
         done();
       });
     });
