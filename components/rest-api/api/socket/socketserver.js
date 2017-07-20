@@ -18,6 +18,7 @@ function bootstrapSocketServer(io) {
     });
     socket.on('authorize', (auth) => {
       if (authorize.verify(auth, 'mailbox:all')) {
+        console.log('authorized');
         socket.on('startListeningToMailbox', (id) => {
           if (id.mid !== null && id.mid !== undefined) {
             socket.join(id.mid);
@@ -27,7 +28,8 @@ function bootstrapSocketServer(io) {
               event: 'useronline',
             };
             eventService.sendevent(obj);
-          } else if (id.user !== null && id.mid !== undefined) {
+          } else if (id.user !== null && id.user !== undefined) {
+            console.log('Insude user');
             adapter.checkIfUserExists(id.user, (err, result) => {
               if (err) { throw err; }
               socket.join(result.mailboxid.toString());
