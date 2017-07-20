@@ -19,15 +19,9 @@ export class ActivitiesComponent implements OnInit {
     let avg = 0 ;
     const socket = io('localhost:3000');
     socket.on('msg', (data) => {
-    const topic = JSON.parse(data).topic;
-    const count = JSON.parse(data).count;
-    const consumerGroup = JSON.parse(data).consumerGroup;    
-    const consumerID = JSON.parse(data).consumerID;
-    const fillRate = JSON.parse(data).F;    
-    const drainRate = JSON.parse(data).D;    
-    const errorRate = JSON.parse(data).E;
-    const fillRateCapacity = JSON.parse(data).FC;    
-    const drainRateCapacity = JSON.parse(data).DC;        
+     if(JSON.parse(data).topic) {
+      const topic = JSON.parse(data).topic;
+      const count = JSON.parse(data).count;       
      if(!this.topics[topic]){ this.topics[topic]=[0,0,0,0,0,0,0,0,0,0]; }
      this.topics[topic].unshift(count);
      this.topics[topic].pop();
@@ -37,7 +31,19 @@ export class ActivitiesComponent implements OnInit {
       });
       avg/=10;
      this.topicsData.set(topic ,Math.round(avg));
-      
+    }
+    
+    if(JSON.parse(data).consumerGroup) {
+     const consumerGroup = JSON.parse(data).consumerGroup;    
+     const consumerID = JSON.parse(data).consumerID;
+     const fillRate = JSON.parse(data).F;    
+     const drainRate = JSON.parse(data).D;    
+     const errorRate = JSON.parse(data).E;
+     const fillRateCapacity = JSON.parse(data).FC;    
+     const drainRateCapacity = JSON.parse(data).DC;
+     if(!this.consumerGroups[consumerGroup]){ this.consumerGroups[consumerGroup]=[consumerID] } 
+      this.consumerGroups[consumerGroup].push(consumerID); 
+     }
       //  this.topicsData.set(topic ,calculateAVG(this.topicsData[topic]));
       //  if(!this.consumerGroups[consumerGroup]){
       //  if(!this.consumerGroups[consumerGroup]){ 
@@ -60,7 +66,6 @@ export class ActivitiesComponent implements OnInit {
         });
         return Math.round(avg/10); 
     }
-    console.log(this.consumerGroups[consumerGroup].consumerID);
    });
   }
 }
