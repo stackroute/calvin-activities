@@ -57,7 +57,7 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
       const resultCopy = JSON.parse(JSON.stringify(result));
       result.CDR -= resultCopy.CDR;
   
-      producer.send([{ topic: 'mult', messages: JSON.stringify(resultCopy) }], (err, result) => {
+      producer.send([{ topic: 'monitor', messages: JSON.stringify(resultCopy) }], (err, result) => {
         if (err) { console.error('ERR:', err); }
       });
   
