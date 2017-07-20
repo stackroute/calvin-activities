@@ -17,6 +17,10 @@ import { MessagesComponent } from './messages/messages.component';
 import { ActivityComponent } from './activity/activity.component';
 import { MessageDashboardComponent } from './message-dashboard/message-dashboard.component';
 
+
+import {JsonpModule} from '@angular/http';
+import {Jsonp} from '@angular/http';
+
 const appRoutes: Routes = [
     { path: '' , redirectTo : 'dashboard' ,pathMatch : 'full' },
     { path: 'dashboard', component: DashboardComponent },
@@ -49,6 +53,7 @@ const appRoutes: Routes = [
     HttpModule,
     MaterialModule,
     FlexLayoutModule,
+    JsonpModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],
