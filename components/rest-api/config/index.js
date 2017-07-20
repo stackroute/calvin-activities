@@ -9,7 +9,7 @@ module.exports = {
   secretKey: secret,
   dao: process.env.DAO || 'cassandra',
   kafka: {
-    host: process.env.ZOOKEEPER_HOST || '172.23.238.180',
+    host: process.env.ZOOKEEPER_HOST || '172.23.238.134',
     port: process.env.ZOOKEEPER_PORT || '2181',
     activitiesTopic: process.env.ACTIVITIES_TOPIC || 'activities1',
     eventsTopic: process.env.EVENTS_TOPIC || 'events1',

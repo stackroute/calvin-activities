@@ -67,9 +67,9 @@ var unirest = require("unirest");
 const circles = [];
 const mailboxes = [];
 
-for ( var i = 0; i <= 100; i+=1){
+for ( var i = 0; i < 100; i+=1){
 
-var req = unirest("POST", "http://localhost:4000/circle");
+var req = unirest("POST", "http://172.23.238.180:4000/circle");
 
 req.headers({
   "postman-token": "7274537b-a6df-cdbc-684a-195e7187b815",
@@ -85,17 +85,14 @@ req.send({
 
 req.end(function (res) {
   if (res.error) throw new Error(res.error);
-
   circles.push(res.body.circleId);
-  
-
-});
+  });
 }
 
 // mailbox
 setTimeout(function() {
-  for ( var i = 0; i <= 1000; i+=1){
-  var req = unirest("POST", "http://localhost:4000/mailbox");
+  for ( var i = 0; i <1000; i+=1){
+  var req = unirest("POST", "http://172.23.238.180:4000/mailbox");
 
   req.headers({
     "postman-token": "efc6d453-e27c-0575-0422-498ae87a06cb",
@@ -118,27 +115,53 @@ setTimeout(function() {
   });
   }
 
-}, 3000);
+}, 2000);
 
 
-setTimeout(function() {
-  //follow
+// setTimeout(function() {
+//   //follow
+// circles.forEach((circleId) => {
+//   mailboxes.forEach((mailboxId) => {
+//   var req = unirest("POST", `http://172.23.238.180:4000/mailbox/${mailboxId}/circle/${circleId}`);
+//   req.headers({
+//     "postman-token": "c353e818-ab76-0298-5504-c5c4762ce73c",
+//     "cache-control": "no-cache",
+//     "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1heWFuayBTZXRoaSIsImFwaSI6ImNpcmNsZSIsInNjb3BlcyI6WyJtYWlsYm94OmFsbCIsImNpcmNsZTphbGwiLCJmb2xsb3c6YWxsIl0sImlhdCI6MTQ5NzkzODEzOX0.cpLAt8BaYZyqyp53iDJGbl3yIBtBjj6_qoSiM4_hDiY",
+//     "content-type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+//   });
+
+//   req.multipart([]);
+
+//   req.end(function (res) {
+//     if (res.error) throw new Error(res.error);
+//   });
+//   });
+//   });
+
+// }, 6000);
+
+setTimeout (function(){
 circles.forEach((circleId) => {
-  mailboxes.forEach((mailboxId) => {
-  var req = unirest("POST", `http://localhost:4000/mailbox/${mailboxId}/circle/${circleId}`);
-  req.headers({
-    "postman-token": "c353e818-ab76-0298-5504-c5c4762ce73c",
-    "cache-control": "no-cache",
-    "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1heWFuayBTZXRoaSIsImFwaSI6ImNpcmNsZSIsInNjb3BlcyI6WyJtYWlsYm94OmFsbCIsImNpcmNsZTphbGwiLCJmb2xsb3c6YWxsIl0sImlhdCI6MTQ5NzkzODEzOX0.cpLAt8BaYZyqyp53iDJGbl3yIBtBjj6_qoSiM4_hDiY",
-    "content-type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
-  });
+var req = unirest("POST", `http://172.23.238.180:4000/bulk/${circleId}`);
 
-  req.multipart([]);
 
-  req.end(function (res) {
-    if (res.error) throw new Error(res.error);
-  });
-  });
-  });
+req.headers({
+  "postman-token": "dea717c5-bc9a-f579-424c-682532513e56",
+  "cache-control": "no-cache",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1heWFuayBTZXRoaSIsImFwaSI6ImNpcmNsZSIsInNjb3BlcyI6WyJtYWlsYm94OmFsbCIsImNpcmNsZTphbGwiLCJmb2xsb3c6YWxsIl0sImlhdCI6MTQ5NzkzODEzOX0.cpLAt8BaYZyqyp53iDJGbl3yIBtBjj6_qoSiM4_hDiY",
+  "content-type": "application/json"
+});
+// console.log(`${mailboxes.join(',')}`);
+req.type("json");
+req.send({
+  "id": `[${mailboxes.join(',')}]`
+});
+
+req.end(function (res) {
+  if (res.error) throw new Error(res.error);
+
+  // console.log(res.body);
+});
+});
 
 }, 6000);
