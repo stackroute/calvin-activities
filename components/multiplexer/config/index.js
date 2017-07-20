@@ -1,4 +1,3 @@
-
 module.exports = {
   kafka: {
     host: process.env.ZOOKEEPER_HOST || '127.0.0.1',

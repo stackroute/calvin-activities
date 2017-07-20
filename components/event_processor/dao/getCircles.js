@@ -53,13 +53,29 @@ function insertActivitiesForMailbox(mailboxId, activities, callback) {
 
 function syncMailbox(mailboxId, callback) {
   getCircleIdsForMailbox(mailboxId, function (err, data) {
+    console.log('getCircleIdsForMailbox');
+    console.log(err);
+    console.log(data);
     getAllCirclesMailboxIds(data, function (err, circlesMailboxes) {
+      console.log('getAllCirclesMailboxIds');
+      console.log(err);
+      console.log(circlesMailboxes);
       getLastMessageOfMailbox(mailboxId, function (err, lastSavedActivity) {
+        console.log('getLastMessageOfMailbox');
+        console.log(err);
+        console.log(lastSavedActivity);
         if (lastSavedActivity == null) { lastSavedActivity = new Date('2017-01-01'); }
         getAllActivitiesFromGivenTime(circlesMailboxes, lastSavedActivity, function (err, activities) {
+          console.log('getAllActivitiesFromGivenTime');
+          console.log(err);
+          console.log(circlesMailboxes);
+          console.log(lastSavedActivity);
           if (err) { return callback(err); }
           if (activities == null) { return callback(null); }
           insertActivitiesForMailbox(mailboxId, activities, function (err, result) {
+            console.log('insert activities');
+            console.log(err);
+            console.log(result);
             if (err) { return callback(err); }
           })
         })
