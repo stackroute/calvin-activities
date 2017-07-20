@@ -16,6 +16,7 @@ import { FollowersComponent } from './followers/followers.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ActivityComponent } from './activity/activity.component';
 import { MessageDashboardComponent } from './message-dashboard/message-dashboard.component';
+import { OverviewComponent } from './overview/overview.component';
 
 const appRoutes: Routes = [
     { path: '' , redirectTo : 'dashboard' ,pathMatch : 'full' },
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
     MessagesComponent,
     ActivityComponent,
     MessageDashboardComponent,
+    OverviewComponent,
   ],
   imports: [
     BrowserModule,
