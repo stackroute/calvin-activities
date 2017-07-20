@@ -12,6 +12,7 @@ import { Params, RouterModule, Routes, Router, ActivatedRoute } from '@angular/r
 export class FollowersComponent implements OnInit {
 
 resultArray=[];
+count;
 
   constructor(private route: ActivatedRoute,private follower:FollowerService) { }
 
