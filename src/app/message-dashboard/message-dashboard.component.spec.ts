@@ -1,0 +1,25 @@
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { MessageDashboardComponent } from './message-dashboard.component';
+
+describe('MessageDashboardComponent', () => {
+  let component: MessageDashboardComponent;
+  let fixture: ComponentFixture<MessageDashboardComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ MessageDashboardComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(MessageDashboardComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+});
