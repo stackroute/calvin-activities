@@ -97,8 +97,8 @@ services:
     environment:
       COMMUNITY_ZOOKEEPER_HOST: 172.23.238.141
       COMMUNITY_ZOOKEEPER_PORT: 2181
-      COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycle
-      COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvent
+      COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycleEvents
+      COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvents
       ACTIVITY_ZOOKEEPER_HOST: 172.23.238.134
       ACTIVITY_ZOOKEEPER_PORT: 2181
       EVENTS_TOPIC: dev_events

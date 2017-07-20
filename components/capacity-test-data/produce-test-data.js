@@ -1,5 +1,7 @@
 const config = require('./config').kafka;
 
+const noOfPartitions = require('./config').noOfPartitions;
+
 const kafkaPipeline = require('kafka-pipeline');
 
 const topic = config.topics.topic;
@@ -35,8 +37,8 @@ function addActivity(n, callback) {
   const send = [];
   kafkaPipeline.producer.ready(function() { 
  
-    for (let i=0; i<10; i++) {
-      send.push({ topic, messages: i===9 ? messages : messages.splice(0, n/10) });
+    for (let i=0; i<noOfPartitions; i++) {
+      send.push({ topic, messages: i===noOfPartitions-1 ? messages : messages.splice(0, n/noOfPartitions) });
     }
     console.log(`PUSHING: ${JSON.stringify(send)}`);
     kafkaPipeline.producer.send(send, callback);
