@@ -2,6 +2,7 @@ const kafka = require('kafka-node');
 
 const { HighLevelProducer } = kafka;
 const { host, port } = require('../config').kafka;
+const { noOfPartitions } = require('../config');
 
 const client = new kafka.Client(`${host}:${port}`);
 const producer = new HighLevelProducer(client);
@@ -32,7 +33,7 @@ let partitionId = 0;
 
 function getNextPartition() {
   const ret = partitionId;
-  partitionId = (partitionId + 1) % 1;
+  partitionId = (partitionId + 1) % noOfPartitions;
   return ret;
 }
 
@@ -44,7 +45,9 @@ setInterval(function() {
 
 
   msgs.forEach((payloadItem) => {
-    payloadItem.partition = getNextPartition();
+    const partitionId = getNextPartition();
+    console.log('partitionId:', partitionId);
+    payloadItem.partition = partitionId;
   });
 
   if(msgs.length > 0) {

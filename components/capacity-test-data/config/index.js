@@ -5,4 +5,5 @@ module.exports = {
     topics: { topic: process.env.CONSUMER_GROUP || 'mx1' },
     numberOfMessages: process.env.NUMBER_OF_MESSAGES || 1000000,
   },
+  noOfPartitions: process.env.PARTITION_COUNT || 1
 };
