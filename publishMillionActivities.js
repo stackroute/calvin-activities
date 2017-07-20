@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const winston = require('winston');
 const circleDAO = require('./dao').circle;
 const mailboxDAO = require('./dao').mailbox;
@@ -22,7 +24,7 @@ for (i = 0; i < 100; i += 1) {
   });
 }
 
-for (i = 0; i< 100; i += 1) {
+for (i = 0; i< 1000; i += 1) {
   mailboxDAO.createMailbox((err, result) => {
     if (err) { throw err; }
     winston.log(result);
@@ -47,7 +49,7 @@ setTimeout(() => {
 }, 10000);
 
 
-setTimeout(() => {
+/*setTimeout(() => {
   winston.log(`Started pushing messages to activities topic..${new Date().getTime()}`);
   circles.forEach((circleId) => {
     for (i = 0; i< 100; i += 1) {
@@ -60,4 +62,4 @@ setTimeout(() => {
     }
   });
   winston.log(`Stopped pushing messages to activities topic..${new Date().getTime()}`);
-}, 20000);
+}, 20000);*/

@@ -1,4 +1,4 @@
-const kafka = require('kafka-node');
+ const kafka = require('kafka-node');
 
 const { HighLevelProducer } = kafka;
 const { host, port } = require('../config').kafka;

@@ -38,7 +38,7 @@ services:
       REDIS_HOST: redis
       ZOOKEEPER_HOST: kafka
       CONSUMER_GROUP: m1
-      PARTITION_COUNT: 10
+      PARTITION_COUNT: ${PARTITION_COUNT}
   multiplexer-delivery:
     image: multiplexer-delivery
     build:
@@ -120,11 +120,11 @@ services:
       - redis
       - kafka
     environment:
-      NUMBER_OF_MESSAGES: 10
+      NUMBER_OF_MESSAGES: ${NUMBER_OF_MESSAGES}
       ZOOKEEPER_HOST: kafka
       REDIS_HOST: redis
       CONSUMER_GROUP: m1
-      PARTITION_COUNT: 10
+      PARTITION_COUNT: ${PARTITION_COUNT}
   redis:
     image: redis
     ports:
