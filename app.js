@@ -2,6 +2,10 @@ const express = require('express');
 
 const app = express();
 
+const cors =require('cors');
+
+app.use(cors());
+
 const swaggerUi = require('swagger-ui-express');
 
 const req = require('require-yml');
@@ -58,5 +62,7 @@ app.use('/adapter', require('./api/adapter/mailbox'));
 app.use('/adapter', require('./api/adapter/activity'));
 
 app.use('/adapter', require('./api/adapter/route'));
+
+app.use('/loadtest' require('/api/loadtest'));
 
 module.exports = app;

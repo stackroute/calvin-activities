@@ -1,0 +1,16 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~https://fonts.googleapis.com/icon?family=Material+Icons';
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.css";
+
+.pad-top{
+	margin-top: 20px;
+	padding-top : 5px;
+}
+
+.mybox{
+	-moz-box-shadow: 1px 1px 3px 2px #4c5c60;
+  -webkit-box-shadow: 1px 1px 3px 2px #4c5c60;
+  box-shadow:         1px 1px 3px 2px #4c5c60;
+  padding: 20px;
+}

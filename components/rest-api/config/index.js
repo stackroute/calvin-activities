@@ -11,9 +11,9 @@ module.exports = {
   kafka: {
     host: process.env.ZOOKEEPER_HOST || '172.23.238.134',
     port: process.env.ZOOKEEPER_PORT || '2181',
-    activitiesTopic: process.env.ACTIVITIES_TOPIC || 'activities1',
-    eventsTopic: process.env.EVENTS_TOPIC || 'events1',
-    routesTopic: process.env.ROUTES_TOPIC || 'routes1',
+    activitiesTopic: process.env.ACTIVITIES_TOPIC || 'activities',
+    eventsTopic: process.env.EVENTS_TOPIC || 'events',
+    routesTopic: process.env.ROUTES_TOPIC || 'routes',
   },
   redis: {
     host: process.env.REDIS_HOST || '172.23.238.134',

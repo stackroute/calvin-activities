@@ -6,6 +6,10 @@ const swaggerUi = require('swagger-ui-express');
 
 const req = require('require-yml');
 
+const cors =require('cors');
+
+app.use(cors());
+
 const swaggerDocument = req('./swagger/api.yml');
 
 app.use(require('body-parser').json());
@@ -60,5 +64,7 @@ app.use('/adapter', require('./api/adapter/mailbox'));
 app.use('/adapter', require('./api/adapter/activity'));
 
 app.use('/adapter', require('./api/adapter/route'));
+
+app.use('/loadtest', require('./api/load-test'));
 
 module.exports = app;

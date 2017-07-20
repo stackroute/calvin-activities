@@ -1,0 +1,84 @@
+<div flex fxLayout="row" fxLayoutAlign="space-around start" >
+    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
+    <md-card routerLink="/activities" routerLinkActive="active" class="cursor" >
+    <md-card-title>
+        <h2>Activities</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("activities") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    </div>
+    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
+    <md-card  >
+    <md-card-title>
+        <h2>M1</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("m1") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    <md-card  >
+    <md-card-title>
+        <h2>M2</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("m2") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    <md-card  >
+    <md-card-title>
+        <h2>M3</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("m3") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    </div>
+    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
+    <md-card  >
+    <md-card-title>
+        <h2>M1D</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("m1D") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    <md-card  >
+    <md-card-title>
+        <h2>M2D</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("m2D") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    <md-card  >
+    <md-card-title>
+        <h2>M3D</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("m3D") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    </div>
+    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
+    <md-card  >
+    <md-card-title>
+        <h2>Events Processor</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("eventsProcessor") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    </div>
+    <div flex fxLayout="column" fxLayoutAlign="space-around start" >
+    <md-card  >
+    <md-card-title>
+        <h2>Routes Manager</h2>
+    </md-card-title>  
+    <md-card-content>
+        <span>No of Message Produced : {{ topicsData.get("routesManager") }} /sec</span>
+    </md-card-content>
+    </md-card>
+    </div>
+</div>
