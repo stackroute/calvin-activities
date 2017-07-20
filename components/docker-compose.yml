@@ -1,7 +1,7 @@
 version: "2"
 services:
   rest-api:
-    image: 172.23.238.180:5000/rest-api
+    image: 172.23.238.180:5000/rest-api:${ver}
     build: 
       context: .
       dockerfile: rest-api/Dockerfile
@@ -24,7 +24,7 @@ services:
       DAO: cassandra
       DEFAULT_CIRCLE: 10
   multiplexer:
-    image: 172.23.238.180:5000/multiplexer
+    image: 172.23.238.180:5000/multiplexer:${ver}
     build: 
       context: .
       dockerfile: multiplexer/Dockerfile
@@ -33,7 +33,7 @@ services:
       ZOOKEEPER_HOST: 172.23.238.134 
       CONSUMER_GROUP: dev_m1
   multiplexer-delivery:
-    image: 172.23.238.180:5000/multiplexer-delivery
+    image: 172.23.238.180:5000/multiplexer-delivery:${ver}
     build:
       context: .
       dockerfile: multiplexer-delivery/Dockerfile
@@ -44,7 +44,7 @@ services:
       DSE_KEYSPACE: testdb
       CONSUMER_GROUP: dev_m1D
   l1r:
-    image: 172.23.238.180:5000/l1r
+    image: 172.23.238.180:5000/l1r:${ver}
     build:
       context: .
       dockerfile: l1r/Dockerfile
@@ -53,7 +53,7 @@ services:
       ZOOKEEPER_HOST: 172.23.238.134 
       CONSUMER_GROUP: dev_activities
   event-processor:
-    image: 172.23.238.180:5000/event-processor
+    image: 172.23.238.180:5000/event-processor:${ver}
     build: 
       context: .
       dockerfile: event_processor/Dockerfile
@@ -71,7 +71,7 @@ services:
       DAO: cassandra
       CONSUMER_GROUP: dev_events
   routes-manager:
-    image: 172.23.238.180:5000/routes-manager
+    image: 172.23.238.180:5000/routes-manager:${ver}
     build: 
       context: .
       dockerfile: routesManager/Dockerfile
@@ -90,7 +90,7 @@ services:
       DAO: cassandra
       CONSUMER_GROUP: dev_routes
   event-adapter:
-    image: 172.23.238.180:5000/event-adapter
+    image: 172.23.238.180:5000/event-adapter:${ver}
     build:
       context: .
       dockerfile: events-adapter/Dockerfile
