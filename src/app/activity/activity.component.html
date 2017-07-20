@@ -10,6 +10,7 @@
 <button md-button (click)='get(user)'>Listen</button>
 <button md-button (click)='stop(user)'>StopListening</button>
 
+  <!-- <md-slide-toggle>Slide me!</md-slide-toggle> -->
 <div *ngFor="let message of messages">
     <div *ngFor="let item of message.items"> 
   <md-card>
@@ -21,3 +22,4 @@
   </md-card>
    </div>  
 </div>
+  

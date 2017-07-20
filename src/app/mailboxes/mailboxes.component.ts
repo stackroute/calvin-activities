@@ -18,7 +18,5 @@ export class MailboxesComponent implements OnInit {
     console.log("aa", this.cid);
     this.mail.listRoles(this.cid).subscribe(res=> {this.resultArray=res});
     console.log(this.resultArray);
-
   }
-
 }
