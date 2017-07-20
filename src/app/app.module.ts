@@ -51,8 +51,7 @@ const appRoutes: Routes = [
     MessagesComponent,
     ActivityComponent,
     MessageDashboardComponent,
- 
-    
+        
   ],
  
   imports: [
