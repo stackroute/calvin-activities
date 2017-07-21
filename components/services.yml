@@ -8,11 +8,11 @@ services:
   #   image: cassandra
   #   ports:
   #     - 9042:9042
-  # kafka:
-  #   image: spotify-kafka
-  #   build: spotify-kafka/kafka
-  #   ports:
-  #     - 9092:9092
-  #     - 2181:2181
-  #   environment:
-  #     ADVERTISED_HOST: 172.17.0.1
+  kafka:
+    image: spotify-kafka
+    build: spotify-kafka/kafka
+    ports:
+      - 9092:9092
+      - 2181:2181
+    environment:
+      ADVERTISED_HOST: 172.17.0.1
