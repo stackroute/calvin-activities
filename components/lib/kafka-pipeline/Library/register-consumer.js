@@ -45,7 +45,7 @@ function registerConsumer(topic, groupId, consumer) {
   const monitor = {
     F: 0,
     E: 0,
-    D: 0,c
+    D: 0,
     FC: parseInt(process.env.FC) || '-',
     DC: parseInt(process.env.DC) || '-',
     groupId,
