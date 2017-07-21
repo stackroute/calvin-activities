@@ -10,7 +10,7 @@ function updateLastPublishedDate(mid, callback) {
       const query = ('UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?');
       client.execute(query, [new Date(), mid, c], (err, result) => {
         if (err) { return callback(err, null); }
-        callback(null, msg);
+        callback(null, result);
       });
     });
 }
