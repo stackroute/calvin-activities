@@ -66,10 +66,6 @@ const messagesToSend = [];
 
 function send(msgs) {
   Array.prototype.push.apply(messagesToSend, msgs);
-
-  producer.send(msgs, (err) => {
-    if(err) { console.log('ERR:', err); }
-  });
 }
 
 function ready(callback) {

@@ -79,17 +79,16 @@ function registerConsumer(topic, groupId, consumer) {
   });
   consumerGroup.on('message', (msg) => {
     console.log('MESSAGE');
-    // if(!startTime) { setStartTime(groupId); }
+    if(!startTime) { setStartTime(groupId); }
     redisClient.incr(`monitor:${groupId}:count`)(() => {});
     console.log('inside consumerGroup pipeline');
     monitor.F++;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
       if (err) { monitor.E++; console.log('nok:', err); return; }
-      // setEndTime(groupId);
+      setEndTime(groupId);
       monitor.D++;
     });
   });
 }
 
 module.exports = registerConsumer;
-
