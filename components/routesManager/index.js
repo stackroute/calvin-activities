@@ -1,4 +1,4 @@
-const routesManagerDao =require('./dao/routes_service');
+const routesManagerDao =require('./services/routes');
 
 const topic =require('./config').kafka.topics[0];
 
