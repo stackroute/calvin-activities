@@ -52,10 +52,12 @@ function insertActivitiesForMailbox(mailboxId, activities, callback) {
 
 function syncMailbox(mailboxId, callback) {
   getCircleIdsForMailbox(mailboxId, function (err, data) {
-    console.log('getCircleIdsForMailbox');
-    console.log(err);
-    console.log(data);
-    getAllCirclesMailboxIds(data, function (err, circlesMailboxes) {
+    if(err) {console.log(err); callback(err); return;}
+    if(data && data.length > 0){
+     console.log('getCircleIdsForMailbox');
+     console.log(err);
+     console.log(data);
+     getAllCirclesMailboxIds(data, function (err, circlesMailboxes) {
       console.log('getAllCirclesMailboxIds');
       console.log(err);
       console.log(circlesMailboxes);
@@ -64,26 +66,27 @@ function syncMailbox(mailboxId, callback) {
         console.log(err);
         console.log(lastSavedActivity);
         if (lastSavedActivity === null || lastSavedActivity === undefined) { lastSavedActivity = '2017-01-01T00:00:00.000Z' }
-        else{
-          var dateT = lastSavedActivity.getFullYear() + '-' + lastSavedActivity.getMonth() + '-' + lastSavedActivity.getDate() + 'T' + lastSavedActivity.getHours() + ':' + lastSavedActivity.getMinutes() + ':' + lastSavedActivity.getSeconds() + '.000Z';
-          lastSavedActivity = dateT;
-        }
-        getAllActivitiesFromGivenTime(circlesMailboxes, lastSavedActivity, function (err, activities) {
-          console.log('getAllActivitiesFromGivenTime');
-          console.log(err);
-          console.log(circlesMailboxes);
-          console.log(lastSavedActivity);
-          if (err) { return callback(err); }
-          if (activities === null || activities === undefined) { return callback(null); }
-          insertActivitiesForMailbox(mailboxId, activities, function (err, result) {
-            console.log('insert activities');
+          else{
+            var dateT = lastSavedActivity.getFullYear() + '-' + lastSavedActivity.getMonth() + '-' + lastSavedActivity.getDate() + 'T' + lastSavedActivity.getHours() + ':' + lastSavedActivity.getMinutes() + ':' + lastSavedActivity.getSeconds() + '.000Z';
+            lastSavedActivity = dateT;
+          }
+          getAllActivitiesFromGivenTime(circlesMailboxes, lastSavedActivity, function (err, activities) {
+            console.log('getAllActivitiesFromGivenTime');
             console.log(err);
-            console.log(result);
+            console.log(circlesMailboxes);
+            console.log(lastSavedActivity);
             if (err) { return callback(err); }
+            if (activities === null || activities === undefined) { return callback(null); }
+            insertActivitiesForMailbox(mailboxId, activities, function (err, result) {
+              console.log('insert activities');
+              console.log(err);
+              console.log(result);
+              if (err) { return callback(err); }
+            })
           })
         })
-      })
     })
+   }
   })
 }
 
