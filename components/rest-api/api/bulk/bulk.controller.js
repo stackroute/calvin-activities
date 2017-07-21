@@ -58,9 +58,17 @@ function bulkFollow(req, res) {
   }
   res.status(200).json({ message: 'Added followers' });
 }
+function getAllCirclesFollowedByMailbox(req, res) {
+  const mailboxId = req.params.mailboxId;
+     bulkDAO .getAllCircles(mailboxId, (err, circles) => {
+      if (err) { res.status(404).json({err}); return; }
+      res.status(200).json({ items:circles.a, totalitems:circles.b} );
+    });
+}
 
 
 module.exports = {
   getOpenMailboxes,
   bulkFollow,
+  getAllCirclesFollowedByMailbox
 };

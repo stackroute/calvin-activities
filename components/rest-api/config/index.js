@@ -3,7 +3,7 @@ const secret = require('../secret.js');
 module.exports = {
   connectionString: {
     keyspace: process.env.DSE_KEYSPACE || 'testdb',
-    contact: process.env.DSE_HOST || '172.23.238.134',
+    contact: process.env.DSE_HOST || '172.23.238.205',
     port: process.env.DSE_PORT || '9042',
   },
   secretKey: secret,
