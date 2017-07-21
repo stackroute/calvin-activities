@@ -22,6 +22,7 @@ kafkaPipeline.producer.ready(function() {
         arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
       });
       kafkaPipeline.producer.send(arr);
+      console.log('OOKK');
       done();
     });
   });

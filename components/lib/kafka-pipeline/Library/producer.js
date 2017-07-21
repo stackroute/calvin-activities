@@ -40,7 +40,6 @@ producer.on('ready', () => {
   setInterval(function() {
     const msgs = messagesToSend.splice(0, messagesToSend.length);
 
-
     msgs.forEach((payloadItem) => {
       const partitionId = getNextPartition();
       console.log('partitionId:', partitionId);
