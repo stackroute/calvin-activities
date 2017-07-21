@@ -1,5 +1,4 @@
 const start = require('../client/dse');
-
 const client = start.client;
 
 function getCirclesForMailbox(mailboxId, callback) {
@@ -30,9 +29,9 @@ function getLastMessageOfMailbox(mailboxId, callback) {
 function getAllActivitiesFromGivenTime(circlesMailboxesArray, lastActivityTime, callback) {
   console.log(lastActivityTime);
   const circleMailboxes = convertArrayToQueryParam(circlesMailboxesArray);
-  const query = (`SELECT * from activity where mailboxid in ${circleMailboxes} and createdat < (?)`);
+  const query = (`SELECT * from activity where mailboxid in ${circleMailboxes} and createdAt > '${lastActivityTime}'`);
   console.log(query);
-  client.execute(query, [lastActivityTime], (err, result) => {
+  client.execute(query, (err, result) => {
     if (err) { return callback(err); }
     if (result.rowLength == 0) { return callback(null); }
     return callback(err, result.rows);
@@ -64,14 +63,18 @@ function syncMailbox(mailboxId, callback) {
         console.log('getLastMessageOfMailbox');
         console.log(err);
         console.log(lastSavedActivity);
-        if (lastSavedActivity == null) { lastSavedActivity = new Date('2017-01-01'); }
+        if (lastSavedActivity === null || lastSavedActivity === undefined) { lastSavedActivity = '2017-01-01T00:00:00.000Z' }
+        else{
+          var dateT = lastSavedActivity.getFullYear() + '-' + lastSavedActivity.getMonth() + '-' + lastSavedActivity.getDate() + 'T' + lastSavedActivity.getHours() + ':' + lastSavedActivity.getMinutes() + ':' + lastSavedActivity.getSeconds() + '.000Z';
+          lastSavedActivity = dateT;
+        }
         getAllActivitiesFromGivenTime(circlesMailboxes, lastSavedActivity, function (err, activities) {
           console.log('getAllActivitiesFromGivenTime');
           console.log(err);
           console.log(circlesMailboxes);
           console.log(lastSavedActivity);
           if (err) { return callback(err); }
-          if (activities == null) { return callback(null); }
+          if (activities === null || activities === undefined) { return callback(null); }
           insertActivitiesForMailbox(mailboxId, activities, function (err, result) {
             console.log('insert activities');
             console.log(err);

@@ -72,7 +72,6 @@ function registerConsumer(topic, groupId, consumer) {
     fromOffset: 'latest',
   };
 
-  console.log('Creating a Consumer Group');
   const consumerGroup = new ConsumerGroup(options, topic);
   console.log('Created Consumer group==>',topic);
   consumerGroup.on('error', (err) => {
@@ -88,7 +87,6 @@ function registerConsumer(topic, groupId, consumer) {
       if (err) { monitor.E++; console.log('nok:', err); return; }
       // setEndTime(groupId);
       monitor.D++;
-      console.log('ok');
     });
   });
 }

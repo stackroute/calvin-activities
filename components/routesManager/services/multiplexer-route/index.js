@@ -1,6 +1,7 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 
 const client = require('../../client/redisclient').client;
+const multiplexerService = require('../multiplexer');
 
 function checkIfRouteExists(route, callback) {
   const mailboxId = (route.mailboxId).toString();
