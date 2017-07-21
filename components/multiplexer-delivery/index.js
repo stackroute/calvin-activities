@@ -26,46 +26,25 @@ const mailboxDAO = require('./dao/mailbox');
 
 let startTimeAlreadySet = false;
 
-function setStartTime() {
-  startTimeAlreadySet = true;
-  redisClient.get('startTime')((err, reply) => {
-    if (!reply) {
-      console.log('Reply Not Set');
-      return redisClient.set('startTime', (new Date()).getTime());
-    }
-  })((err, response) => {
-    if (err) { console.log(err); } else { console.log('Reply Already Set'); }
-  });
-}
+const result = {
+  "CG":groupName,
+  "CID": id,
+  "CDR": 0,
+};
 
-let setEndTimeTimeout = null;
-let arr = [];
-function setEndTime(endTime) {
-  redisClient.set('endTime', (new Date()).getTime())((err, response) => {
-    if (err) { console.log(err); } else { console.log('EndTime Set'); }
-  });
-}
+setInterval(function() {
+  // console.log('inside setInterval');
+  const resultCopy = JSON.parse(JSON.stringify(result));
+  result.CDR -= resultCopy.CDR;
 
-  const result = {
-    "CG":groupName,
-    "CID": id,
-    "CDR": 0,
-  };
+  producer.send([{ topic: 'monitor', messages: JSON.stringify(resultCopy) }], (err, result) => {
+    if (err) { console.error('ERR:', err); }
+  });
+}, 1000);
+  
 kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
-      setInterval(function() {
-        // console.log('inside setInterval');
-      const resultCopy = JSON.parse(JSON.stringify(result));
-      result.CDR -= resultCopy.CDR;
-  
-      producer.send([{ topic: 'monitor', messages: JSON.stringify(resultCopy) }], (err, result) => {
-        if (err) { console.error('ERR:', err); }
-      });
-  
-    }, 5000);
-      console.log(message);
-  if (!startTimeAlreadySet) {
-    setStartTime();
-  }
+  console.log(message);
+
   const receiver = JSON.parse(message).mailboxId;
   const newActivity = {
     payload: JSON.parse(message).payload,
@@ -74,15 +53,12 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
   mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
     if (err) { console.log({ message: `${err}` }); done(err); return; }
     redisPublisher.publish(receiver, JSON.stringify(newActivity));
-     activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {  
+    activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {  
      result.CDR++;
      console.log('result==>',result);      
-        if (error) { console.log({ message: `${error}` }); done(err); return; } else {
-        if (setEndTimeTimeout) { clearTimeout(setEndTimeTimeout); }
-        setEndTimeTimeout = setTimeout(setEndTime.bind(new Date()), 5000);
-        done();
-      }
-    });
+     if (error) { console.log({ message: `${error}` }); done(err); return; } else {
+    }
+  });
   });
 
 });

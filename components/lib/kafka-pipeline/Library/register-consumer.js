@@ -45,7 +45,7 @@ function registerConsumer(topic, groupId, consumer) {
   const monitor = {
     F: 0,
     E: 0,
-    D: 0,c
+    D: 0,
     FC: parseInt(process.env.FC) || '-',
     DC: parseInt(process.env.DC) || '-',
     groupId,
@@ -74,19 +74,19 @@ function registerConsumer(topic, groupId, consumer) {
 
   console.log('Creating a Consumer Group');
   const consumerGroup = new ConsumerGroup(options, topic);
-  console.log('Created Consumer group==>'topic);
+  console.log('Created Consumer group==>',topic);
   consumerGroup.on('error', (err) => {
     console.log('CG ERR:', err);
   });
   consumerGroup.on('message', (msg) => {
     console.log('MESSAGE');
-    if(!startTime) { setStartTime(groupId); }
+    // if(!startTime) { setStartTime(groupId); }
     redisClient.incr(`monitor:${groupId}:count`)(() => {});
     console.log('inside consumerGroup pipeline');
     monitor.F++;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
       if (err) { monitor.E++; console.log('nok:', err); return; }
-      setEndTime(groupId);
+      // setEndTime(groupId);
       monitor.D++;
       console.log('ok');
     });
