@@ -1,0 +1,75 @@
+version: "2"
+services:
+  rest-api:
+    environment:
+      REDIS_HOST: 172.17.0.1
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.17.0.1
+      ZOOKEEPER_PORT: 2181
+      ACTIVITIES_TOPIC: activities1
+      ROUTES_TOPIC: routes1
+      DSE_HOST: 172.17.0.1
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      DEFAULT_CIRCLE: 10
+  multiplexer:
+    environment:
+      REDIS_HOST: 172.17.0.1
+      ZOOKEEPER_HOST: 172.17.0.1 
+      CONSUMER_GROUP: mx1
+  multiplexer-delivery:
+    environment:
+      REDIS_HOST: 172.17.0.1
+      ZOOKEEPER_HOST: 172.17.0.1
+      DSE_HOST: 172.17.0.1
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: mx1D
+  l1r:
+    environment:
+      REDIS_HOST: 172.17.0.1
+      ZOOKEEPER_HOST: 172.17.0.1 
+      CONSUMER_GROUP: activities1
+  event-processor:
+    environment:
+      REDIS_HOST: 172.17.0.1
+      REDIS_PORT: 6379
+      ZOOKEEPER_HOST: 172.17.0.1
+      ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: events1
+      ROUTES_TOPIC: routes1
+      DSE_HOST: 172.17.0.1
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+  routes-manager:
+    environment:
+      REDIS_HOST: 172.17.0.1
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.17.0.1
+      ZOOKEEPER_PORT: 2181
+      ROUTES_TOPIC: routes1
+      DSE_HOST: 172.17.0.1
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+  event-adapter:
+    image: event-adapter
+    build:
+      context: .
+      dockerfile: events-adapter/Dockerfile
+    environment:
+      COMMUNITY_ZOOKEEPER_HOST: 172.17.0.1
+      COMMUNITY_ZOOKEEPER_PORT: 2181
+      COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycle
+      COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvent
+      ACTIVITY_ZOOKEEPER_HOST: 172.17.0.1
+      ACTIVITY_ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: events1
+      CONSUMER_GROUP: community

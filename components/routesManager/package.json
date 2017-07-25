@@ -1,0 +1,27 @@
+{
+  "name": "routesmanager",
+  "version": "1.0.0",
+  "description": "routes manager for calvin activities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stackroute/calvin-activities.git"
+  },
+  "author": "priyanga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stackroute/calvin-activities/issues"
+  },
+  "homepage": "https://github.com/stackroute/calvin-activities#readme",
+  "dependencies": {
+    "cassandra-driver": "^3.2.2",
+    "express": "^4.15.3",
+    "kafka-node": "^2.0.1",
+    "thunk-redis": "^2.1.2",
+    "kafka-pipeline": "file:../lib/kafka-pipeline"
+  }
+}

@@ -1,15 +1,15 @@
-const consumerGroupName = process.env.CONSUMER_GROUP || 'm1'
-
 module.exports = {
   kafka: {
     host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
     port: process.env.ZOOKEEPER_PORT || '2181',
-    topics: { topic: consumerGroupName, partition: 0, offset: 0 },
+    topics: [process.env.CONSUMER_GROUP || 'activities'],
     options: {
-      autoCommit: false,
-      fromOffset: true,
+      host: process.env.ZOOKEEPER_HOST || '127.0.0.1',
+      groupId: process.env.CONSUMER_GROUP || 'm1',
+      sessionTimeout: 15000,
+      protocol: ['roundrobin'],
+      fromOffset: 'earliest',
     },
-    activitiesTopic: 'activities',
   },
   redis: {
     host: process.env.REDIS_HOST || '127.0.0.1',

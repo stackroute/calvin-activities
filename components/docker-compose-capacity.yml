@@ -1,0 +1,143 @@
+version: "2"
+services:
+  rest-api:
+    image: rest-api
+    build: 
+      context: .
+      dockerfile: rest-api/Dockerfile
+    ports:
+      - 4000:4000
+    links:
+      - redis
+      - kafka
+      - cassandra
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer1
+      ZOOKEEPER_HOST: kafka
+      ZOOKEEPER_PORT: 2181
+      ACTIVITIES_TOPIC: activities1
+      ROUTES_TOPIC: routes1
+      DSE_HOST: cassandra
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      DEFAULT_CIRCLE: 10
+  multiplexer:
+    image: multiplexer
+    build: 
+      context: .
+      dockerfile: multiplexer/Dockerfile
+    links:
+      - redis
+      - kafka
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka
+      CONSUMER_GROUP: m1
+      PARTITION_COUNT: ${PARTITION_COUNT}
+  multiplexer-delivery:
+    image: multiplexer-delivery
+    build:
+      context: .
+      dockerfile: multiplexer-delivery/Dockerfile
+    links:
+      - redis
+      - kafka
+      - cassandra
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka
+      DSE_HOST: cassandra
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: mx1D
+  l1r:
+    image: l1r
+    build:
+      context: .
+      dockerfile: l1r/Dockerfile
+    links:
+      - redis
+      - kafka
+    environment:
+      REDIS_HOST: redis
+      ZOOKEEPER_HOST: kafka
+      CONSUMER_GROUP: activities1
+  event-processor:
+    image: event-processor
+    build: 
+      context: .
+      dockerfile: event_processor/Dockerfile
+    links:
+      - redis
+      - kafka
+      - cassandra
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ZOOKEEPER_HOST: kafka
+      ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: events1
+      ROUTES_TOPIC: routes1
+      ACTIVITIES_TOPIC: activities1
+      DSE_HOST: cassandra
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      CONSUMER_GROUP: events1
+  routes-manager:
+    image: routes-manager
+    build: 
+      context: .
+      dockerfile: routesManager/Dockerfile
+    links:
+      - redis
+      - kafka
+      - cassandra
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer1
+      ZOOKEEPER_HOST: kafka
+      ZOOKEEPER_PORT: 2181
+      ROUTES_TOPIC: routes1
+      DSE_HOST: cassandra
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      CONSUMER_GROUP: routes1
+  produce:
+    image: capacity-test-data
+    build:
+      context: .
+      dockerfile: capacity-test-data/Dockerfile
+    links:
+      - redis
+      - kafka
+    environment:
+      NUMBER_OF_MESSAGES: ${NUMBER_OF_MESSAGES}
+      ZOOKEEPER_HOST: kafka
+      REDIS_HOST: redis
+      CONSUMER_GROUP: m1
+      PARTITION_COUNT: ${PARTITION_COUNT}
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  cassandra:
+    image: cassandra
+    ports:
+      - 9042:9042
+  kafka:
+    image: spotify-kafka
+    build: spotify-kafka/kafka
+    ports:
+      - 9092:9092
+      - 2181:2181
+    environment:
+      ADVERTISED_HOST: 172.17.0.1

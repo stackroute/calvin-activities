@@ -2,25 +2,33 @@
   swagger: "2.0"
   tags:
     - name: "Circle API"
-      description: "API to create and delete circles"
+      description: "API to create a circle ,delete a circle, get list of all circles"
     - name : "Mailbox API"
       description: "API to create and delete mailbox"
     - name: "Follow API"
       description: "API to unfollow and follow circles" 
-    - name: "Publish API"
+    - name: "Publish Activity API"
       description: "API to Publish Activity" 
-    - name: "Receive Notification"
-      description: "API to receive the notification"
     - name: "Bulk API"
       description: "API to receive the notification"
-    - name: "L1R Routes API"
+    - name: "L1R routes API"
       description: "API to add,remove,list routes"
     - name: "Multiplexer API"
       description: "API to create,delete,list all multiplexers"
-    - name: "Multiplexer Routes API"
+    - name: "Multiplexer routes API"
       description: "API to add,remove,list routes"
     - name: "Routes API"
       description: "API to create and delete routes"
+    - name: "Domain API"
+      description: "API to create and delete domain"
+    - name: "User API"
+      description: "API to create and delete User"
+    - name: "Adapter follow API"
+      description: "API to add and remove follow"
+    - name: "Adapter activity API"
+      description: "API to publish and get activities"
+    - name: "Adapter Routes API"
+      description: "API to check status"
   info: 
     title: "Calvin - Activity Log"
     version: "v1"
@@ -41,7 +49,7 @@
             type: "string"
         responses: 
           201: 
-            description: Creates a circle.           
+            description: circle created.           
     /circle/{circleId}:
       delete:
         tags:
@@ -63,7 +71,45 @@
           type: "string"
         responses:
           200:
-            description: Deletes a circle.
+            description: circle deleted.
+    /circle/getallcircles:
+      get:
+        tags:
+          - "Circle API"
+        summary: "Gets the list of  Circles available"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "limit"
+          in: "query"
+          description: "Number of circles need to be displayed"
+          required: false
+          type: "string"
+          format: "int64"        
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+        responses:
+          200:
+            description: List of circles.
+    /circle/getallcircles:
+      get:
+        tags:
+          - "Circle API"
+        summary: "Gets the list of  Circles available"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+        responses:
+          200:
+            description: Number of circles need to be displayed.            
     /mailbox:
       post:
         tags:
@@ -158,6 +204,46 @@
         responses:
           200:
             description: Unfollow a circle.
+    /mailbox/getfollowers/circle/{circleId}:            
+      get:
+        tags:
+          - "Follow API"
+        summary: "List of followers"
+        produces:
+          -"application/json"
+        parameters:
+        - name: "circleId"
+          in: "path"
+          description: "Circle id"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "limit"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "before"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "after"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64"                     
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: true
+          type: "string" 
+        responses:
+          200:
+            description: List of followers.
     /circle/{circleId}/activity:
        post:
         tags:
@@ -239,7 +325,7 @@
     /mailbox/{mailboxId}/activity:
        get:
         tags:
-          - "Activity API"
+          - "Publish Activity API"
         summary: "GET Activity"
         produces:
           - "application/json"
@@ -281,58 +367,59 @@
           required: true
           type: "string"
           format: "int64"
-    /getallcircles/{offset}/{count}:
-       get:
+        - in: "body"
+          name: "body"
+          description: "Publish any activity"
+          required: "true"
+          paramType: "body"
+          type: "string"
+          format: "int64"
+          schema:
+            type: object
+            required:
+              - payload
+            properties:
+              - type: string
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /mailbox/bulk/{circleId}:
+       post:
         tags:
           - "Bulk API"
-        summary: "Get all the circles"
-        produces:
+        summary: "API to add route"
+        produces: 
           - "application/json"
-        responses:
-          200:
-            description: Get all the circles.
+        responses: 
+          201: 
+            description: Adds more follower for the circle. 
         parameters:
-        - name: "offset"
+        - name: "circleId"
           in: "path"
-          description: "offset value"
+          description: "circle Id to add route"
           required: true
           type: "string"
           format: "int64"
-        - name: "count"
-          in: "path"
-          description: "count"
-          required: true
+        - in: "body"
+          name: "mailboxId"
+          description: "Publish any activity"
+          required: "true"
+          paramType: "body"
           type: "string"
           format: "int64"
-    /getfollowers/{circleid}/{offset}/{count}:
-       get:
-        tags:
-          - "Bulk API"
-        summary: "Get all the followers"
-        produces:
-          - "application/json"
-        responses:
-          200:
-            description: Get all the followers.
-        parameters:
-        - name: "circleid"
-          in: "path"
-          description: "circleId"
-          required: true
+          schema:
+            type: object
+            required:
+              - payload
+            properties:
+              - type: string
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
           type: "string"
-          format: "int64"
-        - name: "offset"
-          in: "path"
-          description: "offset value"
-          required: true
-          type: "string"
-          format: "int64"
-        - name: "count"
-          in: "path"
-          description: "count"
-          required: true
-          type: "string"
-          format: "int64"
     /l1route/{circleId}/{multiplexerId}:
        post:
         tags:
@@ -356,6 +443,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
        delete:
         tags:
           - "L1R routes API"
@@ -378,6 +470,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /l1route/{circleId}:
        get:
         tags:
@@ -422,6 +519,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
        delete:
         tags:
           - "Multiplexer API"
@@ -438,6 +540,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /multiplexer:
        get:
         tags:
@@ -448,6 +555,12 @@
         responses:
           200:
             description: lists the multiplexers.
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /multiplexer_route/{namespace}/{circleId}/{mailboxId}:
        post:
         tags:
@@ -477,6 +590,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
        delete:
         tags:
           - "Multiplexer routes API"
@@ -505,6 +623,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /multiplexer_route/{namespace}/{circleId}:
        get:
         tags:
@@ -528,6 +651,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /multiplexer_route/{namespace}:
        get:
         tags:
@@ -545,6 +673,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /routes/{circleId}/{userId}:
        post:
         tags:
@@ -568,6 +701,11 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
     /routes/{circleId}/{userId}/{multiplexerId}:
        delete:
         tags:
@@ -597,3 +735,355 @@
           required: true
           type: "string"
           format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/domain/{domain}:
+       post:
+        tags:
+          - "Domain API"
+        summary: "API to create a domain"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: domain created. 
+        parameters:
+        - name: "domain"
+          in: "path"
+          description: "Name to create domain"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+       delete:
+        tags:
+          - "Domain API"
+        summary: "API to delete a domain"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: domain deleted. 
+        parameters:
+        - name: "domain"
+          in: "path"
+          description: "Name to delete domain"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/user/{user}:
+       post:
+        tags:
+          - "User API"
+        summary: "API to create a user"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: user created. 
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "Name to create user"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+       delete:
+        tags:
+          - "User API"
+        summary: "API to delete a user"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: user deleted. 
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "Name to delete user"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/user/{user}/domain/{domain}:
+       post:
+        tags:
+          - "Adapter follow API"
+        summary: "API to add follow"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: follow added. 
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "user name to follow a domain"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "domain"
+          in: "path"
+          description: "domain name to add follow"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+       delete:
+        tags:
+          - "Adapter follow API"
+        summary: "API to delete follow"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: follow deleted. 
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "user name to remove a follow"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "domain"
+          in: "path"
+          description: "domain name to remove follow"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/domain/{domain}/activity:
+       post:
+        tags:
+          - "Adapter activity API"
+        summary: "API to post activity to domain"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: activity posted. 
+        parameters:
+        - name: "domain"
+          in: "path"
+          description: "domain name to post activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "Publish any activity"
+          required: "true"
+          paramType: "body"
+          type: "string"
+          format: "int64"
+          schema:
+            type: object
+            required:
+              - payload
+            properties:
+              - type: string
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/user/{user}/activity:
+       post:
+        tags:
+          - "Adapter activity API"
+        summary: "API to post activity to user"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: activity posted. 
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "user name to publish activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "Publish any activity"
+          required: "true"
+          paramType: "body"
+          type: "string"
+          format: "int64"
+          schema:
+            type: object
+            required:
+              - payload
+            properties:
+              - type: string
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/getallactivities/user/{user}:
+       get:
+        tags:
+          - "Adapter activity API"
+        summary: "Gets the list of  activites for particular user"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "user name to get activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "limit"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "before"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "after"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"      
+        responses:
+          200:
+            description: List of activities.
+    /adapter/getallactivities/domain/{domain}:
+       get:
+        tags:
+          - "Adapter activity API"
+        summary: "Gets the list of  activites for particular domain"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "domain"
+          in: "path"
+          description: "domain name to get activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "limit"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "before"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64" 
+        - name: "after"
+          in: "query"
+          description: "date"
+          required: false
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"   
+        responses:
+          200:
+            description: List of activities.
+    /adapter/user/{user}/status/{status}:
+       post:
+        tags:
+          - "Adapter Routes API"
+        summary: "API to check status"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: routes. 
+        parameters:
+        - name: "user"
+          in: "path"
+          description: "user name"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "status"
+          in: "path"
+          description: "status whether user is online or offline"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+    /adapter/domain/{domain}/status/{status}:
+       post:
+        tags:
+          - "Adapter Routes API"
+        summary: "API to check status"
+        produces: 
+          - "application/json"
+        responses: 
+          201: 
+            description: routes. 
+        parameters:
+        - name: "domain"
+          in: "path"
+          description: "domain name"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "status"
+          in: "path"
+          description: "status whether user is online or offline"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"

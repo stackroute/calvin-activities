@@ -1,10 +1,12 @@
 const followDao = require('../follow');
 const kafkaClient = require('../../../kafka');
-const start=require('../../../db');
+const start = require('../../../db');
+const config = require('../../../config');
+const createdAt = new Date();
 
 const listeners = {};
 
-const client=start.client;
+const client = start.client;
 
 function publishActivityToListeners(mid, activity) {
   if (!listeners[mid]) { return; }
@@ -13,42 +15,193 @@ function publishActivityToListeners(mid, activity) {
   });
 }
 function publishToMailbox(mid, activity, callback) {
-  const payload = JSON.stringify(activity);
+  const payload = JSON.stringify(activity.payload);
   const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
   client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
+    console.log('result in publishToMailbox=>'result);
     if (err) { return callback(err); }
-    // publishActivityToListeners(mid, activity);
     return callback(err, activity);
   });
 }
 
 function createPublishActivity(mid, activity, callback) {
-  const msg = {};
-  msg.payload = activity;
-  msg.payload.requestedAt = new Date();
-  msg.circleId = mid;
-  kafkaClient.addActivity(msg, (err, data) => callback(err, data));
+  const msg = JSON.parse(JSON.stringify(activity));
+  activity.circleId = mid;
+  kafkaClient.addActivity(activity, (err, data) => {
+    if (err) {console.log('err:', err); return callback(err, null); }
+    console.log('data:', data);
+    const query1 = (`select createdOn from circle where circleId = ${mid}`);
+    client.execute(query1, (err, result) => {
+      if (err) { return callback(err, null); }
+      const c = result.rows[0].createdon;
+      const query = ('UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?');
+      client.execute(query, [new Date(), mid, c], (err, result) => {
+        if (err) { return callback(err, null); }
+        callback(null, msg);
+      });
+    });
+  });
 }
 
 function checkIfMailboxExists(mid, callback) {
   const query = (`SELECT * from activity where mailboxId= ${mid}`);
   client.execute(query, (err, result) => {
     if (err) { return callback(err); }
-    return callback(err, result.rows.length>0);
+    return callback(err, result.rowLength > 0);
   });
 }
 
-function retriveMessageFromMailbox(mid, callback) {
+function retriveMessageFromMailbox(mid, before, after, limit, callback) {
   checkIfMailboxExists(mid, (err, MailIdExists) => {
     if (err) { return callback(err, null); }
-    if (MailIdExists) {
-      const query = (`SELECT * from activity where mailboxId= ${mid}`);
-      client.execute(query, (err1, result) => {
-        if (err1) { return callback(err1); }
-        return callback(null, result.rows);
-      });
+    if(!MailIdExists) { return callback(null, { a : 0, b : []});};
+    if (MailIdExists && limit != 0) {
+
+      //limit -1
+       if (limit == -1 && before != undefined && after == undefined) {
+        const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}'`);
+        client.execute(query, (err1, result) => {
+          if (err1) { return callback(err1); }
+          let a = result.rows.length;
+          let b = result.rows;
+          return callback(null, { a, b });
+        });
+      }
+      else if (limit == -1 && after != undefined && before == undefined) {
+        const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after}'`);
+        client.execute(query, (err1, result) => {
+          if (err1) { return callback(err1); }
+          let a = result.rows.length;
+          let b = result.rows;
+          return callback(null, { a, b });
+        });
+        return;
+      }
+
+      else if (limit == -1 && after != undefined && before != undefined) {
+     
+        const query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after}' and createdAt < '${before}'`);
+        client.execute(query, (err1, result) => {
+          if (err1) { return callback(err1); }
+          let a = result.rows.length;
+          let b = result.rows;
+          return callback(null, { a, b });
+          return;
+        });
+      }
+
+ else if (limit == -1 && after == undefined && before == undefined) {
+    const query = (`SELECT * from activity where mailboxId= ${mid}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+  // limit undefined
+
+  else if (limit == undefined && before != undefined && after == undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' limit ${defaultLimit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+  else if (limit == undefined && after != undefined && before == undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > '${after}' limit ${defaultLimit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+ else if (limit == undefined && after != undefined && before != undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' and createdAt > '${after}' limit ${defaultLimit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+ else if (limit == undefined && after == undefined && before == undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} limit ${defaultLimit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+
+// limit is defined
+
+
+  else if (limit != undefined && before != undefined && after == undefined) {
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' limit ${limit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+  else if (limit != undefined && after != undefined && before == undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > '${after}' limit ${limit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+ else if (limit != undefined && after != undefined && before != undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before}' and createdAt > '${after}' limit ${limit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
+ else if (limit != undefined && after == undefined && before == undefined) {
+
+    const defaultLimit = config.defaultLimit;
+    const query = (`SELECT * from activity where mailboxId = ${mid} limit ${limit}`);
+    client.execute(query, (error, result) => {
+      if (error) { return callback(error, null); }
+      let a = result.rows.length;
+      let b = result.rows;
+      return callback(null, { a, b });
+    });
+  }
+
     }
-    return true;
+    else { return callback("limit is 0"); }
   });
 }
 
@@ -78,4 +231,6 @@ module.exports = {
   removeListnerFromMailbox,
   retriveMessageFromMailbox,
   checkActivityPublished,
+  publishActivityToListeners,
+  listeners,
 };

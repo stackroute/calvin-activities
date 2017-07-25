@@ -6,38 +6,23 @@ const multiplexerRouteService = require('../../services/multiplexer-route');
 
 function createRoute(req, res) {
   routesService.addRoute(req.params.circleId, req.params.userId, (err, result) => {
-    if (err) { res.status(500).send({ message: `${err}` }); return; }
-    res.status(201).json(result);
+    if (result === 'No multiplexer available') { res.status(404).json({ message: 'No multiplexers available' }); }
+    if (result === 'Routes added') { res.status(201).json({ message: 'Routes added' }); }
+    if (err) { res.status(500).send({ message: `${err}` }); }
   });
 }
 
 function deleteRoute(req, res) {
   const circleId = req.params.circleId;
-  const userId = req.params.userId;
+  const mailboxId = req.params.userId;
   const multiplexerId = req.params.multiplexerId;
-  routesService.deleteRoute(circleId, userId, (err4, result) => {
-    if (err4) { res.status(500).send({ message: `${err4}` }); return; }
-    const route = {
-      circleId: req.params.circleId,
-      multiplexerId: req.params.multiplexerId,
-    };
-    l1rService.deleteRoute(route, (err5, res2) => {
-      if (err5) { throw err5; }
-      multiplexerService.deleteMultiplexer(multiplexerId, (err6, res3) => {
-        if (err6) { throw err6; }
-        const route1 = {
-          namespace: multiplexerId,
-          circleId: req.params.circleId,
-          mailboxId: req.params.userId,
-        };
-        multiplexerRouteService.deleteRoute(route1, (err7, res4) => {
-          if (err7) { throw err7; }
-        });
-        res.status(201).json({ message: 'Routes deleted' });
-      });
-    });
+  routesService.removeRoute(circleId, mailboxId, multiplexerId, (err4, result) => {
+    if (result === 'No routes present') { res.status(404).json({ message: `No routes present for ${circleId} ${mailboxId}` }); }
+    if (result === 'Routes deleted') { res.status(201).json({ message: 'Routes deleted' }); }
+    if (err4) { res.status(500).json({ message: `${err4}` }); }
   });
 }
+
 
 module.exports = {
   createRoute,

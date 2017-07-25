@@ -23,6 +23,13 @@ function deleteCircle(req, res) {
   });
 }
 
+function getAllCircles(req, res) {
+  circleDAO.getAllCircles(req.query.limit, (err, result) => {
+    if (err) { res.status(500).json({ message: `${err}` }); return; }
+    res.status(200).json({totalItems: result.a, items: result.b});
+  });
+}
+
 module.exports = {
-  createCircle, deleteCircle,
+  createCircle, deleteCircle, getAllCircles,
 };

@@ -1,0 +1,23 @@
+{
+  "name": "event_adapter",
+  "version": "1.0.0",
+  "description": "Event adapter for calvin activities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stackroute/calvin-activities.git"
+  },
+  "author": "himani singla <himanisingla8708@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stackroute/calvin-activities/issues"
+  },
+  "homepage": "https://github.com/stackroute/calvin-activities#readme",
+  "dependencies": {
+    "kafka-node": "^2.0.1"
+  }
+}

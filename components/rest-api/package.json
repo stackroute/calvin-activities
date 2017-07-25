@@ -1,0 +1,52 @@
+{
+  "name": "calvin-activities-rest-apis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node start",
+    "test": "  DAO=mock ./node_modules/.bin/mocha **/*.spec.js DAO=cassandra && ./node_modules/.bin/mocha **/*.spec.js",
+    "eslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js'",
+    "fixeslint": "./node_modules/.bin/eslint *.js '**/mailbox*.js' --fix",
+    "yamllint": "./node_modules/.bin/yamllint 'swagger/**/*.yml'",
+    "activitytest": " DAO=cassandra ./node_modules/.bin/mocha **/activity.spec.js",
+    "circletest": "  DAO=cassandra ./node_modules/.bin/mocha **/circle.spec.js",
+    "mailboxtest": "  DAO=cassandra ./node_modules/.bin/mocha **/mailbox.spec.js",
+    "followtest": "  DAO=cassandra ./node_modules/.bin/mocha **/follow.spec.js",
+    "bulktest": "  DAO=cassandra ./node_modules/.bin/mocha **/bulk.spec.js",
+    "pushtest": "  DAO=cassandra && ./node_modules/.bin/mocha **/socketserver.spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.4.1",
+    "body-parser": "^1.17.2",
+    "cassandra-driver": "^3.2.2",
+    "dse-driver": "^1.3.1",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^7.4.1",
+    "kafka-node": "^1.6.2",
+    "kafka-pipeline": "file:../lib/kafka-pipeline",
+    "redis": "^2.7.1",
+    "require-yml": "^1.3.1",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
+    "swagger-ui-express": "^2.0.0",
+    "thunk": "0.0.1",
+    "thunk-redis": "^2.1.2",
+    "thunks": "^4.8.0",
+    "uuid": "^3.0.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-mocha": "^4.9.0",
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
+    "supertest": "^3.0.0",
+    "yaml-lint": "^0.0.4"
+  }
+}
