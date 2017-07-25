@@ -7,6 +7,7 @@ import { RouterModule, Routes, Router, ActivatedRoute } from '@angular/router'
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.css']
 })
+
 export class OverviewComponent implements OnInit {
  messagesDelivered=0;
   ngOnInit() {
