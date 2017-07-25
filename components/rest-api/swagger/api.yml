@@ -465,10 +465,12 @@
         summary: "API to add route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: Adds more follower for the circle. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
         - name: "circleId"
           in: "path"
           description: "circle Id to add route"
@@ -488,11 +490,15 @@
               - payload
             properties:
               - type: string
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: Adds more follower for the circle.
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }          
     /l1route/{circleId}/{multiplexerId}:
       post:
         tags:
@@ -500,10 +506,12 @@
         summary: "API to add route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: Add route. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string" 
         - name: "circleId"
           in: "path"
           description: "circle Id to add route"
@@ -516,21 +524,27 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: Add route. 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
       delete:
         tags:
           - "L1R routes API"
         summary: "API to delete route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: Delete route. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "circleId"
           in: "path"
           description: "circle Id to delete route"
@@ -543,11 +557,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: Delete route.  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
     /l1route/{circleId}:
       get:
         tags:
@@ -555,9 +573,6 @@
         summary: "Get routes for circle"
         produces:
           - "application/json"
-        responses:
-          200:
-            description: Get routes for circle.
         parameters:
         - name: "circleId"
           in: "path"
@@ -565,6 +580,15 @@
           required: true
           type: "string"
           format: "int64"
+        responses:
+          200:
+            description: Get routes for circle.  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
     /l1route:
       get:
         tags:
@@ -575,6 +599,9 @@
         responses:
           200:
             description: Get list of routes.
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
     /multiplexer/{mx}:
       post:
         tags:
@@ -582,42 +609,51 @@
         summary: "API to create multiplexer"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: multiplexer created. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
         - name: "mx"
           in: "path"
           description: "creates a multiplexer"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: multiplexer created.  
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
       delete:
         tags:
           - "Multiplexer API"
         summary: "API to create multiplexer"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: multiplexer created. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "mx"
           in: "path"
           description: "creates a multiplexer"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: multiplexer created. 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }    
     /multiplexer:
       get:
         tags:
@@ -625,15 +661,18 @@
         summary: "Get list of multiplexers"
         produces:
           - "application/json"
-        responses:
-          200:
-            description: lists the multiplexers.
         parameters:
         - name: "Authorization"
           in: "header"
           description: "authorization key"
           required: false
           type: "string"
+        responses:
+          200:
+            description: lists the multiplexers.  
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }       
     /multiplexer_route/{namespace}/{circleId}/{mailboxId}:
       post:
         tags:
@@ -641,10 +680,12 @@
         summary: "API to add route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: Routes added. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "namespace"
           in: "path"
           description: "multiplexer Id to add route"
@@ -663,21 +704,27 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: Routes added.   
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
       delete:
         tags:
           - "Multiplexer routes API"
         summary: "API to delete route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: Routes deleted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "namespace"
           in: "path"
           description: "multiplexer Id to delete route"
@@ -696,11 +743,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: Routes deleted. 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
     /multiplexer_route/{namespace}/{circleId}:
       get:
         tags:
@@ -708,10 +759,13 @@
         summary: "Get routes for circle"
         produces:
           - "application/json"
-        responses:
-          200:
-            description: Get routes for circle.
+       
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "namespace"
           in: "path"
           description: "multiplexerId to get routes"
@@ -724,11 +778,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses:
+          200:
+            description: Get routes for circle.    
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }           
     /multiplexer_route/{namespace}:
       get:
         tags:
@@ -736,21 +794,27 @@
         summary: "Get list of routes"
         produces:
           - "application/json"
-        responses:
-          200:
-            description: Get list of routes.
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "namespace"
           in: "path"
           description: "multiplexerId to get routes"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses:
+          200:
+            description: Get list of routes.
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
     /routes/{circleId}/{userId}:
       post:
         tags:
@@ -758,10 +822,12 @@
         summary: "API to create route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: route created. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "circleId"
           in: "path"
           description: "circle Id to create route"
@@ -774,11 +840,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: route created.
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
     /routes/{circleId}/{userId}/{multiplexerId}:
       delete:
         tags:
@@ -786,10 +856,12 @@
         summary: "API to delete route"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: route deleted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "circleId"
           in: "path"
           description: "circle Id to create route"
@@ -808,11 +880,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: route deleted.  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
     /adapter/domain/{domain}:
       post:
         tags:
@@ -820,42 +896,51 @@
         summary: "API to create a domain"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: domain created. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "domain"
           in: "path"
           description: "Name to create domain"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: domain created. 
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }         
       delete:
         tags:
           - "Adapter Domain API"
         summary: "API to delete a domain"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: domain deleted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "domain"
           in: "path"
           description: "Name to delete domain"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: domain deleted. 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
     /adapter/user/{user}:
       post:
         tags:
@@ -863,42 +948,52 @@
         summary: "API to create a user"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: user created. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "user"
           in: "path"
           description: "Name to create user"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: user created.   
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }    
       delete:
         tags:
           - "Adapter User API"
         summary: "API to delete a user"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: user deleted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
         - name: "user"
           in: "path"
           description: "Name to delete user"
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: user deleted.  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }          
+        
     /adapter/user/{user}/domain/{domain}:
       post:
         tags:
@@ -906,10 +1001,12 @@
         summary: "API to add follow"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: follow added. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "user"
           in: "path"
           description: "user name to follow a domain"
@@ -922,21 +1019,27 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: follow added.
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }           
       delete:
         tags:
           - "Adapter Follow API"
         summary: "API to delete follow"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: follow deleted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "user"
           in: "path"
           description: "user name to remove a follow"
@@ -949,11 +1052,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: follow deleted.   
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }          
     /adapter/domain/{domain}/activity:
       post:
         tags:
@@ -961,10 +1068,12 @@
         summary: "API to post activity to domain"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: activity posted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "domain"
           in: "path"
           description: "domain name to post activity"
@@ -984,11 +1093,15 @@
               - payload
             properties:
               - type: string
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: activity posted.  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
     /adapter/user/{user}/activity:
       post:
         tags:
@@ -996,10 +1109,12 @@
         summary: "API to post activity to user"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: activity posted. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "user"
           in: "path"
           description: "user name to publish activity"
@@ -1019,11 +1134,12 @@
               - payload
             properties:
               - type: string
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: activity posted. 
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
     /adapter/getallactivities/user/{user}:
       get:
         tags:
@@ -1032,6 +1148,11 @@
         produces:
           -"application/json"
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"    
         - name: "user"
           in: "path"
           description: "user name to get activity"
@@ -1056,14 +1177,13 @@
           required: false
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"      
         responses:
           200:
             description: List of activities.
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }    
+
     /adapter/getallactivities/domain/{domain}:
       get:
         tags:
@@ -1072,6 +1192,11 @@
         produces:
           -"application/json"
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "domain"
           in: "path"
           description: "domain name to get activity"
@@ -1096,14 +1221,12 @@
           required: false
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"   
         responses:
           200:
             description: List of activities.
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }   
     /adapter/user/{user}/status/{status}:
       post:
         tags:
@@ -1111,10 +1234,12 @@
         summary: "API to check status"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: routes. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
         - name: "user"
           in: "path"
           description: "user name"
@@ -1127,11 +1252,16 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: routes. 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
+
     /adapter/domain/{domain}/status/{status}:
       post:
         tags:
@@ -1139,10 +1269,12 @@
         summary: "API to check status"
         produces: 
           - "application/json"
-        responses: 
-          201: 
-            description: routes. 
         parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
         - name: "domain"
           in: "path"
           description: "domain name"
@@ -1155,11 +1287,15 @@
           required: true
           type: "string"
           format: "int64"
-        - name: "Authorization"
-          in: "header"
-          description: "authorization key"
-          required: false
-          type: "string"
+        responses: 
+          201: 
+            description: routes. 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }       
   definitions:
     createCircleResponse:
       type: "object"
