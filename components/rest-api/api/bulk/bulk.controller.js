@@ -14,50 +14,39 @@ function getOpenMailboxes(req, res) {
 }
 
 function bulkFollow(req, res) {
- 
-  const follower = req.body.id;
-  const result = follower.slice(1, follower.length - 1).split(',');
-  console.log(follower);
-  console.log(result);
-  for (let i = 0; i <= result.length - 1; i += 1) {
-    const mailboxId = (result[i]);
-    const circleId = req.params.circleId;
-    const startFollowing = new Date();
-    mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
-      if (err) { res.status(404).json({ message: `${err}` }); return; }
-      const isMailboxExists = doesMailboxExists;
-
-      circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
-        if (err1) { res.status(404).json({ message: `${err1}` }); return; }
-        const isCircleExists = doesCircleExists;
-
-        followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
-          if (err2) { res.status(404).json({ message: `${err2}` }); return; }
-          const isFollowExists = isExists;
-          if (!isMailboxExists) {
-            res.status(404).json({ message: `Mailbox with id ${mailboxId} does not exist` });
-            return;
+  const circleId = req.params.circleId;
+  const result = req.body.mailboxIds;
+  if(result && result.length > 0){
+    circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
+      if (err1) { res.status(404).json({ message: `${err1}` }); return; }
+      if (!doesCircleExists) {
+        res.status(404).json({ message: `Circle with id ${circleId} does not exist` });
+        return;
+      }
+      for (let i = 0; i <= result.length - 1; i += 1) {
+        const mailboxId = (result[i]);
+        const startFollowing = new Date();
+        mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
+          if (err) { res.status(404).json({ message: `${err}` }); return; }
+          const isMailboxExists = doesMailboxExists;
+          if(isMailboxExists){
+            followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
+              if (err2) { res.status(404).json({ message: `${err2}` }); return; }
+              const isFollowExists = isExists;
+              if(!isFollowExists){
+                followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
+                  if (err3) { throw err3; }
+                });
+              }
+            });
           }
-
-          if (!isCircleExists) {
-            res.status(404).json({ message: `Circle with id ${circleId} does not exist` });
-            return;
-          }
-
-          if (isFollowExists) {
-            res.status(409).json({ message: `Mailbox ${mailboxId} is already following ${circleId}` });
-            return;
-          }
-
-          followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
-            if (err3) { throw err3; }
-          });
         });
-      });
+      }
+      res.status(200).json({ message: 'Added followers' });
     });
   }
-  res.status(200).json({ message: 'Added followers' });
 }
+
 function getAllCirclesFollowedByMailbox(req, res) {
   const mailboxId = req.params.mailboxId;
      bulkDAO .getAllCircles(mailboxId, (err, circles) => {

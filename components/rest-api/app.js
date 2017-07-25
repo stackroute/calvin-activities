@@ -45,7 +45,7 @@ app.use('/l1route', require('./api/l1r'));
 
 // app.use('/multiplxerrouter', require('./api/multiplexer_routes'));
 
-app.use('/', require('./api/bulk'));
+app.use('/mailbox', require('./api/bulk'));
 
 app.use('/events', require('./api/event'));
 

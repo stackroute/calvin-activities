@@ -7,7 +7,7 @@ function publishActivityToDomain(req, res) {
     payload: req.body,
     timestamp: new Date(),
   };
-
+  newActivity.payload.requestedAt = new Date();
   adapterDAO.checkIfDomainExists(req.params.domain, (error, doesDomainExists) => {
     if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesDomainExists) {
@@ -29,6 +29,7 @@ function publishActivityToUser(req, res) {
     payload: req.body,
     timestamp: new Date(),
   };
+  newActivity.payload.requestedAt = new Date();
   adapterDAO.checkIfUserExists(req.params.user, (error, doesUserExists) => {
     if (error) { res.status(500).json({ message: `${error}` }); return; }
     if (!doesUserExists) {
