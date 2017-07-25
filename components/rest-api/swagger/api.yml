@@ -462,7 +462,7 @@
       post:
         tags:
           - "Bulk API"
-        summary: "API to add route"
+        summary: "API to add bulk mailbox for a circle"
         produces: 
           - "application/json"
         parameters:
@@ -492,7 +492,14 @@
               - type: string
         responses: 
           201: 
-            description: Adds more follower for the circle.
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle to add mailbox"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -526,7 +533,14 @@
           format: "int64"
         responses: 
           201: 
-            description: Add route. 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle to route"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -559,7 +573,7 @@
           format: "int64"
         responses: 
           201: 
-            description: Delete route.  
+            description: OK.  
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -581,8 +595,15 @@
           type: "string"
           format: "int64"
         responses:
-          200:
-            description: Get routes for circle.  
+          200: 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId which is routed"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"  
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -598,7 +619,7 @@
           - "application/json"
         responses:
           200:
-            description: Get list of routes.
+            description: OK.
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }        
@@ -623,7 +644,7 @@
           format: "int64"
         responses: 
           201: 
-            description: multiplexer created.  
+            description: OK.  
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }        
@@ -647,7 +668,7 @@
           format: "int64"
         responses: 
           201: 
-            description: multiplexer created. 
+            description: OK. 
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -669,7 +690,7 @@
           type: "string"
         responses:
           200:
-            description: lists the multiplexers.  
+            description: OK.  
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }       
@@ -705,8 +726,19 @@
           type: "string"
           format: "int64"
         responses: 
-          201: 
-            description: Routes added.   
+          201:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle added for a multiplexer"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
+                mailboxId:
+                  type: "string"
+                  description: "mailboxId of the mailbox follow that circle"
+                  example: "0a35c3a5-6bc7-440a-932c-2db0f7b85af9" 
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -745,7 +777,7 @@
           format: "int64"
         responses: 
           201: 
-            description: Routes deleted. 
+            description: OK. 
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -780,7 +812,14 @@
           format: "int64"
         responses:
           200:
-            description: Get routes for circle.    
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle that routed for multiplexer"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -808,7 +847,7 @@
           format: "int64"
         responses:
           200:
-            description: Get list of routes.
+            description: OK.
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -842,7 +881,14 @@
           format: "int64"
         responses: 
           201: 
-            description: route created.
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle that routed for multiplexer"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"  
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -882,7 +928,14 @@
           format: "int64"
         responses: 
           201: 
-            description: route deleted.  
+            description: OK. 
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle that routed for multiplexer"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea" 
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -910,7 +963,7 @@
           format: "int64"
         responses: 
           201: 
-            description: domain created. 
+            description: OK. 
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }         
@@ -962,7 +1015,7 @@
           format: "int64"
         responses: 
           201: 
-            description: user created.   
+            description: OK.   
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }    
@@ -986,7 +1039,7 @@
           format: "int64"
         responses: 
           201: 
-            description: user deleted.  
+            description: OK.  
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -1021,7 +1074,7 @@
           format: "int64"
         responses: 
           201: 
-            description: follow added.
+            description: OK.
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -1054,7 +1107,7 @@
           format: "int64"
         responses: 
           201: 
-            description: follow deleted.   
+            description: OK.   
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -1095,7 +1148,7 @@
               - type: string
         responses: 
           201: 
-            description: activity posted.  
+            description: OK.  
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -1136,7 +1189,7 @@
               - type: string
         responses: 
           201: 
-            description: activity posted. 
+            description: OK. 
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }        
@@ -1179,7 +1232,7 @@
           format: "int64"
         responses:
           200:
-            description: List of activities.
+            description: OK.
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }    
@@ -1223,7 +1276,7 @@
           format: "int64"
         responses:
           200:
-            description: List of activities.
+            description: OK.
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }   
@@ -1254,7 +1307,7 @@
           format: "int64"
         responses: 
           201: 
-            description: routes. 
+            description: OK. 
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -1289,7 +1342,7 @@
           format: "int64"
         responses: 
           201: 
-            description: routes. 
+            description: OK. 
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
