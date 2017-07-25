@@ -61,14 +61,16 @@ kafkaPipeline.producer.ready(function() {
   if ((status == "addcircle") ||(status=="removecircle") ){
     followDao.getMailboxIdForCircle(circleId, (err, result) => {
       if (err) { return { message: 'err' }; }
-      const circleMailboxId = result;
-      const obj = {
+      if(result && result.rows && result.rows[0]){
+        let circleMailboxId = result.rows[0].mailboxid.toString();
+        const obj = {
         circleId: circleId,
         mailboxId: circleMailboxId,
         command,
       };
       const payloads = [{ topic: routesTopic, messages: JSON.stringify(obj),}];
       kafkaPipeline.producer.send(payloads);
+      }
     });
   }
 

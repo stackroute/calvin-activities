@@ -1358,7 +1358,7 @@
           type: "string"
         - name: "domain"
           in: "path"
-          description: "domain name"
+          description: "name of the domain"
           required: true
           type: "string"
           format: "int64"

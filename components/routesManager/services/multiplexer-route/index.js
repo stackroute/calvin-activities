@@ -2,6 +2,7 @@
 
 const client = require('../../client/redisclient').client;
 const multiplexerService = require('../multiplexer');
+const l1rService = require('../l1r');
 
 function checkIfRouteExists(route, callback) {
   const mailboxId = (route.mailboxId).toString();
@@ -50,7 +51,7 @@ function deleteRoute(route, callback) {
 function getMultiplexer(namespace, circleId , userId, callback){
     client.srem(`${namespace}:${circleId}`, userId)((err, res) => {
     if (err) { callback(err, null); }  
-    if (res === 1){
+/*    if (res === 1){
        getRoutesForCircle({ namespace: namespace, circleId: circleId }, (err, res) => {
       if (res.length === 0) {
         l1rService.deleteRoute({ circleId: circleId, multiplexerId: namespace }, (err, result1) => {
@@ -61,7 +62,7 @@ function getMultiplexer(namespace, circleId , userId, callback){
         if (err) { throw err; }
       });
     });
-    }
+    }*/
   });
 }
 
