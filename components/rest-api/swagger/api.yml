@@ -537,10 +537,10 @@
             schema:
               type: "object"
               properties:
-                circleId:
+                result:
                   type: "string"
                   description: "circleId of circle to route"
-                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
+                  example: "1"
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -600,10 +600,10 @@
             schema:
               type: "object"
               properties:
-                circleId:
+                result:
                   type: "string"
                   description: "circleId which is routed"
-                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"  
+                  example: ["M","M7"]  
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -620,6 +620,13 @@
         responses:
           200:
             description: OK.
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "Get list of the routes"
+                  example: ["L1R:fcb9bab3-14f8-407c-ba20-5fdcb4241299","L1R:2018d90f-0289-4fe6-886b-77bb67018d30",]  
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }        
@@ -644,7 +651,14 @@
           format: "int64"
         responses: 
           201: 
-            description: OK.  
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "create a multiplexer"
+                  example:   "Multiplexer M3 created"
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }        
@@ -669,6 +683,13 @@
         responses: 
           201: 
             description: OK. 
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "Delete the multiplexer"
+                  example:   "Multiplexer M8 created"
           404:
             description: Not found
             schema: { $ref : "#/definitions/notFoundErrorResponse" }
@@ -690,7 +711,14 @@
           type: "string"
         responses:
           200:
-            description: OK.  
+            description: OK.
+             schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "Get list of the multiplexers"
+                  example:   "M2": "0","M3": "1"
           500:
             description: Internal server error
             schema: { $ref : "#/definitions/internalServerErrorResponse" }       
