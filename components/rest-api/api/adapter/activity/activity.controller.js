@@ -57,6 +57,12 @@ function getAllActivitiesForUser(req, res) {
     const mailboxId = (doesUserExists.mailboxid).toString();
     activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
+      if(result.b){
+        result.b.forEach(element => {
+          element.payload = JSON.parse(element.payload);
+        });
+      }
+
          const firstActivity = result.b[0];
          const lastActivity = result.b[result.b.length - 1];
          res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
@@ -78,6 +84,12 @@ function getAllActivitiesForDomain(req,res){
     console.log(mailboxId);
      activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
+      if(result.b){
+        result.b.forEach(element => {
+          element.payload = JSON.parse(element.payload);
+        });
+      }
+
        const firstActivity =  (result.a !== 0) ? result.b[0] : [];
        const lastActivity = (result.a !== 0) ? result.b[result.b.length - 1] : [];
        res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
