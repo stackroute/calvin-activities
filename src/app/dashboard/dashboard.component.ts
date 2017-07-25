@@ -16,8 +16,8 @@ export class DashboardComponent implements OnInit {
     let avg = 0 ;
     const socket = io('localhost:3000');
     socket.on('msg', (data) => {
-    const topic = JSON.parse(data).topic;
-    const count = JSON.parse(data).count;
+    const topic = JSON.parse(data).topicName;
+    const count = JSON.parse(data).topicCount;
      if(!this.topics[topic]){ this.topics[topic]=[0,0,0,0,0,0,0,0,0,0]; }
      this.topics[topic].unshift(count);
      this.topics[topic].pop();
@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
      });
      avg/=10;
      this.topicsData.set(topic ,Math.round(avg));
-     
+    //  console.log(this.topicsData.get("as_demo_activities"));
    });
 }
 

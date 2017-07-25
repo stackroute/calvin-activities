@@ -23,15 +23,14 @@ export class ActivitiesComponent implements OnInit {
 
     const socket = io('localhost:3000');
     socket.on('msg', (data) => {
-          
-    if(data.messagesDelivered) {
+     if(data.messagesDelivered) {
         this.messagesDelivered = data.messagesDelivered;  
      }
 
-     if(JSON.parse(data).topic) {
-      const topic = JSON.parse(data).topic;
-      const count = JSON.parse(data).count;       
-     
+     if(JSON.parse(data).topicName) {
+      const topic = JSON.parse(data).topicName;
+      const count = JSON.parse(data).topicCount;       
+      
      if(!this.topics[topic]){ this.topics[topic]=[0,0,0,0,0,0,0,0,0,0]; }
      this.topics[topic].unshift(count);
      this.topics[topic].pop();

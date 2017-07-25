@@ -8,13 +8,13 @@ const ConsumerGroup = require('kafka-node').ConsumerGroup;
 const winston = require('./winston');
 
 const options = {
-  host: '172.23.238.134:2181',
-  groupId: 'asdadsasdasdsad',
+  host: '172.23.238.205:2181',
+  groupId: 'monitor',
   protocol: ['roundrobin'],
   fromOffset: 'latest' 
 };
 
-const consumerGroup1 = new ConsumerGroup(options, 'monitoring');
+const consumerGroup1 = new ConsumerGroup(options, 'monitor');
 consumerGroup1.on('message', onMessage);
 
 let messages = new Array();
@@ -25,16 +25,17 @@ setInterval(function(){
      sum+=element;
    });
    messagesDelivered = sum;
+   io.to('monitoring').emit('msg', { messagesDelivered  }); 
    messages = [];
 	}, 1000);
 
 
 function onMessage (message) {
+  console.log(message.value);
   if(JSON.parse(message.value).CID){ 
      messages.push(JSON.parse(message.value).CDR);
-     io.to('monitoring').emit('msg', { messagesDelivered  }); 
   }
-  if(JSON.parse(message.value).topic){ 
+  if(JSON.parse(message.value).topicName){ 
       io.to('monitoring').emit('msg', message.value);
   }
   if(JSON.parse(message.value).consumerGroup){ 
