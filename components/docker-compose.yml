@@ -95,7 +95,7 @@ services:
       context: .
       dockerfile: events-adapter/Dockerfile
     environment:
-      COMMUNITY_ZOOKEEPER_HOST: 172.23.238.201
+      COMMUNITY_ZOOKEEPER_HOST: 172.23.238.193
       COMMUNITY_ZOOKEEPER_PORT: 2181
       COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycleEvents
       COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvents
