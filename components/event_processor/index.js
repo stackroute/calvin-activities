@@ -17,7 +17,14 @@ const kafkaPipeline = require('kafka-pipeline');
   
 kafkaPipeline.producer.ready(function() {
   kafkaPipeline.registerConsumer(topic,groupName,(message,done)=>{
-    console.log(message);
+    try{
+      JSON.parse(message);
+    }
+    catch(ex){
+      console.log('incorrect message: ' - message + ' error: ' + ex);
+      return;
+    }
+  console.log(message);
   const mailboxId= JSON.parse(message).mailboxId;
   const circleId = JSON.parse(message).circleId;
    
