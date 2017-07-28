@@ -4,5 +4,7 @@ node_js:
 services:
   - cassandra
   - redis-server
+  - docker
 before_install:
   - ./setup-DB.sh
+  - sudo ver=1 ./components/start.sh
