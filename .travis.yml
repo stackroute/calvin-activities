@@ -2,10 +2,7 @@ language: node_js
 node_js:
   - 8.0.0
 services:
-  - docker
+  - cassandra
+  - redis-server
 before_install:
-  - docker-compose -f components/services.yml up
-  - echo "going to sleep"
-  - sleep 75
-  - echo "going to execute set up scripts"
   - ./setup-DB.sh
