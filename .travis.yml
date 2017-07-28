@@ -5,5 +5,7 @@ services:
   - docker
 before_install:
   - docker-compose -f components/services.yml up
+  - echo "going to sleep"
   - sleep 75
+  - echo "going to execute set up scripts"
   - ./setup-DB.sh
