@@ -5,7 +5,7 @@ let expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Circle API', function() {
-	/*it('circles mailbox gets all the messages immediately', (done) => {
+	it('Messages posted to circle gets delivered immediately', (done) => {
 		chai.request('http://localhost:4000')
 		.post('/circle')
 		.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`)
@@ -14,7 +14,6 @@ describe('Circle API', function() {
 			expect(res.body).to.be.an('object').to.have.property('circleId');
 			expect(res.body).to.be.an('object').to.have.property('mailboxId');
 			expect(res.body).to.be.an('object').to.have.property('createdOn');
-
 			let circleId = res.body.circleId;
 			let circleMailboxId = res.body.mailboxId;
 			if(!circleId || !circleMailboxId) { done(); return;}
@@ -23,8 +22,8 @@ describe('Circle API', function() {
 			.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`)
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
+				console.log(res.body);
 				console.log(err);
-				console.log(res);
 				if (err) { done(err); return; }
 				res.should.have.status(201);
 				expect(res.body).to.be.an('object').to.have.property('payload');
@@ -45,7 +44,7 @@ describe('Circle API', function() {
 				});
 			});
 		});
-	});*/
+	});
 	it('Messages posted to mailbox gets delivered immediately', (done) => {
 		chai.request('http://localhost:4000')
 		.post('/mailbox')
@@ -67,8 +66,6 @@ describe('Circle API', function() {
 				.get(`/mailbox/getallactivities/${mailboxId}`)
 				.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`)
 				.end((err, res) => {
-					console.log(res.body);
-					console.log(err);
 					if (err) { done(err); return; }
 					res.should.have.status(201);
 					expect(res.body).to.be.an('object').to.have.property('items');
