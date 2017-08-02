@@ -80,9 +80,3 @@ describe('Circle API', function() {
 		});
 	});
 });
-
-describe('')
-
-function fillAllMailboxActivities(callback){
-
-}
