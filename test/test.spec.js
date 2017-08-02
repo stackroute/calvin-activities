@@ -10,6 +10,7 @@ describe('Circle API', function() {
 		.post('/circle')
 		.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`)
 		.end((err, res) => {
+			if (err) { done(err); return; }
 			res.should.have.status(201);
 			expect(res.body).to.be.an('object').to.have.property('circleId');
 			expect(res.body).to.be.an('object').to.have.property('mailboxId');
@@ -22,9 +23,9 @@ describe('Circle API', function() {
 			.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`)
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
+				if (err) { done(err); return; }
 				console.log(res.body);
 				console.log(err);
-				if (err) { done(err); return; }
 				res.should.have.status(201);
 				expect(res.body).to.be.an('object').to.have.property('payload');
 				expect(res.body.payload).to.be.an('object').to.have.property('link');
@@ -32,9 +33,9 @@ describe('Circle API', function() {
 				.get(`/mailbox/getallactivities/${circleMailboxId}`)
 				.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`)
 				.end((err, res) => {
+					if (err) { done(err); return; }
 					console.log(res.body);
 					console.log(err);
-					if (err) { done(err); return; }
 					res.should.have.status(201);
 					expect(res.body).to.be.an('object').to.have.property('items');
 					expect(res.body).to.be.an('object').to.have.property('totalItems');
@@ -49,6 +50,7 @@ describe('Circle API', function() {
 		chai.request('http://localhost:4000')
 		.post('/mailbox')
 		.end((err, res) => {
+			if (err) { done(err); return; }
 			res.should.have.status(201);
 			expect(res.body).to.be.an('object').to.have.property('mailboxId');
 			let mailboxId = res.body.mailboxId;
@@ -78,3 +80,9 @@ describe('Circle API', function() {
 		});
 	});
 });
+
+describe('')
+
+function fillAllMailboxActivities(callback){
+
+}
