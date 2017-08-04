@@ -38,16 +38,17 @@ producer.on('ready', () => {
   }
 
   setInterval(function() {
+    //console.log('In Producer - ' + messagesToSend.length);
     const msgs = messagesToSend.splice(0, messagesToSend.length);
 
     msgs.forEach((payloadItem) => {
       const partitionId = getNextPartition();
-      console.log('partitionId:', partitionId);
+      /*console.log('partitionId:', partitionId);*/
       payloadItem.partition = partitionId;
     });
 
     if(msgs.length > 0) {
-      console.log('msgs:', msgs);
+      //console.log('msgs:', msgs);
       producer.send(msgs, (err) => {
         msgs.forEach((payloadItem) => {
           const topic = payloadItem.topic;
@@ -56,7 +57,7 @@ producer.on('ready', () => {
           topicCount[topic] += count;
         });
 
-        console.log('Messages Produced!');
+        console.log('Messages Produced! - ' + msgs.length + ' - topic - ' + msgs[0].topic);
       });
     }
   }, 1000);

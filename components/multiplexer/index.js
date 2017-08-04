@@ -8,7 +8,7 @@ const kafkaPipeline = require('kafka-pipeline');
 
 kafkaPipeline.producer.ready(function() {
   kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
-    console.log(message);
+   /* console.log(message);*/
     const activity = JSON.parse(message);
     const circleId = activity.circleId;
     let followers;
@@ -22,7 +22,7 @@ kafkaPipeline.producer.ready(function() {
         arr.push({ topic: `${topic}D`, messages: [JSON.stringify(newActivity)] });
       });
       kafkaPipeline.producer.send(arr);
-      console.log('OOKK');
+      /*console.log('OOKK');*/
       done();
     });
   });

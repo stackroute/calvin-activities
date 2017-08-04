@@ -41,25 +41,22 @@ setInterval(function() {
     if (err) { console.error('ERR:', err); }
   });
 }, 1000);
-  
+
 kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
-  console.log(message);
+ /* console.log(message);*/
 
   const receiver = JSON.parse(message).mailboxId;
+
   const newActivity = {
     payload: JSON.parse(message).payload,
     timestamp: new Date(),
   };
-  mailboxDAO.checkIfMailboxExists(receiver, (err, mailboxExists) => {
-    if (err) { console.log({ message: `${err}` }); done(err); return; }
-    redisPublisher.publish(receiver, JSON.stringify(newActivity));
-    activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {  
-     result.CDR++;
-     console.log('result==>',result);      
-     if (error) { console.log({ message: `${error}` }); done(err); return; } else {
+  
+  redisPublisher.publish(receiver, JSON.stringify(newActivity));
+  
+  activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {  
+    result.CDR++;  
+    if (error) { console.log({ message: `${error}` }); done(err); return; } else {
     }
   });
-  });
-
 });
-

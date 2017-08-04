@@ -12,10 +12,10 @@ const subscriber = redis.createClient({
 });
 
 function bootstrapSocketServer(io) {
-  io.on('connection', (socket) => {
-    subscriber.on('message', (channel, data) => {
-      socket.broadcast.to(channel).emit('newActivity', data);
+  subscriber.on('message', (channel, data) => {
+      io.to(channel).emit('newActivity', data);
     });
+  io.on('connection', (socket) => {
     socket.on('authorize', (auth) => {
       if (authorize.verify(auth, 'mailbox:all')) {
         console.log('authorized');

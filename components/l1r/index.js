@@ -17,7 +17,7 @@ function setStartTime() {
     return redis.set('startTime', (new Date()).getTime());
   })((err, response) => {
     if (err) { console.log(err); return; }
-    console.log('Reply Already Set');
+    /*console.log('Reply Already Set');*/
   });
 }
 
@@ -31,9 +31,9 @@ function setEndTime(endTime) {
 }
 
 kafkaPipeline.producer.ready(function() {
-  console.log('topic:', topic);
+ /* console.log('topic:', topic);*/
   kafkaPipeline.registerConsumer(topic,groupName,(message, done)=> {
-    console.log(message);
+   /* console.log(message);*/
     if (!startTimeAlreadySet) {
       setStartTime();
     }

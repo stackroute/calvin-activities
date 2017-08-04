@@ -16,7 +16,7 @@ function setStartTime(groupId) {
   startTime = new Date().getTime();
   redisClient.get(`monitor:${groupId}:startTime`)(function(err, reply) {
     if(err) { console.log('ERR:', err); return; }
-    console.log('reply:', reply);
+    /*console.log('reply:', reply);*/
     if(!reply) {
       console.log('Setting Start Time:');
       redisClient.set(`monitor:${groupId}:startTime`, startTime)(function(err, reply) {
@@ -78,10 +78,10 @@ function registerConsumer(topic, groupId, consumer) {
     console.log('CG ERR:', err);
   });
   consumerGroup.on('message', (msg) => {
-    console.log('MESSAGE');
+    /*console.log('MESSAGE');*/
     if(!startTime) { setStartTime(groupId); }
     redisClient.incr(`monitor:${groupId}:count`)(() => {});
-    console.log('inside consumerGroup pipeline');
+    /*console.log('inside consumerGroup pipeline');*/
     monitor.F++;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
       if (err) { monitor.E++; console.log('nok:', err); return; }
