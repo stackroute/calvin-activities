@@ -7,9 +7,8 @@ function createPublishActivity(req, res) {
   const receiver = req.params.circleId;
   const newActivity = {
     payload: req.body,
-    timestamp: new Date(),
   };
-  newActivity.payload.requestedAt = new Date();
+  newActivity.payload.createdAt = new Date();
   circleDAO.checkIfCircleExists(receiver, (data, circleExists) => {
     if (!circleExists) { res.status(404).json({ message: 'Circle Id does not exists' }); return; }
     activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
@@ -24,9 +23,8 @@ function createPublishActivityToMailbox(req, res) {
   const receiver = req.params.mailboxId;
   const newActivity = {
     payload: req.body,
-    timestamp: new Date(),
   };
-  newActivity.payload.requestedAt = new Date();
+  newActivity.payload.createdAt = new Date();
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
     if (!mailboxExists) { res.status(404).send('Mailbox Id does not exists'); return; }
     activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
@@ -38,20 +36,15 @@ function createPublishActivityToMailbox(req, res) {
 
 
 function getAllActivities(req, res) {
-  const limit = req.query.limit;
-  const before = req.query.before;
-  const after = req.query.after;
   const mailboxId = req.params.mailboxId;
-  activityDao.retriveMessageFromMailbox(mailboxId, before, after, limit, (err, result) => {
+  const limit = req.query.limit;
+  const queryObj = req.query;
+  console.log(queryObj);
+  activityDao.retriveMessageFromMailbox(mailboxId, { queryObj }, limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    if(result.b){
-      result.b.forEach(element => {
-        element.payload = JSON.parse(element.payload);
-      });
-    }
     const firstActivity =  (result.a !== 0) ? result.b[0] : [];
     const lastActivity = (result.a !== 0) ? result.b[result.b.length - 1] : [];
-    res.status(201).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
+    res.status(200).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
   });
 }
 

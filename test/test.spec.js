@@ -6,7 +6,7 @@ const socketClient = require('socket.io-client');
 const should = chai.should();
 const expect = chai.expect;
 chai.use(chaiHttp);
-const redis = require('redis').createClient({host:'172.23.238.134', port: 6379});
+const redis = require('redis').createClient({host:'172.17.0.1', port: 6379});
 
 let allCircles, allMailboxes, allMailboxesWithCircleMailboxes = [];
 let allActivities = [];
@@ -17,8 +17,8 @@ const host = 'http://localhost:4000';
 const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`;
 
 
-/*describe('Messages posted to circle', function() {
-	this.timeout(4000);
+describe('Messages posted to circle', function() {
+	this.timeout(20000);
 	it('gets delivered to circle mailbox immediately', (done) => {
 		chai.request(host)
 		.post('/circle')
@@ -32,31 +32,33 @@ const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY
 			let circleId = res.body.circleId;
 			let circleMailboxId = res.body.mailboxId;
 			if(!circleId || !circleMailboxId) { done(); return;}
-			chai.request(host)
-			.post(`/circle/${circleId}/activity`)
-			.set('Authorization', token)
-			.send({ link: 'www.facebook.com' })
-			.end((err, res) => {
-				if (err) { done(err); return; }
-				res.should.have.status(201);
-				expect(res.body).to.be.an('object').to.have.property('payload');
-				expect(res.body.payload).to.be.an('object').to.have.property('link');
-				setTimeout(function(){
-					chai.request(host)
-					.get(`/mailbox/getallactivities/${circleMailboxId}`)
-					.set('Authorization', token)
-					.end((err, res) => {
-						if (err) { done(err); return; }
-						res.should.have.status(201);
-						expect(res.body).to.be.an('object').to.have.property('items');
-						expect(res.body).to.be.an('object').to.have.property('totalItems');
-						expect(res.body).to.be.an('object').to.have.property('first');
-						expect(res.body).to.be.an('object').to.have.property('last');
-						expect(res.body.totalItems).to.equal(1);
-						done();
-					});
-				}, 3000);
-			});
+			setTimeout(function(){
+				chai.request(host)
+				.post(`/circle/${circleId}/activity`)
+				.set('Authorization', token)
+				.send({ link: 'www.facebook.com' })
+				.end((err, res) => {
+					if (err) { done(err); return; }
+					res.should.have.status(201);
+					expect(res.body).to.be.an('object').to.have.property('payload');
+					expect(res.body.payload).to.be.an('object').to.have.property('link');
+					setTimeout(function(){
+						chai.request(host)
+						.get(`/mailbox/getallactivities/${circleMailboxId}`)
+						.set('Authorization', token)
+						.end((err, res) => {
+							if (err) { done(err); return; }
+							res.should.have.status(200);
+							expect(res.body).to.be.an('object').to.have.property('items');
+							expect(res.body).to.be.an('object').to.have.property('totalItems');
+							expect(res.body).to.be.an('object').to.have.property('first');
+							expect(res.body).to.be.an('object').to.have.property('last');
+							expect(res.body.totalItems).to.equal(1);
+							done();
+						});
+					}, 8000);
+				});
+			}, 3000);
 		});
 	});
 });
@@ -85,7 +87,7 @@ describe('Messages posted to mailbox', function() {
 				.set('Authorization', token)
 				.end((err, res) => {
 					if (err) { done(err); return; }
-					res.should.have.status(201);
+					res.should.have.status(200);
 					expect(res.body).to.be.an('object').to.have.property('items');
 					expect(res.body).to.be.an('object').to.have.property('totalItems');
 					expect(res.body).to.be.an('object').to.have.property('first');
@@ -96,10 +98,10 @@ describe('Messages posted to mailbox', function() {
 			});
 		});
 	});
-})*/
+})
 
 describe('Messages posted to circle', function() {
-	this.timeout(30000);
+	this.timeout(40000);
 	before((done) => {
 
 		createCircles(5, (error, result) => {
@@ -139,7 +141,7 @@ describe('Messages posted to circle', function() {
 		done();
 	});
 
-	/*describe('All non-following users, whether online or offline', function(){
+	describe('All non-following users, whether online or offline', function(){
 		before((done) => {
 			setMailboxesOnline([m1, m2, m3, m5, m8, m9], (error, result) => {});
 			done();
@@ -154,9 +156,6 @@ describe('Messages posted to circle', function() {
 
 			setTimeout(function(){
 				getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err, result) => {
-					console.log([m1, m2, m3, m4, m5, m6, m7, m8, m9]);
-					console.log(allActivities);
-					console.log(allSockets);
 					if(err) { done(err); return;}
 					expect(allActivities.length).to.equal(0);
 					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(0);
@@ -167,7 +166,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allSockets, { mailboxId: m9})[0].activities.length).to.equal(0);
 					done();
 				})
-			}, 8000);
+			}, 35000);
 		});
 
 		after((done) => {
@@ -175,58 +174,54 @@ describe('Messages posted to circle', function() {
 			done();
 		})
 	});
-*/
+
 	describe('All following users who are online', function(){
 		before((done) => {
 
-			followCircles([c1], [m1], (error, result) => {});
-			/*followCircles([c3], [m3, m4], (error, result) => {});
+			followCircles([c1], [m1, m2, m3], (error, result) => {});
+			followCircles([c3], [m3, m4], (error, result) => {});
 			followCircles([c4], [m2, m3, m5], (error, result) => {});
-			followCircles([c5], [m6, m7, m8], (error, result) => {});*/
+			followCircles([c5], [m6, m7, m8], (error, result) => {});
 
-			setMailboxesOnline([m1], (error, result) => {});
+			setMailboxesOnline([m1, m3, m5, m8, m9], (error, result) => {});
 
 			done();
 		});
 
 		it('will receive message immediately in mailbox and as push notifications', (done) => {
 			setTimeout(function(){
-				pushActivitiesToCircles([c1], 1000, (err, result) => {
+				pushActivitiesToCircles([c1, c2, c3, c4, c5], 1000, (err, result) => {
 					if(err) { done(err); return;}
 				})
 			}, 3000);
 
 			setTimeout(function(){
-				getActivitiesOfMailboxes([m1], (err, result) => {
-					console.log([m1]);
-					console.log(allActivities);
-					console.log(_.filter(allSockets, { mailboxId: m1})[0].activities.length);
+				getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err, result) => {
 					if(err) { done(err); return;}
-					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m1}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(1000);
-	
-		/*			expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
+					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(2000);
+					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(1000);	
+					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(3000);
+					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(6000);
 					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(3000);
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(1000);
+					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(2000);
 					expect(_.filter(allSockets, { mailboxId: m5})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m6}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m7}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m8}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(1000);
+					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(2000);
 					expect(_.filter(allSockets, { mailboxId: m8})[0].activities.length).to.equal(1000);
-					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);*/
+					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
 					done();
 				})
-			}, 25000);
+			}, 35000);
 		});
 	});
 
-	/*describe('All following users who are online and they goes offline', function(){
+	describe('All following users who are online and they goes offline', function(){
 		before((done) => {
 
 			setMailboxesOffline([m1, m3, m5, m8, m9], (error, result) => {});
@@ -243,26 +238,24 @@ describe('Messages posted to circle', function() {
 
 			setTimeout(function(){
 				getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err, result) => {
-					console.log([m1, m2, m3, m4, m5, m6, m7, m8, m9]);
-					console.log(allActivities);
 					if(err) { done(err); return;}
-					expect(allSockets,length).to.equal(0);
+					expect(allSockets.length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m1}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(1000);
+					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(2000);
 					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(3000);
+					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(6000);
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(1000);
+					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(2000);
 					expect(_.filter(allActivities, { mailboxId: m6}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m7}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m8}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(1000);
+					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(2000);
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
 					done();
 				})
-			}, 8000);
+			}, 35000);
 		});
 	});
 
@@ -283,32 +276,30 @@ describe('Messages posted to circle', function() {
 
 			setTimeout(function(){
 				getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err, result) => {
-					console.log([m1, m2, m3, m4, m5, m6, m7, m8, m9]);
-					console.log(allActivities);
 					if(err) { done(err); return;}
 					expect(_.filter(allActivities, { mailboxId: m1}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(3000);
+					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(4000);
 					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(9000);
+					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(12000);
 					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(3000);
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(3000);
+					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(4000);
 					expect(_.filter(allSockets, { mailboxId: m5})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m6}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m7}).length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m8}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(3000);
+					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(4000);
 					expect(_.filter(allSockets, { mailboxId: m8})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
 					done();
 				})
-			}, 8000);
+			}, 35000);
 		});
 	});
-*/
+
 	afterEach((done) => {
 		_.each(allSockets, function(conn, index){
 			conn.socket.removeAllListeners();
@@ -467,12 +458,13 @@ function getActivitiesOfMailboxes(mailboxes, callback){
 
 function getActivitiesOfOneMailbox(mailboxId, callback){
 	chai.request(host)
-	.get(`/mailbox/getallactivities/${mailboxId}?limit=-1`)
+	.get(`/mailbox/getallactivities/${mailboxId}?limit=1000000`)
 	.set('Authorization', token)
 	.end((err, res) => {
 		if (err) { callback(err); return; }
 		else {
 			if(res && res.body && res.body.totalItems > 0){
+				console.log(mailboxId + ' : ' + res.body.totalItems);
 				let mailbox = _.filter(allActivities, { mailboxId: mailboxId});
 				if(!mailbox  || mailbox.length == 0) { 
 					allActivities.push({mailboxId: mailboxId, activities: []});

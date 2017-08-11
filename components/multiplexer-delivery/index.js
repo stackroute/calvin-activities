@@ -49,14 +49,13 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
 
   const newActivity = {
     payload: JSON.parse(message).payload,
-    timestamp: new Date(),
   };
   
   redisPublisher.publish(receiver, JSON.stringify(newActivity));
   
   activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {  
     result.CDR++;  
-    if (error) { console.log({ message: `${error}` }); done(err); return; } else {
+    if (error) {done(error); return; } else {
     }
   });
 });

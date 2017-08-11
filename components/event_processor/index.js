@@ -10,6 +10,7 @@ const activityDao = require('./dao/activityDao');
 const adapterDao = require('./dao/adapter');
 const circleDao = require('./dao/circleDao');
 const flwDao = require('./dao/followDao');
+const uuid = require('./db').uuid;
 
 const groupName = require('./config').kafka.options.groupId;
 
@@ -181,6 +182,8 @@ kafkaPipeline.producer.ready(function() {
           adapterDao.createDomainGetCircleId(domain, function(err, circleId){
             const activity = {};
             activity.payload = JSON.parse(message);
+            activity.payload.id = uuid().toString();
+            activity.payload.createdAt = new Date();
             activity.circleId = circleId;
             const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
             kafkaPipeline.producer.send(payloads);
@@ -193,6 +196,8 @@ kafkaPipeline.producer.ready(function() {
           const circleId = circle.circleid;
           const activity = {};
           activity.payload = JSON.parse(message);
+          activity.payload.id = uuid().toString();
+          activity.payload.createdAt = new Date();
           activity.circleId = circleId;
           const payloads = [ {topic: activitiesTopic, messages: JSON.stringify(activity)}];
           kafkaPipeline.producer.send(payloads);

@@ -41,9 +41,8 @@ function getAllActivitiesFromGivenTime(circlesMailboxesArray, lastActivityTime, 
 function insertActivitiesForMailbox(mailboxId, activities, callback) {
   let insertQuery = "";
   for (let i = 0; i < activities.length; i += 1) {
-    console.log(activities[i]);
-    const query = ('INSERT INTO activity (mailboxId,createdat,payload) values( ?,?,? )');
-    client.execute(query, [mailboxId, activities[i].createdat, activities[i].payload], (err, result) => {
+    const query = ('INSERT INTO activity (mailboxId,createdat,activityid,payload) values( ?,?,?,? )');
+    client.execute(query, [mailboxId, activities[i].createdat, activities[i].activityid, activities[i].payload], (err, result) => {
       console.log(err);
       if (err) { return callback(err); }
     });

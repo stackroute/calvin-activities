@@ -4,9 +4,9 @@ let out_count = 0;
 
 function publishToMailbox(mid, activity, callback) {
   const payload = JSON.stringify(activity.payload);
-  const query = ('INSERT INTO activity (mailboxId,createdAt,payload) values( ?,?,? )');
-  console.log('in_count-' + (in_count++) + ' - time - ' + activity.timestamp);
-  client.execute(query, [mid, activity.timestamp, payload], (err, result) => {
+  const query = ('INSERT INTO activity (mailboxId,createdAt,activityId,payload) values( ?,?,?,? )');
+  console.log('in_count-' + (in_count++) + ' - time - ' + activity.payload.createdAt);
+  client.execute(query, [mid, new Date(Date.parse(activity.payload.createdAt)), activity.payload.id, payload], (err, result) => {
   	if (err) { return callback(err); }
     console.log('out_count-' + out_count++);
     return callback(err, activity);
