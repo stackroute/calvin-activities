@@ -5,7 +5,6 @@ function getCirclesForMailbox(mailboxId, callback) {
   const query = (`SELECT  circleid from circlesfollowedbymailbox where mailboxId = ${mailboxId}`);
   client.execute(query, (err, result) => {
     if (err) { throw err; }
-    console.log(result);
     return callback(err, result);
   });
 }
@@ -27,10 +26,8 @@ function getLastMessageOfMailbox(mailboxId, callback) {
 }
 
 function getAllActivitiesFromGivenTime(circlesMailboxesArray, lastActivityTime, callback) {
-  console.log(lastActivityTime);
   const circleMailboxes = convertArrayToQueryParam(circlesMailboxesArray);
   const query = (`SELECT * from activity where mailboxid in ${circleMailboxes} and createdAt > '${lastActivityTime}'`);
-  console.log(query);
   client.execute(query, (err, result) => {
     if (err) { return callback(err); }
     if (result.rowLength == 0) { return callback(null); }
@@ -43,8 +40,7 @@ function insertActivitiesForMailbox(mailboxId, activities, callback) {
   for (let i = 0; i < activities.length; i += 1) {
     const query = ('INSERT INTO activity (mailboxId,createdat,activityid,payload) values( ?,?,?,? )');
     client.execute(query, [mailboxId, activities[i].createdat, activities[i].activityid, activities[i].payload], (err, result) => {
-      console.log(err);
-      if (err) { return callback(err); }
+      if (err) { console.log(err); return callback(err); }
     });
   }
 }
@@ -53,40 +49,28 @@ function syncMailbox(mailboxId, callback) {
   getCircleIdsForMailbox(mailboxId, function (err, data) {
     if(err) {console.log(err); callback(err); return;}
     if(data && data.length > 0){
-     console.log('getCircleIdsForMailbox');
-     console.log(err);
-     console.log(data);
      getAllCirclesMailboxIds(data, function (err, circlesMailboxes) {
-      console.log('getAllCirclesMailboxIds');
-      console.log(err);
-      console.log(circlesMailboxes);
+      if(err) {console.log(err); callback(err); return;}
       getLastMessageOfMailbox(mailboxId, function (err, lastSavedActivity) {
-        console.log('getLastMessageOfMailbox');
-        console.log(err);
-        console.log(lastSavedActivity);
+        if(err) {console.log(err); callback(err); return;}
         if (lastSavedActivity === null || lastSavedActivity === undefined) { lastSavedActivity = '2017-01-01T00:00:00.000Z' }
           else{
             var dateT = lastSavedActivity.getFullYear() + '-' + lastSavedActivity.getMonth() + '-' + lastSavedActivity.getDate() + 'T' + lastSavedActivity.getHours() + ':' + lastSavedActivity.getMinutes() + ':' + lastSavedActivity.getSeconds() + '.000Z';
             lastSavedActivity = dateT;
           }
           getAllActivitiesFromGivenTime(circlesMailboxes, lastSavedActivity, function (err, activities) {
-            console.log('getAllActivitiesFromGivenTime');
-            console.log(err);
-            console.log(circlesMailboxes);
-            console.log(lastSavedActivity);
+            if(err) {console.log(err); callback(err); return;}
             if (err) { return callback(err); }
             if (activities === null || activities === undefined) { return callback(null); }
             insertActivitiesForMailbox(mailboxId, activities, function (err, result) {
-              console.log('insert activities');
-              console.log(err);
-              console.log(result);
-              if (err) { return callback(err); }
-            })
+             if(err) {console.log(err); callback(err); return;}
+             if (err) { return callback(err); }
+           })
           })
         })
     })
    }
-  })
+ })
 }
 
 

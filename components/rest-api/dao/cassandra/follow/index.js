@@ -1,6 +1,7 @@
 const start = require('../../../db');
 const config = require('../../../config');
 const client = start.client;
+const kafkaPipeline = require('kafka-pipeline');
 
 function addFollow(follower, startedFollowing, callback) {
   const query = ('INSERT INTO mailboxesFollowingCircle (circleid, mailboxid, startedFollowing ) values(?, ?, ? )');
@@ -41,7 +42,12 @@ function deleteFollow(follower, callback) {
       if (err2) {
         throw err2;
       }
-      return callback(err2, follower);
+       console.log('SENDING MESSAGE TO ROUTES');
+      kafkaPipeline.producer.ready(function() {
+        console.log('ROUTES_TOPIC:', config.kafka.routesTopic);
+        kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: follower.circleId, mailboxId: follower.mailboxId, command: 'removeRoute'})}]);
+        return callback(null, follower);
+      });
     });
   });
 }

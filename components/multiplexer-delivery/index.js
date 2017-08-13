@@ -43,7 +43,7 @@ setInterval(function() {
 }, 1000);
 
 kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
- /* console.log(message);*/
+  console.log(message);
 
   const receiver = JSON.parse(message).mailboxId;
 

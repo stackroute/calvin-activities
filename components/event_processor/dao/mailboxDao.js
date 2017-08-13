@@ -22,7 +22,6 @@ function checkIfMailboxExists(mailboxId, callback) {
   const query = (`SELECT * from mailbox where mailboxId = ${mailboxId}`);
   client.execute(query, (err, result) => {
     if (err) { console.log(`error returned${err}`); return callback(err); }
-    console.log('rowLength===>', result.rowLength);
     return callback(null, result.rowLength > 0);
   });
 }
