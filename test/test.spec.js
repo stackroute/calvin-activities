@@ -6,7 +6,6 @@ const socketClient = require('socket.io-client');
 const should = chai.should();
 const expect = chai.expect;
 chai.use(chaiHttp);
-const redis = require('redis').createClient({host:'172.17.0.1', port: 6379});
 
 let allCircles, allMailboxes, allMailboxesWithCircleMailboxes = [];
 let allActivities = [];
@@ -102,6 +101,7 @@ describe('Messages posted to mailbox', function() {
 
 describe('Messages posted to circle', function() {
 	this.timeout(40000);
+	allSockets = [];
 	before((done) => {
 
 		createCircles(5, (error, result) => {
@@ -137,7 +137,9 @@ describe('Messages posted to circle', function() {
 
 	beforeEach((done) => {
 		allActivities = [];
-		allSockets = [];
+		_.each(allSockets, function(conn, index){
+			conn.activities = [];
+		});
 		done();
 	});
 
@@ -183,7 +185,7 @@ describe('Messages posted to circle', function() {
 			followCircles([c4], [m2, m3, m5], (error, result) => {});
 			followCircles([c5], [m6, m7, m8], (error, result) => {});
 
-			setMailboxesOnline([m1, m3, m5, m8, m9], (error, result) => {});
+			setTimeout(function(){setMailboxesOnline([m1, m3, m5, m8, m9], (error, result) => {});}, 2000);
 
 			done();
 		});
@@ -239,20 +241,28 @@ describe('Messages posted to circle', function() {
 			setTimeout(function(){
 				getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err, result) => {
 					if(err) { done(err); return;}
-					expect(allSockets.length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m1}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(2000);
+					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(0);	
 					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
+					expect(_.filter(allSockets, { mailboxId: m2})[0].activities.length).to.equal(0);	
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(6000);
+					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(0);	
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m4});
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(2000);
+					expect(_.filter(allSockets, { mailboxId: m5})[0].activities.length).to.equal(0);	
 					expect(_.filter(allActivities, { mailboxId: m6}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m6});
 					expect(_.filter(allActivities, { mailboxId: m7}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m7});
 					expect(_.filter(allActivities, { mailboxId: m8}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(2000);
+					expect(_.filter(allSockets, { mailboxId: m8})[0].activities.length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
+					expect(_.filter(allSockets, { mailboxId: m9})[0].activities.length).to.equal(0);
 					done();
 				})
 			}, 35000);
@@ -281,39 +291,95 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(4000);
 					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
+					expect(_.filter(allSockets, { mailboxId: m2})[0].activities.length).to.equal(0);	
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(12000);
+					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(11000);
 					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(3000);
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m4});
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(4000);
 					expect(_.filter(allSockets, { mailboxId: m5})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m6}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m6});
 					expect(_.filter(allActivities, { mailboxId: m7}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m7});
 					expect(_.filter(allActivities, { mailboxId: m8}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(4000);
 					expect(_.filter(allSockets, { mailboxId: m8})[0].activities.length).to.equal(1000);
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
+					expect(_.filter(allSockets, { mailboxId: m9})[0].activities.length).to.equal(0);
 					done();
 				})
 			}, 35000);
 		});
 	});
 
-	afterEach((done) => {
-		_.each(allSockets, function(conn, index){
-			conn.socket.removeAllListeners();
-			conn.socket.disconnect();
+	describe('All following users who starts unfollowing', function(){
+		before((done) => {
+
+			unfollowCircles([c1], [m1, m2, m3], (error, result) => {});
+			unfollowCircles([c3], [m3, m4], (error, result) => {});
+			unfollowCircles([c4], [m2, m3, m5], (error, result) => {});
+			unfollowCircles([c5], [m6, m7, m8], (error, result) => {});
+
+			done();
 		});
-		done();
+
+		it('will not receive the message', (done) => {
+			setTimeout(function(){
+				pushActivitiesToCircles([c1, c2, c3, c4, c5], 1000, (err, result) => {
+					if(err) { done(err); return;}
+				})
+			}, 3000);
+
+			setTimeout(function(){
+				getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err, result) => {
+					if(err) { done(err); return;}
+					expect(_.filter(allActivities, { mailboxId: m1}).length).to.equal(1);
+					expect(_.filter(allSockets, { mailboxId: m1})[0].activities.length).to.equal(0);
+					expect(_.filter(allActivities, { mailboxId: m1})[0].activities.length).to.equal(4000);			
+					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
+					expect(_.filter(allSockets, { mailboxId: m2})[0].activities.length).to.equal(0);	
+					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
+					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(11000);
+					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(0);
+					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m4});
+					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
+					expect(_.filter(allActivities, { mailboxId: m5})[0].activities.length).to.equal(4000);
+					expect(_.filter(allSockets, { mailboxId: m5})[0].activities.length).to.equal(0);
+					expect(_.filter(allActivities, { mailboxId: m6}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m6});
+					expect(_.filter(allActivities, { mailboxId: m7}).length).to.equal(0);
+					expect(allSockets).to.not.include({ mailboxId: m7});
+					expect(_.filter(allActivities, { mailboxId: m8}).length).to.equal(1);
+					expect(_.filter(allActivities, { mailboxId: m8})[0].activities.length).to.equal(4000);
+					expect(_.filter(allSockets, { mailboxId: m8})[0].activities.length).to.equal(0);
+					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
+					expect(_.filter(allSockets, { mailboxId: m9})[0].activities.length).to.equal(0);
+					done();
+				})
+			}, 35000);
+		});
+
+		after((done) => {
+			setMailboxesOffline([m1, m3, m5, m8, m9], (error, result) => {});
+			done();
+		})
 	});
 
 	after((done) => {
+		console.log([c1,c2,c3,c4,c5,m1,m2,m3,m4,m5,m6,m7,m8,m9]);
 		deleteCircles([c1,c2,c3,c4,c5], (error, result) => {
 			if(error) { done(error); return;}
 		});
 		deleteMailboxes([m1,m2,m3,m4,m5,m6,m7,m8,m9], (error, result) => {
 			if(error) { done(error); return;}
+		});
+		_.each(allSockets, function(conn, index){
+			conn.socket.removeAllListeners();
+			conn.socket.disconnect();
 		});
 		done();
 	});
