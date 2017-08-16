@@ -80,7 +80,7 @@ describe('Messages posted to mailbox', function() {
 			.set('Authorization', token)
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
-				if (err) { done(err); return; }
+				if (err) { console.log('received - ' + err); done(err); return; }
 				console.log(res.body);
 				res.should.have.status(201);
 				expect(res.body).to.be.an('object').to.have.property('payload');
