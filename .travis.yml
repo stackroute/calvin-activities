@@ -10,6 +10,7 @@ before_install:
   - chmod +x ./components/seed-data.sh
   - ./components/seed-data.sh
   - ver=1 docker-compose -f components/docker-compose-local-travis.yml up --build -d
+  - sleep 100
 script:
   - chmod +x ./components/create-multiplexer.sh
   - ./components/create-multiplexer.sh
