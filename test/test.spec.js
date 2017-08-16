@@ -16,7 +16,7 @@ const host = 'http://localhost:4000';
 const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`;
 
 
-describe('Messages posted to circle', function() {
+/*describe('Messages posted to circle', function() {
 	this.timeout(20000);
 	it('gets delivered to circle mailbox immediately', (done) => {
 		chai.request(host)
@@ -62,7 +62,7 @@ describe('Messages posted to circle', function() {
 			}, 3000);
 		});
 	});
-});
+});*/
 
 describe('Messages posted to mailbox', function() {
 	it('gets delivered to mailbox immediately', (done) => {
@@ -70,6 +70,7 @@ describe('Messages posted to mailbox', function() {
 		.post('/mailbox')
 		.end((err, res) => {
 			if (err) { done(err); return; }
+			console.log(res.body);
 			res.should.have.status(201);
 			expect(res.body).to.be.an('object').to.have.property('mailboxId');
 			let mailboxId = res.body.mailboxId;
@@ -80,6 +81,7 @@ describe('Messages posted to mailbox', function() {
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
 				if (err) { done(err); return; }
+				console.log(res.body);
 				res.should.have.status(201);
 				expect(res.body).to.be.an('object').to.have.property('payload');
 				expect(res.body.payload).to.be.an('object').to.have.property('link');
@@ -88,6 +90,7 @@ describe('Messages posted to mailbox', function() {
 				.set('Authorization', token)
 				.end((err, res) => {
 					if (err) { done(err); return; }
+					console.log(res.body);
 					res.should.have.status(200);
 					expect(res.body).to.be.an('object').to.have.property('items');
 					expect(res.body).to.be.an('object').to.have.property('totalItems');
@@ -101,7 +104,7 @@ describe('Messages posted to mailbox', function() {
 	});
 })
 
-describe('Messages posted to circle', function() {
+/*describe('Messages posted to circle', function() {
 	this.timeout(40000);
 	allSockets = [];
 	before((done) => {
@@ -385,7 +388,7 @@ describe('Messages posted to circle', function() {
 		});
 		done();
 	});
-});
+});*/
 
 function createCircles(circleCount, callback){
 	var tasks = [];
