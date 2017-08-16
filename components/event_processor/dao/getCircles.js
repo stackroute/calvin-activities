@@ -28,10 +28,21 @@ function getLastMessageOfMailbox(mailboxId, callback) {
 function getAllActivitiesFromGivenTime(circlesMailboxesArray, lastActivityTime, callback) {
   const circleMailboxes = convertArrayToQueryParam(circlesMailboxesArray);
   const query = (`SELECT * from activity where mailboxid in ${circleMailboxes} and createdAt > '${lastActivityTime}'`);
-  client.execute(query, (err, result) => {
-    if (err) { return callback(err); }
-    if (result.rowLength == 0) { return callback(null); }
-    return callback(err, result.rows);
+
+  let activities = [];
+  let activitiesCount = 0;
+  const options = { fetchSize : 100 };
+  client.eachRow(query, [], options, function (n, row) {
+    activities.push(row);
+    activitiesCount += 1;
+  }, function (err, result) {
+    if (result.nextPage) {
+      console.log('next - ' + activitiesCount + ' - ' + activities.length);
+      result.nextPage();
+    }
+    else{
+      return callback(null, activities);    
+    }
   });
 }
 
