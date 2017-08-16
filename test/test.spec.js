@@ -16,7 +16,7 @@ const host = 'http://localhost:4000';
 const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphbGwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg`;
 
 
-/*describe('Messages posted to circle', function() {
+describe('Messages posted to circle', function() {
 	this.timeout(20000);
 	it('gets delivered to circle mailbox immediately', (done) => {
 		chai.request(host)
@@ -60,7 +60,7 @@ const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY
 			}, 3000);
 		});
 	});
-});*/
+});
 
 /*describe('Messages posted to mailbox', function() {
 	it('gets delivered to mailbox immediately', (done) => {
