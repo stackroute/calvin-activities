@@ -38,6 +38,7 @@ describe('Messages posted to circle', function() {
 				.send({ link: 'www.facebook.com' })
 				.end((err, res) => {
 					if (err) { done(err); return; }
+					console.log(res.body);
 					res.should.have.status(201);
 					expect(res.body).to.be.an('object').to.have.property('payload');
 					expect(res.body.payload).to.be.an('object').to.have.property('link');
@@ -47,6 +48,7 @@ describe('Messages posted to circle', function() {
 						.set('Authorization', token)
 						.end((err, res) => {
 							if (err) { done(err); return; }
+							console.log(res.body);
 							res.should.have.status(200);
 							expect(res.body).to.be.an('object').to.have.property('items');
 							expect(res.body).to.be.an('object').to.have.property('totalItems');
