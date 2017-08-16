@@ -62,7 +62,7 @@ describe('Messages posted to circle', function() {
 	});
 });
 
-/*describe('Messages posted to mailbox', function() {
+describe('Messages posted to mailbox', function() {
 	it('gets delivered to mailbox immediately', (done) => {
 		chai.request(host)
 		.post('/mailbox')
@@ -98,7 +98,7 @@ describe('Messages posted to circle', function() {
 		});
 	});
 })
-*/
+
 describe('Messages posted to circle', function() {
 	this.timeout(40000);
 	allSockets = [];
@@ -226,7 +226,7 @@ describe('Messages posted to circle', function() {
 	describe('All following users who are online and they goes offline', function(){
 		before((done) => {
 
-			setMailboxesOffline([m1, m5, m8, m9], (error, result) => {});
+			setMailboxesOffline([m1, m3, m5, m8, m9], (error, result) => {});
 
 			done();
 		});
@@ -247,8 +247,8 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allActivities, { mailboxId: m2}).length).to.equal(0);
 					expect(_.filter(allSockets, { mailboxId: m2})[0].activities.length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
-					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(9000);
-					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(3000);
+					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(6000);
+					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(0);
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
 					expect(allSockets).to.not.include({ mailboxId: m4});
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
@@ -294,7 +294,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allSockets, { mailboxId: m2})[0].activities.length).to.equal(0);	
 					expect(_.filter(allActivities, { mailboxId: m3}).length).to.equal(1);
 					expect(_.filter(allActivities, { mailboxId: m3})[0].activities.length).to.equal(12000);
-					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(6000);
+					expect(_.filter(allSockets, { mailboxId: m3})[0].activities.length).to.equal(3000);
 					expect(_.filter(allActivities, { mailboxId: m4}).length).to.equal(0);
 					expect(allSockets).to.not.include({ mailboxId: m4});
 					expect(_.filter(allActivities, { mailboxId: m5}).length).to.equal(1);
