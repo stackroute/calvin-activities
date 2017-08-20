@@ -12,6 +12,7 @@ function createMailbox(callback) {
   };
   const query = ('INSERT INTO mailbox (mailboxId) values( ? )');
   client.execute(query, [newMailbox.mailboxId], (err, result) => {
+    console.log('mailbox create - ' + err);
     if (err) { return callback(err, null); }
     return callback(null, newMailbox);
   });

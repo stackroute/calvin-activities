@@ -43,6 +43,7 @@ if(decodeToken !== null){
     if ((claims.indexOf(element) > -1)) { isAllowed = true; }
   });
 }
+console.log('isAllowed-' + isAllowed);
 return isAllowed;
 };
 module.exports = {

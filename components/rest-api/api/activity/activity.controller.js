@@ -20,6 +20,7 @@ function createPublishActivity(req, res) {
 
 // Publish to mailbox
 function createPublishActivityToMailbox(req, res) {
+  console.log('createPublishActivityToMailbox');
   const receiver = req.params.mailboxId;
   const newActivity = {
     payload: req.body,
