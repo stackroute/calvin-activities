@@ -25,9 +25,14 @@ function createPublishActivityToMailbox(req, res) {
     payload: req.body,
   };
   newActivity.payload.createdAt = new Date();
+  console.log('in api');
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
-    if (!mailboxExists) { res.status(404).send('Mailbox Id does not exists'); return; }
+    if (!mailboxExists) { console.log('no mailbox'); res.status(404).send('Mailbox Id does not exists'); return; }
     activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
+      console.log('after publish call');
+      console.log(error1);
+      console.log(data1);
+      console.log('out api');
       if (error1) { res.status(404).json({ message: `${error1}` }); return; }
       res.status(201).json(data1);
     });

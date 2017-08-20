@@ -18,9 +18,12 @@ function createMailbox(callback) {
 }
 
 function checkIfMailboxExists(mailboxId, callback) {
+  console.log('in db check mailbox');
   const query = (`SELECT * from mailbox where mailboxId = ${mailboxId}`);
   client.execute(query, (err, result) => {
     if (err) { console.log(`error returned${err}`); return callback(err); }
+    console.log(result.rows);
+    console.log(result.rowLength);
     return callback(null, result.rowLength > 0);
   });
 }

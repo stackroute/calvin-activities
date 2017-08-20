@@ -16,8 +16,11 @@ function publishActivityToListeners(mid, activity) {
   });
 }
 function publishToMailbox(mid, activity, callback) {
+  console.log('in db publish');
   activity.payload.id = uuid().toString();
   const payload = JSON.stringify(activity.payload);
+  console.log(payload);
+  console.log(mid);
   const query = ('INSERT INTO activity (mailboxId,createdAt, activityId, payload) values( ?,?,?,? )');
   client.execute(query, [mid, activity.payload.createdAt, activity.payload.id, payload], (err, result) => {
     console.log('result',result);
@@ -59,6 +62,7 @@ function checkIfMailboxExists(mid, callback) {
 }
 
 function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
+  console.log('in db retriveMessageFromMailbox');
   let before_time  = queryObj.before_time;
   let after_time = queryObj.after_time;
   checkIfMailboxExists(mid, (err, MailIdExists) => {

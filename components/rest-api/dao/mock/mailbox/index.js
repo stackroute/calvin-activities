@@ -14,6 +14,7 @@ function createMailbox(callback) {
   return callback(null, newMailbox);
 }
 function checkIfMailboxExists(mailboxId, callback) {
+  console.log('in mock mailbox');
   const filterMailbox = mailboxes.filter(mailbox => mailbox.mailboxId === mailboxId);
   return callback(null, filterMailbox.length!==0);
 }
