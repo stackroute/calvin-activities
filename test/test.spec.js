@@ -17,7 +17,7 @@ const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY
 
 
 describe('Messages posted to circle', function() {
-	this.timeout(20000);
+	this.timeout(120000);
 	it('gets delivered to circle mailbox immediately', (done) => {
 		chai.request(host)
 		.post('/circle')
