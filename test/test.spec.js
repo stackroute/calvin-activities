@@ -76,7 +76,7 @@ describe('Messages posted to mailbox', function() {
 			let mailboxId = res.body.mailboxId;
 			if(!mailboxId) { done(); return;}
 			chai.request(host)
-			.post(`/mailbox/${mailboxId}/activitytomailbox`)
+			.post(`/circle/${mailboxId}/activitytomailbox`)
 			.set('Authorization', token)
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
