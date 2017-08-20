@@ -57,7 +57,7 @@ describe('Messages posted to circle', function() {
 							expect(res.body.totalItems).to.equal(1);
 							done();
 						});
-					}, 8000);
+					}, 60000);
 				});
 			}, 3000);
 		});
