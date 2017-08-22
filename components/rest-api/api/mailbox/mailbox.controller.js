@@ -1,7 +1,6 @@
 const mailboxDao = require('../../dao/').mailbox;
 
 function createMailbox(req, res) {
-  console.log('mailbox');
   mailboxDao.createMailbox((err, newMailbox) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
     res.status(201).json(newMailbox);

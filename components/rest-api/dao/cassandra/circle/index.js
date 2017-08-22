@@ -12,23 +12,18 @@ const uuid = start.uuid;
 
 function createCircle(callback) {
   mailboxDAO.createMailbox(function(err, newUser){
-    if(err) { console.log('ERR:', err); return callback(err); }
+    if(err) { return callback(err); }
     const newCircle = {
       circleId: uuid().toString(),
       mailboxId: newUser.mailboxId.toString(),
       createdOn: new Date()
     }
     const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
-    console.log('query:', query);
     client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
-      if (err) { console.log('ERR:', err); return callback(err, null); }
-      console.log('Executed Query Successfully');
-      console.log('SENDING MESSAGE TO ROUTES');
+      if (err) { return callback(err, null); }
       kafkaPipeline.producer.ready(function() {
-        console.log('ROUTES_TOPIC:', config.kafka.routesTopic);
         kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}]);
         return callback(null, newCircle);
-        // return callback(null, newCircle);
       });
     });
   });

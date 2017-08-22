@@ -20,22 +20,16 @@ function createPublishActivity(req, res) {
 
 // Publish to mailbox
 function createPublishActivityToMailbox(req, res) {
-  console.log('createPublishActivityToMailbox');
   const receiver = req.params.mailboxId;
   const newActivity = {
     payload: req.body,
   };
   newActivity.payload.createdAt = new Date();
-  console.log('in api');
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
-    if (!mailboxExists) { console.log('no mailbox'); res.status(404).send('Mailbox Id does not exists'); return; }
-    activityDao.publishToMailbox(receiver, newActivity, (error1, data1) => {
-      console.log('after publish call');
-      console.log(error1);
-      console.log(data1);
-      console.log('out api');
-      if (error1) { res.status(404).json({ message: `${error1}` }); return; }
-      res.status(201).json(data1);
+    if (!mailboxExists) { res.status(404).send('Mailbox Id does not exists'); return; }
+    activityDao.publishToMailbox(receiver, newActivity, (error, data) => {
+      if (error) { res.status(404).json({ message: `${error}` }); return; }
+      res.status(201).json(data);
     });
   });
 }
@@ -45,7 +39,6 @@ function getAllActivities(req, res) {
   const mailboxId = req.params.mailboxId;
   const limit = req.query.limit;
   const queryObj = req.query;
-  console.log(queryObj);
   activityDao.retriveMessageFromMailbox(mailboxId, { queryObj }, limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
     const firstActivity =  (result.a !== 0) ? result.b[0] : [];

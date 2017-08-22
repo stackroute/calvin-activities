@@ -13,7 +13,6 @@ function publishActivityToListeners(mid, activity) {
 }
 
 function publishToMailbox(mid, activity, callback) {
-  console.log('in mock');
   if (!activities[mid]) { activities[mid] = []; }
   activities[mid].unshift(activity);
   publishActivityToListeners(mid, activity);
@@ -46,22 +45,17 @@ function checkIfMailboxExists(mid, callback) {
 // }
 
 function retriveMessageFromMailbox(mid, callback) {
-  console.log('in moch retriveMessageFromMailbox');
   checkIfMailboxExists(mid, (err, MailIdExists) => {
     if (err) { return callback(err, null); }
     if (MailIdExists === false) {
       return callback([], null);
     } else {
       const newAct = activities[mid];
-      //  const offset = parseInt(range.offset);
-      // const count = parseInt(range.count);
-      // console.log(new_Act);
       let i;
       const offset=0;
       const count=5;
       const msg = [];
       for (i=offset; i<=count; i += 1) {
-        // console.log(new_Act[i])
         msg.push(newAct[i]);
       }
 

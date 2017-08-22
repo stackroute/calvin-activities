@@ -16,14 +16,10 @@ function publishActivityToListeners(mid, activity) {
   });
 }
 function publishToMailbox(mid, activity, callback) {
-  console.log('in db publish');
   activity.payload.id = uuid().toString();
   const payload = JSON.stringify(activity.payload);
-  console.log(payload);
-  console.log(mid);
   const query = ('INSERT INTO activity (mailboxId,createdAt, activityId, payload) values( ?,?,?,? )');
   client.execute(query, [mid, activity.payload.createdAt, activity.payload.id, payload], (err, result) => {
-    console.log('result',result);
     if (err) { return callback(err); }
     return callback(err, activity);
   });
@@ -34,7 +30,7 @@ function createPublishActivity(mid, activity, callback) {
   activity.circleId = mid;
   activity.payload.id = uuid().toString();
   kafkaClient.addActivity(activity, (err, data) => {
-    if (err) {console.log('err:', err); return callback(err, null); }
+    if (err) { return callback(err, null); }
     const query1 = (`select createdOn from circle where circleId = ${mid}`);
     client.execute(query1, (err, result) => {
       if (err) { return callback(err, null); }
@@ -62,7 +58,6 @@ function checkIfMailboxExists(mid, callback) {
 }
 
 function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
-  console.log('in db retriveMessageFromMailbox');
   let before_time  = queryObj.before_time;
   let after_time = queryObj.after_time;
   checkIfMailboxExists(mid, (err, MailIdExists) => {
@@ -167,7 +162,6 @@ function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
         }
 
         if (result.nextPage && activitiesResult.length < limit) {
-          console.log('next - ' + activitiesCount + ' - ' + activitiesResult.length);
           activitiesCount = 0;
           activitiesResult = [];
           result.nextPage();

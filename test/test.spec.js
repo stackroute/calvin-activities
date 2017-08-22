@@ -17,7 +17,7 @@ const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY
 
 
 describe('Messages posted to circle', function() {
-	this.timeout(120000);
+	this.timeout(20000);
 	it('gets delivered to circle mailbox immediately', (done) => {
 		chai.request(host)
 		.post('/circle')
@@ -57,14 +57,14 @@ describe('Messages posted to circle', function() {
 							expect(res.body.totalItems).to.equal(1);
 							done();
 						});
-					}, 60000);
+					}, 8000);
 				});
 			}, 3000);
 		});
 	});
 });
 
-/*describe('Messages posted to mailbox', function() {
+describe('Messages posted to mailbox', function() {
 	it('gets delivered to mailbox immediately', (done) => {
 		chai.request(host)
 		.post('/mailbox')
@@ -76,7 +76,7 @@ describe('Messages posted to circle', function() {
 			let mailboxId = res.body.mailboxId;
 			if(!mailboxId) { done(); return;}
 			chai.request(host)
-			.post(`/circle/${mailboxId}/activitytomailbox`)
+			.post(`/mailbox/${mailboxId}/activitytomailbox`)
 			.set('Authorization', token)
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
@@ -102,9 +102,9 @@ describe('Messages posted to circle', function() {
 			});
 		});
 	});
-})*/
+})
 
-/*describe('Messages posted to circle', function() {
+describe('Messages posted to circle', function() {
 	this.timeout(40000);
 	allSockets = [];
 	before((done) => {
@@ -388,7 +388,7 @@ describe('Messages posted to circle', function() {
 		});
 		done();
 	});
-});*/
+});
 
 function createCircles(circleCount, callback){
 	var tasks = [];
