@@ -1,4 +1,4 @@
-const async = require('async');
+ const async = require('async');
 const _ = require('lodash');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -100,7 +100,7 @@ describe('Messages posted to mailbox', function() {
 })
 
 describe('Messages posted to circle', function() {
-	this.timeout(60000);
+	this.timeout(90000);
 	allSockets = [];
 	before((done) => {
 
@@ -219,7 +219,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
 					done();
 				})
-			}, 55000);
+			}, 75000);
 		});
 	});
 
@@ -265,7 +265,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allSockets, { mailboxId: m9})[0].activities.length).to.equal(0);
 					done();
 				})
-			}, 55000);
+			}, 75000);
 		});
 	});
 
@@ -384,6 +384,8 @@ describe('Messages posted to circle', function() {
 		done();
 	});
 });
+
+
 
 function createCircles(circleCount, callback){
 	var tasks = [];

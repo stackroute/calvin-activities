@@ -13,8 +13,8 @@ const subscriber = redis.createClient({
 
 function bootstrapSocketServer(io) {
   subscriber.on('message', (channel, data) => {
-      io.to(channel).emit('newActivity', data);
-    });
+    io.to(channel).emit('newActivity', data);
+  });
   io.on('connection', (socket) => {
     socket.on('authorize', (auth) => {
       if (authorize.verify(auth, 'mailbox:all')) {
@@ -31,6 +31,9 @@ function bootstrapSocketServer(io) {
             adapter.checkIfUserExists(id.user, (err, result) => {
               if (err) { throw err; }
               socket.join(result.mailboxid.toString());
+              console.log(io.sockets.clients(result.mailboxid.toString()).length);
+              console.log(io.adapter.rooms[result.mailboxid.toString()].length);
+              console.log(io.sockets.adapter.rooms[result.mailboxid.toString()].length);
               subscriber.subscribe(result.mailboxid.toString());
               const obj = {
                 mailboxId: result.mailboxid.toString(),
@@ -61,6 +64,9 @@ function bootstrapSocketServer(io) {
             adapter.checkIfUserExists(id.user, (err, result) => {
               if (err) { throw err; }
               socket.leave(result.mailboxid.toString());
+              console.log(io.sockets.clients(result.mailboxid.toString()).length);
+              console.log(io.adapter.rooms[result.mailboxid.toString()].length);
+              console.log(io.sockets.adapter.rooms[result.mailboxid.toString()].length);
               subscriber.unsubscribe(result.mailboxid.toString());
               const obj = {
                 mailboxId: result.mailboxid.toString(),
