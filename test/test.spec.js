@@ -38,7 +38,6 @@ describe('Messages posted to circle', function() {
 				.send({ link: 'www.facebook.com' })
 				.end((err, res) => {
 					if (err) { done(err); return; }
-					console.log(res.body);
 					res.should.have.status(201);
 					expect(res.body).to.be.an('object').to.have.property('payload');
 					expect(res.body.payload).to.be.an('object').to.have.property('link');
@@ -48,7 +47,6 @@ describe('Messages posted to circle', function() {
 						.set('Authorization', token)
 						.end((err, res) => {
 							if (err) { done(err); return; }
-							console.log(res.body);
 							res.should.have.status(200);
 							expect(res.body).to.be.an('object').to.have.property('items');
 							expect(res.body).to.be.an('object').to.have.property('totalItems');
@@ -70,7 +68,6 @@ describe('Messages posted to mailbox', function() {
 		.post('/mailbox')
 		.end((err, res) => {
 			if (err) { done(err); return; }
-			console.log(res.body);
 			res.should.have.status(201);
 			expect(res.body).to.be.an('object').to.have.property('mailboxId');
 			let mailboxId = res.body.mailboxId;
@@ -80,8 +77,7 @@ describe('Messages posted to mailbox', function() {
 			.set('Authorization', token)
 			.send({ link: 'www.facebook.com' })
 			.end((err, res) => {
-				if (err) { console.log('received - ' + err); done(err); return; }
-				console.log(res.body);
+				if (err) { done(err); return; }
 				res.should.have.status(201);
 				expect(res.body).to.be.an('object').to.have.property('payload');
 				expect(res.body.payload).to.be.an('object').to.have.property('link');
@@ -90,7 +86,6 @@ describe('Messages posted to mailbox', function() {
 				.set('Authorization', token)
 				.end((err, res) => {
 					if (err) { done(err); return; }
-					console.log(res.body);
 					res.should.have.status(200);
 					expect(res.body).to.be.an('object').to.have.property('items');
 					expect(res.body).to.be.an('object').to.have.property('totalItems');
@@ -105,7 +100,7 @@ describe('Messages posted to mailbox', function() {
 })
 
 describe('Messages posted to circle', function() {
-	this.timeout(40000);
+	this.timeout(60000);
 	allSockets = [];
 	before((done) => {
 
@@ -224,7 +219,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
 					done();
 				})
-			}, 35000);
+			}, 55000);
 		});
 	});
 
@@ -270,7 +265,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allSockets, { mailboxId: m9})[0].activities.length).to.equal(0);
 					done();
 				})
-			}, 35000);
+			}, 55000);
 		});
 	});
 
