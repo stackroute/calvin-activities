@@ -3,7 +3,8 @@ const kafkaClient = require('../../../kafka');
 const start = require('../../../db');
 const config = require('../../../config');
 const _ = require('lodash');
-
+const redis = require('redis');
+const redisPublisher = redis.createClient({host:config.redis.host, port: config.redis.port});
 const listeners = {};
 
 const client = start.client;
@@ -21,6 +22,8 @@ function publishToMailbox(mid, activity, callback) {
   const query = ('INSERT INTO activity (mailboxId,createdAt, activityId, payload) values( ?,?,?,? )');
   client.execute(query, [mid, activity.payload.createdAt, activity.payload.id, payload], (err, result) => {
     if (err) { return callback(err); }
+
+    redisPublisher.publish(mid, JSON.stringify({ payload: activity.payload}));
     return callback(err, activity);
   });
 }

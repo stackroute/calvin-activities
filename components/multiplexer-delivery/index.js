@@ -1,5 +1,3 @@
-const redisClient = require('./client/redisclient').client;
-
 const kafka = require('kafka-node');
 
 const { ConsumerGroup, Client, HighLevelProducer } = kafka;
