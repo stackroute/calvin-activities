@@ -9,7 +9,9 @@ module.exports = {
       "radix": 0,
       "space-infix-ops": 0,
       "no-unused-vars": [1, {"vars": "local", "args": "none"}],
-      "no-else-return": 0
+      "no-else-return": 0,
+      "prefer-arrow-callback": 1,
+      "no-console": 0,
     },
     "env" : {
   "node": true,

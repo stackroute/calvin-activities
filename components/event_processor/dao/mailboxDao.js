@@ -37,31 +37,31 @@ function deleteMailbox(mailboxId, callback) {
 
 function getAllMailboxes(limit, callback) {
   if (limit === 0) {
-    return callback('limit is set to 0', null);
+    callback('limit is set to 0', null);
   } else if (limit === -1) {
     const query = ('SELECT * from mailbox');
     client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+      if (error) { callback(error, null); return; }
       const a = result.rows.length;
       const b = result.rows;
-      return callback(null, { a, b });
+      callback(null, { a, b });
     });
   } else if (limit === undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from mailbox limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+      if (error) { callback(error, null); return; }
       const a = result.rows.length;
       const b = result.rows;
-      return callback(null, { a, b });
+      callback(null, { a, b });
     });
   } else {
     const query = (`SELECT * from mailbox limit ${limit}`);
     client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+      if (error) { callback(error, null); return; }
       const a = result.rows.length;
       const b = result.rows;
-      return callback(null, { a, b });
+      callback(null, { a, b });
     });
   }
 }

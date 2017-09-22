@@ -46,7 +46,7 @@ function follow(req, res) {
 }
 function unfollow(req, res) {
   const circleId = req.params.circleId;
-   const mailboxId = req.params.mailboxId;
+  const mailboxId = req.params.mailboxId;
 
   mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
     if (err) { res.status(404).json({ message: `${err}` }); return; }
@@ -84,10 +84,10 @@ function unfollow(req, res) {
   });
 }
 
-   function getFollowersMailboxesOfACircle(req, res) {
-  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit,req.query.before, req.query.after, (err, result) => {
+function getFollowersMailboxesOfACircle(req, res) {
+  followDAO.getFollowersMailboxesOfACircle(req.params.circleId, req.query.limit, req.query.before, req.query.after, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    res.status(200).json({totalItems: result.a, items: result.b});
+    res.status(200).json({ totalItems: result.a, items: result.b });
   });
 }
 

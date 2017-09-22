@@ -1,5 +1,6 @@
 const start = require('../../../db');
 const config = require('../../../config');
+
 const client = start.client;
 const activityDAO = require('../../index').activity;
 const followDAO = require('../../index').follow;
@@ -34,17 +35,17 @@ function getAllActivitiesOfACircle(circleId, range, callback) {
   callback(null, response);
 }
 function getAllCircles(mailboxId, callback) {
-     const query = (`SELECT * from circlesfollowedbymailbox where mailboxId = ${mailboxId}`);
-    client.execute(query, (error, result) => {
-      if (error) {
-        return callback(error, null);
-      }
-     
-       let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {a,b});
-           });
-  }
+  const query = (`SELECT * from circlesfollowedbymailbox where mailboxId = ${mailboxId}`);
+  client.execute(query, (error, result) => {
+    if (error) {
+      return callback(error, null);
+    }
+
+    const a = result.rows.length;
+    const b = result.rows;
+    return callback(null, { a, b });
+  });
+}
 
 
 module.exports = {

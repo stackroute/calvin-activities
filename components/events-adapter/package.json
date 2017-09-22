@@ -19,5 +19,11 @@
   "homepage": "https://github.com/stackroute/calvin-activities#readme",
   "dependencies": {
     "kafka-node": "^2.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-mocha": "^4.9.0"
   }
 }

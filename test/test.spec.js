@@ -100,7 +100,7 @@ describe('Messages posted to mailbox', function() {
 })
 
 describe('Messages posted to circle', function() {
-	this.timeout(90000);
+	this.timeout(120000);
 	allSockets = [];
 	before((done) => {
 
@@ -219,7 +219,7 @@ describe('Messages posted to circle', function() {
 					expect(_.filter(allActivities, { mailboxId: m9}).length).to.equal(0);
 					done();
 				})
-			}, 75000);
+			}, 100000);
 		});
 	});
 

@@ -69,33 +69,27 @@ function addRoute(circleId, userId, callback) {
 }
 
 
-
 function removeRoute(circleId, userId, callback) {
   const circle = {
-    circleId: circleId,
+    circleId,
   };
 
   deleteRoute(circleId, userId, (err, result) => {
     if (err) { throw err; }
-     l1rService.getRoutesForCircle(circle, (err, multiplexerList) => {
-    for (let i = 0; i < multiplexerList.length; i += 1) {
-       multiplexerRouteService.checkIfCircleIsPresentinCache({namespace:multiplexerList[i], circleId:circle.circleId}, (err, res) => {
-        if (res === 1) { multiplexerRouteService.getMultiplexer(multiplexerList[i], circle.circleId, userId, (err, result) => {
-          if (err) { throw err; }
+    l1rService.getRoutesForCircle(circle, (err1, multiplexerList) => {
+      for (let i = 0; i < multiplexerList.length; i += 1) {
+        multiplexerRouteService.checkIfCircleIsPresentinCache({ namespace: multiplexerList[i], circleId: circle.circleId }, (err2, res) => {
+          if (res === 1) {
+            multiplexerRouteService.getMultiplexer(multiplexerList[i], circle.circleId, userId, (err3, result3) => {
+              if (err3) { throw err3; }
+            });
+          }
         });
-        }
-       });
-    }
+      }
+    });
   });
-});
-return callback ( null, "del");
+  return callback(null, 'del');
 }
-
-
-
-
-
-
 
 
 module.exports = {

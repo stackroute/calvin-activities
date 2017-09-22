@@ -1,5 +1,5 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
-const app = require('../../app');
+/* const app = require('../../app');
 
 const multiplexerRouteService = require('../../services/multiplexer-route');
 
@@ -158,5 +158,5 @@ describe('multiplexer routes Api', function () {
         });
     });
   });
-});
+}); */
 

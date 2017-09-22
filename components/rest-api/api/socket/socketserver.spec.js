@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+/* const EventEmitter = require('events');
 const authorize = require('../../authorize');
 const mailboxDao = require('../../dao').mailbox;
 const circleDao = require('../../dao').circle;
@@ -118,4 +118,4 @@ describe('/push notifications', () => {
   //     setTimeout(() => { validEventEmitted.should.be.equal(false); done(); }, 100);
   //   });
   // });
-});
+}); */

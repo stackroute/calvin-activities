@@ -48,20 +48,20 @@ function deleteRoute(route, callback) {
   });
 }
 
-function getMultiplexer(namespace, circleId , userId, callback){
-    client.srem(`${namespace}:${circleId}`, userId)((err, res) => {
-    if (err) { callback(err, null); }  
-    if (res === 1){
-       getRoutesForCircle({ namespace: namespace, circleId: circleId }, (err, res) => {
-      if (res.length === 0) {
-        l1rService.deleteRoute({ circleId: circleId, multiplexerId: namespace }, (err, result1) => {
-          if (err) { throw err; }
-        })
-      }
-      multiplexerService.deleteMultiplexer(namespace, (err, result) => {
-        if (err) { throw err; }
+function getMultiplexer(namespace, circleId, userId, callback) {
+  client.srem(`${namespace}:${circleId}`, userId)((err, res) => {
+    if (err) { callback(err, null); }
+    if (res === 1) {
+      getRoutesForCircle({ namespace, circleId }, (err1, res1) => {
+        if (res1.length === 0) {
+          l1rService.deleteRoute({ circleId, multiplexerId: namespace }, (err2, result1) => {
+            if (err2) { throw err2; }
+          });
+        }
+        multiplexerService.deleteMultiplexer(namespace, (err3, result) => {
+          if (err3) { throw err3; }
+        });
       });
-    });
     }
   });
 }

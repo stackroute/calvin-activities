@@ -1,5 +1,4 @@
-
-const routeService = require('../../services/routes');
+/* const routeService = require('../../services/routes');
 
 const multiplexerService = require('../../services/multiplexer');
 
@@ -103,4 +102,4 @@ describe('Routes manager api', () => {
       });
     });
   });
-});
+}); */

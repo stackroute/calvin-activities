@@ -1,15 +1,13 @@
 const followapi = [];
 
-const result = [];
-
 const config = require('../../../config');
 
 function addFollow(follower, startedFollowing, callback) {
   const followers = {
     circleId: follower.circleId,
     mailboxId: follower.mailboxId,
-    startedFollowing: startedFollowing
-  }
+    startedFollowing,
+  };
   followapi.push(followers);
   return callback(null, follower);
 }
@@ -34,33 +32,26 @@ function splitMailId(circleId, callback) {
 function getFollowersMailboxesOfACircle(circleId, limit, callback) {
   const filterData = follow => follow.circleId === circleId;
   const result = followapi.filter(filterData);
-  if (limit == 0) {
-    return callback("limit is set to 0", null);
-    return;
-  }
-
-  else if (limit === -1) {
-    let a = followapi.length;
-    let b = followapi;
+  if (limit === 0) {
+    return callback('limit is set to 0', null);
+  } else if (limit === -1) {
+    const a = followapi.length;
+    const b = followapi;
     return callback(null, { a, b });
-  }
-
-  else if (limit === undefined) {
+  } else if (limit === undefined) {
     const defaultLimit = config.defaultLimit;
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < limit; i+=1) {
       result.push(followapi[i]);
     }
-    let a = result.length;
-    let b = result;
+    const a = result.length;
+    const b = result;
     return callback(null, { a, b });
-  }
-
-  else {
-    for (let i = 0; i < limit; i++) {
+  } else {
+    for (let i = 0; i < limit; i+=1) {
       result.push(followapi[i]);
     }
-    let a = result.length;
-    let b = result;
+    const a = result.length;
+    const b = result;
     return callback(null, { a, b });
   }
 }

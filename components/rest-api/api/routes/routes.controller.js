@@ -16,7 +16,7 @@ function deleteRoute(req, res) {
   const circleId = req.params.circleId;
   const mailboxId = req.params.userId;
   routesService.removeRoute(circleId, mailboxId, (err4, result) => {
-    if (result === "del") { res.status(201).json({ message: 'Routes deleted' }); }
+    if (result === 'del') { res.status(201).json({ message: 'Routes deleted' }); }
     if (err4) { res.status(500).json({ message: `${err4}` }); }
   });
 }

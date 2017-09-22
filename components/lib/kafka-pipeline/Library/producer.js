@@ -1,4 +1,4 @@
- const kafka = require('kafka-node');
+const kafka = require('kafka-node');
 
 const { HighLevelProducer } = kafka;
 const { host, port } = require('../config').kafka;
@@ -9,25 +9,26 @@ const producer = new HighLevelProducer(client);
 console.log(`HOST: ${host}, PORT: ${port}`);
 
 let isReady = false;
+const messagesToSend = [];
+
 producer.on('ready', () => {
   isReady = true;
+  const topicCount = {};
 
   setInterval(() => {
     const topicCountCopy = JSON.parse(JSON.stringify(topicCount));
     const ts = new Date().getTime();
-    const send = Object.keys(topicCount).map((topic) => {
+    const sendMsgs = Object.keys(topicCount).map((topic) => {
       topicCount[topic] -= topicCountCopy[topic]; return {
         topicName: topic,
         topicCount: topicCountCopy[topic],
         ts,
       };
     });
-    producer.send([{ topic: 'monitor', messages: send.map(msg => JSON.stringify(msg)) }], (err, reply) => {
-      if (err) { console.error('err:', err); return; }
+    producer.send([{ topic: 'monitor', messages: sendMsgs.map(msg => JSON.stringify(msg)) }], (err, reply) => {
+      if (err) { console.error('err:', err); }
     });
   }, 1000);
-
-  const topicCount = {};
 
   let partitionId = 0;
 
@@ -37,43 +38,42 @@ producer.on('ready', () => {
     return ret;
   }
 
-  setInterval(function() {
-    //console.log('In Producer - ' + messagesToSend.length);
+  setInterval(() => {
     const msgs = messagesToSend.splice(0, messagesToSend.length);
 
+    const msgsWithPartitionId = [];
+
     msgs.forEach((payloadItem) => {
-      const partitionId = getNextPartition();
-      /*console.log('partitionId:', partitionId);*/
-      payloadItem.partition = partitionId;
+      const obj = JSON.parse(JSON.stringify(payloadItem));
+      partitionId = getNextPartition();
+      obj.partition = partitionId;
+      msgsWithPartitionId.push(obj);
     });
 
-    if(msgs.length > 0) {
-      //console.log('msgs:', msgs);
-      producer.send(msgs, (err) => {
-        msgs.forEach((payloadItem) => {
+    if (msgsWithPartitionId.length > 0) {
+      producer.send(msgsWithPartitionId, (err) => {
+        msgsWithPartitionId.forEach((payloadItem) => {
           const topic = payloadItem.topic;
           const count = payloadItem.messages.length;
-          if (!topicCount.hasOwnProperty(topic)) { topicCount[topic] = 0; }
+          if (!Object.prototype.hasOwnProperty.call(topicCount, topic)) { topicCount[topic] = 0; }
           topicCount[topic] += count;
         });
 
-        console.log('Messages Produced! - ' + msgs.length + ' - topic - ' + msgs[0].topic);
+        console.log(`Messages Produced! - ${msgsWithPartitionId.length} - topic - ${msgsWithPartitionId[0].topic}`);
       });
     }
   }, 1000);
 });
-
-const messagesToSend = [];
 
 function send(msgs) {
   Array.prototype.push.apply(messagesToSend, msgs);
 }
 
 function ready(callback) {
-  if(isReady) { callback(); return; }
+  if (isReady) { callback(); return; }
 
   const interval = setInterval(() => {
-    if(isReady) { clearInterval(interval); callback(); }
+    if (isReady) { clearInterval(interval); callback(); }
   }, 1000);
 }
 

@@ -4,7 +4,8 @@ const start = require('../../../db');
 const config = require('../../../config');
 const _ = require('lodash');
 const redis = require('redis');
-const redisPublisher = redis.createClient({host:config.redis.host, port: config.redis.port});
+
+const redisPublisher = redis.createClient({ host: config.redis.host, port: config.redis.port });
 const listeners = {};
 
 const client = start.client;
@@ -17,36 +18,36 @@ function publishActivityToListeners(mid, activity) {
   });
 }
 function publishToMailbox(mid, activity, callback) {
-  activity.payload.id = uuid().toString();
+  const msg = JSON.parse(JSON.stringify(activity));
+  msg.payload.id = uuid().toString();
   const payload = JSON.stringify(activity.payload);
   const query = ('INSERT INTO activity (mailboxId,createdAt, activityId, payload) values( ?,?,?,? )');
-  client.execute(query, [mid, activity.payload.createdAt, activity.payload.id, payload], (err, result) => {
+  client.execute(query, [mid, activity.payload.createdAt, msg.payload.id, payload], (err, result) => {
     if (err) { return callback(err); }
 
-    redisPublisher.publish(mid, JSON.stringify({ payload: activity.payload}));
-    return callback(err, activity);
+    redisPublisher.publish(mid, JSON.stringify({ payload: activity.payload }));
+    return callback(err, msg);
   });
 }
 
 function createPublishActivity(mid, activity, callback) {
   const msg = JSON.parse(JSON.stringify(activity));
-  activity.circleId = mid;
-  activity.payload.id = uuid().toString();
-  kafkaClient.addActivity(activity, (err, data) => {
-    if (err) { return callback(err, null); }
+  msg.circleId = mid;
+  msg.payload.id = uuid().toString();
+  kafkaClient.addActivity(msg, (err, data) => {
+    if (err) { callback(err, null); return; }
     const query1 = (`select createdOn from circle where circleId = ${mid}`);
-    client.execute(query1, (err, result) => {
-      if (err) { return callback(err, null); }
-      if(result && result.rows && result.rows[0]){
+    client.execute(query1, (err1, result) => {
+      if (err1) { callback(err1, null); return; }
+      if (result && result.rows && result.rows[0]) {
         const c = result.rows[0].createdon;
         const query = ('UPDATE circle SET lastPublishedActivity = ? where circleId=? and createdOn=?');
-        client.execute(query, [new Date(), mid, c], (err, result) => {
-          if (err) { return callback(err, null); }
+        client.execute(query, [new Date(), mid, c], (err2, result2) => {
+          if (err2) { callback(err2, null); return; }
           callback(null, msg);
         });
-      }
-      else{
-        return callback('Circle does not exists');
+      } else {
+        callback('Circle does not exists');
       }
     });
   });
@@ -61,106 +62,86 @@ function checkIfMailboxExists(mid, callback) {
 }
 
 function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
-  let before_time  = queryObj.before_time;
-  let after_time = queryObj.after_time;
+  const beforeTime = queryObj.before_time;
+  const afterTime = queryObj.after_time;
+  let beforeId;
+  let afterId;
+  if (beforeTime !== undefined) {
+    afterId = queryObj.after_id;
+  } else {
+    beforeId = queryObj.before_id;
+  }
   checkIfMailboxExists(mid, (err, MailIdExists) => {
-    if (err) { return callback(err, null); }
-    if(!MailIdExists) { return callback(null, { a : 0, b : []});}
-    else {
+    if (err) { callback(err, null); return; }
+    if (!MailIdExists) { callback(null, { a: 0, b: [] }); } else {
       let query;
-      if(limit === 0){
-        return callback('Limit is zero');
-      }
-      else if(limit === '-1'){
-        if (before_time !== undefined) {
-          if(after_id !== undefined){
-            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before_time}' and activityId > ${after_id}`);
+      if (limit === 0) {
+        callback('Limit is zero'); return;
+      } else if (limit === '-1') {
+        if (beforeTime !== undefined) {
+          if (afterId !== undefined) {
+            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${beforeTime}' and activityId > ${afterId}`);
+          } else {
+            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt <= '${beforeTime}'`);
           }
-          else{
-            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt <= '${before_time}'`);
+        } else if (afterTime !== undefined) {
+          if (beforeId !== undefined) {
+            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${afterTime}' and activityId < ${beforeId}`);
+          } else {
+            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt >= '${afterTime}'`);
           }
-        }
-        else if (after_time !== undefined) {
-          if(before_id !== undefined){
-            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after_time}' and activityId < ${before_id}`);
-          }
-          else{
-            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt >= '${after_time}'`);
-          }
-
-        }
-        else {
+        } else {
           query = (`SELECT * from activity where mailboxId= ${mid}`);
         }
-      }
-      else if(limit !== undefined){
-        if (before_time !== undefined) {
-          if(after_id !== undefined){
-            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before_time}' and activityId > ${after_id}  limit ${limit}`);
+      } else if (limit !== undefined) {
+        if (beforeTime !== undefined) {
+          if (afterId !== undefined) {
+            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${beforeTime}' and activityId > ${afterId}  limit ${limit}`);
+          } else {
+            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt <= '${beforeTime}' limit ${limit}`);
           }
-          else{
-            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt <= '${before_time}' limit ${limit}`);
+        } else if (afterTime !== undefined) {
+          if (beforeId !== undefined) {
+            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${afterTime}' and activityId < ${beforeId} limit ${limit}`);
+          } else {
+            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt >= '${afterTime}' limit ${limit}`);
           }
-        }
-        else if (after_time !== undefined) {
-          if(before_id !== undefined){
-            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after_time}' and activityId < ${before_id} limit ${limit}`);
-          }
-          else{
-            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt >= '${after_time}' limit ${limit}`);
-          }
-        }
-        else {
+        } else {
           query = (`SELECT * from activity where mailboxId= ${mid} limit ${limit}`);
         }
-      }
-      else{
+      } else {
         const defaultLimit = config.defaultLimit;
-        if (before_time !== undefined) {
-          if(after_id !== undefined){
-            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${before_time}' and activityId > ${after_id}  limit ${defaultLimit}`);
+        if (beforeTime !== undefined) {
+          if (afterId !== undefined) {
+            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${beforeTime}' and activityId > ${afterId}  limit ${defaultLimit}`);
+          } else {
+            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt <= '${beforeTime}' limit ${defaultLimit}`);
           }
-          else{
-            query = (`SELECT * from activity where mailboxId = ${mid} and createdAt <= '${before_time}' limit ${defaultLimit}`);
+        } else if (afterTime !== undefined) {
+          if (beforeId !== undefined) {
+            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${afterTime}' and activityId < ${beforeId} limit ${defaultLimit}`);
+          } else {
+            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt >= '${afterTime}' limit ${defaultLimit}`);
           }
-        }
-        else if (after_time !== undefined) {
-          if(before_id !== undefined){
-            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt > '${after_time}' and activityId < ${before_id} limit ${defaultLimit}`);
-          }
-          else{
-            query = (`SELECT * from activity where mailboxId= ${mid} and createdAt >= '${after_time}' limit ${defaultLimit}`);
-          }
-        }
-        else {
+        } else {
           query = (`SELECT * from activity where mailboxId= ${mid} limit ${defaultLimit}`);
         }
       }
 
-      let before_id;
-      let after_id;
-      if(before_time !== undefined){
-        after_id = queryObj.after_id;
-      }
-      else{
-        before_id = queryObj.before_id;
-      }
-
-      const options = { fetchSize : 100 };
-      let activities = [];
+      const options = { fetchSize: 100 };
+      const activities = [];
       let activitiesCount = 0;
       let activitiesResult = [];
 
-      client.eachRow(query, [], options, function (n, row) {
+      client.eachRow(query, [], options, (n, row) => {
         activities.push(row);
         activitiesCount += 1;
-      }, function (err, result) {
-        if(after_id || before_id){
-          const filteredActivities = _.filter(activities, 
-            function(a) { return after_id ? (a.activityid > after_id) : (a.activityid < before_id)});
+      }, (err1, result) => {
+        if (afterId || beforeId) {
+          const filteredActivities = _.filter(activities,
+            a => (afterId ? (a.activityid > afterId) : (a.activityid < beforeId)));
           activitiesResult = activitiesResult.concat(filteredActivities);
-        }
-        else{
+        } else {
           activitiesResult = activitiesResult.concat(activities);
         }
 
@@ -168,9 +149,8 @@ function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
           activitiesCount = 0;
           activitiesResult = [];
           result.nextPage();
-        }
-        else{
-          return callback(null, { a : activitiesResult.length, b: activitiesResult});    
+        } else {
+          callback(null, { a: activitiesResult.length, b: activitiesResult });
         }
       });
     }

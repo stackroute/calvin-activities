@@ -13,6 +13,10 @@
     "async.js": "^0.9.5",
     "chai": "^4.1.0",
     "chai-http": "^3.0.0",
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-mocha": "^4.9.0",
     "lodash": "^4.17.4",
     "mocha": "^3.4.2",
     "socket.io-client": "^2.0.3"

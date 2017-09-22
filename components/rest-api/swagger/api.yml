@@ -276,7 +276,7 @@
         - name: "Authorization"
           in: "header"
           description: "authorization key"
-          required: true
+          required: false
           type: "string" 
         - name: "circleId"
           in: "path"

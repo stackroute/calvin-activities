@@ -3,7 +3,7 @@ const followDAO = require('../../index').follow;
 const circleDAO = require('../../index').circle;
 
 function getOpenMailboxes(range, callback) {
-  console.log("In mock");
+  console.log('In mock');
   const offset = parseInt(range.offset);
   const count = parseInt(range.count);
   const users = (Object.keys(activityDAO.listeners)).slice(offset, (offset+count));

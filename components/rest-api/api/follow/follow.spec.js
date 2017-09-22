@@ -1,6 +1,6 @@
 
 /* eslint prefer-arrow-callback:0, func-names:0 */
-const app = require('../../app');
+/* const app = require('../../app');
 
 require('chai').should();
 
@@ -30,12 +30,12 @@ describe('/follow api', () => {
       circleId = result.circleId;
     });
     mailboxDAO.createMailbox((err, result) => {
-      mailboxId = result.mailboxId;   
-    token = authorize.generateJWTToken();
-    setTimeout(() => {
-      done();
-    }, 400);
-  });
+      mailboxId = result.mailboxId;
+      token = authorize.generateJWTToken();
+      setTimeout(() => {
+        done();
+      }, 400);
+    });
   });
 
   it('should add if circle id, mailbox id exist and follower does not exist', (done) => {
@@ -312,18 +312,18 @@ describe('/follow api', () => {
 
 describe('/follow api with pagination', () => {
   before(function (done) {
-    let startedFollowing = new Date();
-   token = authorize.generateJWTToken();
+    const startedFollowing = new Date();
+    token = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
       circleId = result.circleId;
     });
-     for ( let i = 0; i <= 10; i++){
-      mailboxDAO.createMailbox((err, result) => {  
-        mailboxId = result.mailboxId;  
-      follower = {circleId, mailboxId}
-      followDAO.addFollow(follower, startedFollowing,(err, result) => {
-        if (err) { throw err; }
-    });
+    for (let i = 0; i <= 10; i++) {
+      mailboxDAO.createMailbox((err, result) => {
+        mailboxId = result.mailboxId;
+        follower = { circleId, mailboxId };
+        followDAO.addFollow(follower, startedFollowing, (err, result) => {
+          if (err) { throw err; }
+        });
       });
     }
     done();
@@ -363,4 +363,4 @@ describe('/follow api with pagination', () => {
         done();
       });
   });
-  });
+}); */

@@ -1,5 +1,5 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
-const app = require('../../app');
+/* const app = require('../../app');
 
 const expect = require('chai').expect;
 
@@ -10,6 +10,7 @@ const request = require('supertest');
 const circleDAO = require('../../dao').circle;
 
 const authorize = require('../../authorize');
+
 describe('/circle api', function () {
   let circleId;
   let token;
@@ -114,5 +115,5 @@ describe('/circle api', function () {
         done();
       });
   });
-});
+}); */
 

@@ -20,8 +20,7 @@ function bootstrapSocketServer(io) {
       if (authorize.verify(auth, 'mailbox:all')) {
         socket.on('startListeningToMailbox', (id) => {
           if (id.mid !== null && id.mid !== undefined) {
-
-            if(!io.sockets.adapter.rooms[id.mid]){
+            if (!io.sockets.adapter.rooms[id.mid]) {
               subscriber.subscribe(id.mid);
               const obj = {
                 mailboxId: id.mid,
@@ -31,12 +30,11 @@ function bootstrapSocketServer(io) {
             }
 
             socket.join(id.mid);
-
           } else if (id.user !== null && id.user !== undefined) {
             adapter.checkIfUserExists(id.user, (err, result) => {
               if (err) { throw err; }
 
-              if(!io.sockets.adapter.rooms[result.mailboxid.toString()]){
+              if (!io.sockets.adapter.rooms[result.mailboxid.toString()]) {
                 subscriber.subscribe(result.mailboxid.toString());
                 const obj = {
                   mailboxId: result.mailboxid.toString(),
@@ -46,17 +44,15 @@ function bootstrapSocketServer(io) {
               }
 
               socket.join(result.mailboxid.toString());
-
             });
           } else if (id.domain !== null && id.domain !== undefined) {
             adapter.checkIfDomainExists(id.domain, (err, result) => {
               if (err) { throw err; }
 
-              if(!io.sockets.adapter.rooms[result.mailboxid.toString()]){
-                subscriber.subscribe(result.mailboxid.toString());  
+              if (!io.sockets.adapter.rooms[result.mailboxid.toString()]) {
+                subscriber.subscribe(result.mailboxid.toString());
               }
               socket.join(result.mailboxid.toString());
-              
             });
           } else {
             socket.emit('message', 'mapping does not exists');
@@ -64,10 +60,9 @@ function bootstrapSocketServer(io) {
         });
         socket.on('stopListeningToMailbox', (id) => {
           if (id.mid !== null && id.mid !== undefined) {
-
             socket.leave(id.mid);
 
-            if(!io.sockets.adapter.rooms[id.mid]){
+            if (!io.sockets.adapter.rooms[id.mid]) {
               subscriber.unsubscribe(id.mid);
               const obj = {
                 mailboxId: id.mid,
@@ -75,14 +70,13 @@ function bootstrapSocketServer(io) {
               };
               eventService.sendevent(obj);
             }
-
           } else if (id.user !== null && id.user !== undefined) {
             adapter.checkIfUserExists(id.user, (err, result) => {
               if (err) { throw err; }
 
               socket.leave(result.mailboxid.toString());
 
-              if(!io.sockets.adapter.rooms[result.mailboxid.toString()]){
+              if (!io.sockets.adapter.rooms[result.mailboxid.toString()]) {
                 subscriber.unsubscribe(result.mailboxid.toString());
                 const obj = {
                   mailboxId: result.mailboxid.toString(),
@@ -90,17 +84,15 @@ function bootstrapSocketServer(io) {
                 };
                 eventService.sendevent(obj);
               }
-              
             });
           } else if (id.domain !== null && id.domain !== undefined) {
             adapter.checkIfDomainExists(id.domain, (err, result) => {
               if (err) { throw err; }
 
               socket.leave(result.mailboxid.toString());
-              if(!io.sockets.adapter.rooms[result.mailboxid.toString()]){
+              if (!io.sockets.adapter.rooms[result.mailboxid.toString()]) {
                 subscriber.unsubscribe(result.mailboxid.toString());
               }
-
             });
           } else {
             socket.emit('message', 'mapping does not exists');

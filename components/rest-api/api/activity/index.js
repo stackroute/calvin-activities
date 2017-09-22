@@ -9,7 +9,7 @@ router.post('/:circleId/activity', authorize.permit('circle:all', 'circle:publis
 
 // For mailbox
 
-router.post('/:mailboxId/activitytomailbox', authorize.permit('mailbox:all', 'mailbox:publish'),controller.createPublishActivityToMailbox);
+router.post('/:mailboxId/activitytomailbox', authorize.permit('mailbox:all', 'mailbox:publish'), controller.createPublishActivityToMailbox);
 
 router.get('/getallactivities/:mailboxId', authorize.permit('mailbox:all'), controller.getAllActivities);
 

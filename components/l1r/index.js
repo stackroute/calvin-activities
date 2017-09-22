@@ -14,14 +14,11 @@ function setStartTime() {
   startTimeAlreadySet = true;
   redis.get('startTime')((err, reply) => {
     if (err) { console.log(err); return; }
-    return redis.set('startTime', (new Date()).getTime());
+    redis.set('startTime', (new Date()).getTime());
   })((err, response) => {
-    if (err) { console.log(err); return; }
-    /*console.log('Reply Already Set');*/
+    if (err) { console.log(err); }
   });
 }
-
-let setEndTimeTimeout = null;
 
 function setEndTime(endTime) {
   redis.set('endTime', (new Date()).getTime())((err, response) => {
@@ -30,28 +27,23 @@ function setEndTime(endTime) {
   });
 }
 
-kafkaPipeline.producer.ready(function() {
- /* console.log('topic:', topic);*/
-  kafkaPipeline.registerConsumer(topic,groupName,(message, done)=> {
-   /* console.log(message);*/
+kafkaPipeline.producer.ready(() => {
+  kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
     if (!startTimeAlreadySet) {
       setStartTime();
     }
-    redis.incr(`${topic}:count`)((err, reply) => {
+    redis.incr(`${topic}:count`)(function (err, reply) {
       if (err) { done(err); return; }
       const key = `${L1RCacheNamespace}:${JSON.parse(message).circleId}`;
-      redis.info('server')(function (error, res) {
-        if(error) { done(error); return; }
-        return this.select(0);
-      })(function (error, res) {
-        if(error) { done(error); return; }
-        return this.smembers(key);
-      })((error, res) => {
-        if(error) { done(error); return; }
-        const payloads =[];
+      redis.smembers(key)(function (error, res) {
+        console.log('keys response');
+        console.log(res);
+        if (error) { done(error); return; }
+        const payloads = [];
         res.forEach((element) => {
           payloads.push({ topic: element, messages: [message] });
         });
+
         kafkaPipeline.producer.send(payloads);
         done();
       });

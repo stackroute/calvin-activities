@@ -14,13 +14,12 @@ const redisClient = require('../client/redisclient').client;
 
 function setStartTime(groupId) {
   startTime = new Date().getTime();
-  redisClient.get(`monitor:${groupId}:startTime`)(function(err, reply) {
-    if(err) { console.log('ERR:', err); return; }
-    /*console.log('reply:', reply);*/
-    if(!reply) {
+  redisClient.get(`monitor:${groupId}:startTime`)((err, reply) => {
+    if (err) { console.log('ERR:', err); return; }
+    if (!reply) {
       console.log('Setting Start Time:');
-      redisClient.set(`monitor:${groupId}:startTime`, startTime)(function(err, reply) {
-        if(err) { console.log('ERR:', err); return; }
+      redisClient.set(`monitor:${groupId}:startTime`, startTime)((err1, reply1) => {
+        if (err1) { console.log('ERR:', err1); return; }
         console.log('Set Start Time');
       });
     } else {
@@ -33,9 +32,9 @@ let timeout = null;
 
 function setEndTime(groupId) {
   const endTime = new Date().getTime();
-  if(timeout) { clearTimeout(timeout); }
-  timeout = setTimeout(function() {
-    redisClient.set(`monitor:${groupId}:endTime`, endTime)(function(err, reply) { console.log('End Time Set'); startTime = null; });
+  if (timeout) { clearTimeout(timeout); }
+  timeout = setTimeout(() => {
+    redisClient.set(`monitor:${groupId}:endTime`, endTime)((err, reply) => { console.log('End Time Set'); startTime = null; });
   }, 5000);
 }
 
@@ -73,20 +72,18 @@ function registerConsumer(topic, groupId, consumer) {
   };
 
   const consumerGroup = new ConsumerGroup(options, topic);
-  console.log('Created Consumer group==>',topic);
+  console.log('Created Consumer group==>', topic);
   consumerGroup.on('error', (err) => {
     console.log('CG ERR:', err);
   });
   consumerGroup.on('message', (msg) => {
-    /*console.log('MESSAGE');*/
-    if(!startTime) { setStartTime(groupId); }
+    if (!startTime) { setStartTime(groupId); }
     redisClient.incr(`monitor:${groupId}:count`)(() => {});
-    /*console.log('inside consumerGroup pipeline');*/
-    monitor.F++;
+    monitor.F+=1;
     consumer(JSON.parse(JSON.stringify(msg.value)), (err) => {
-      if (err) { monitor.E++; console.log('nok:', err); return; }
+      if (err) { monitor.E+=1; console.log('nok:', err); return; }
       setEndTime(groupId);
-      monitor.D++;
+      monitor.D+=1;
     });
   });
 }

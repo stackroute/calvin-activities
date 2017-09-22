@@ -1,4 +1,4 @@
-const app = require('../../app');
+/* const app = require('../../app');
 
 const multiplexerService = require('../../services/multiplexer');
 
@@ -53,4 +53,4 @@ describe('/multiplexer api', () => {
         });
     });
   });
-});
+}); */

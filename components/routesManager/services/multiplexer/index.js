@@ -22,7 +22,7 @@ function addMultiplexer(mx, callback) {
   client.hincrby(`${namespace}`, mx, 1)((err, res) => callback(null, res));
 }
 
-function getMultiplexerCount(mx,callback){
+function getMultiplexerCount(mx, callback) {
   client.hget(`${namespace}`, mx)((err, res) => callback(null, res));
 }
 

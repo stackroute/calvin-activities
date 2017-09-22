@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+/* const EventEmitter = require('events');
 const authorize = require('../../authorize');
 const bootstrapSocketServer = require('./socketserver');
 const mailboxDao = require('../../dao').mailbox;
@@ -91,4 +91,4 @@ describe('/push notifications using redis', () => {
       done();
     }, 1500);
   });
-});
+}); */

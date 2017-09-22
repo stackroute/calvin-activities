@@ -22,9 +22,9 @@ function addFollow(req, res) {
       followDAO.addFollow(obj, startFollowing, (error2, addfollower) => {
         if (error2) { res.status(500).json({ message: `${error2}` }); return; }
         const msg = {
-          domain : req.params.domain,
-          user : req.params.user,
-        }
+          domain: req.params.domain,
+          user: req.params.user,
+        };
         res.status(201).json(msg);
       });
     });
@@ -50,11 +50,11 @@ function deleteFollow(req, res) {
       const obj = {
         circleId: (doesDomainExists.circleid).toString(),
         mailboxId: (doesUserExists.mailboxid).toString(),
-      }
-      followDAO.checkIfFollowExists(obj, (error, doesFollowExists) => {
-        if (error) { res.status(500).json({ message: `${error}` }); return; }
-        if(!doesFollowExists){
-          res.status(404).json({ message: `Link does not exists` }); return;
+      };
+      followDAO.checkIfFollowExists(obj, (error2, doesFollowExists) => {
+        if (error2) { res.status(500).json({ message: `${error2}` }); return; }
+        if (!doesFollowExists) {
+          res.status(404).json({ message: 'Link does not exists' }); return;
         }
         followDAO.deleteFollow(obj, (err, result) => {
           if (err) { res.status(500).json({ message: ` ${err}` }); return; }

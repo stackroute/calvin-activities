@@ -48,183 +48,167 @@ function deleteFollow(follower, callback) {
 }
 
 function getFollowersMailboxesOfACircle(circleId, limit, before, after, callback) {
-  const config = require('../../../config');
-  if (limit == 0) {
-    return callback("limit is set to 0", null);
-    return;
-  } else if (limit == -1 && before != undefined && after == undefined) {
+  if (limit === 0) {
+    callback('limit is set to 0', null);
+  } else if (limit === -1 && before !== undefined && after === undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId < ${before}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == -1 && after != undefined && before == undefined) {
+  } else if (limit === -1 && after !== undefined && before === undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId > ${after}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == -1 && after != undefined && before != undefined) {
+  } else if (limit === -1 && after !== undefined && before !== undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId < ${before} and mailboxId > ${after}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == -1 && after == undefined && before == undefined) {
+  } else if (limit === -1 && after === undefined && before === undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == undefined && before != undefined && after == undefined) {
+  } else if (limit === undefined && before !== undefined && after === undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId < ${before} limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == undefined && after != undefined && before == undefined) {
-
+  } else if (limit === undefined && after !== undefined && before === undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId > ${after} limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == undefined && after != undefined && before != undefined) {
-
+  } else if (limit === undefined && after !== undefined && before !== undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId < ${before} and mailboxId > ${after} limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit == undefined && after == undefined && before == undefined) {
-
+  } else if (limit === undefined && after === undefined && before === undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  }
-
-
-
-  // limit != undefined
-  else if (limit != undefined && before != undefined && after == undefined) {
-
+  } else if (limit !== undefined && before !== undefined && after === undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId < ${before} limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit != undefined && after != undefined && before == undefined) {
-
-
+  } else if (limit !== undefined && after !== undefined && before === undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId > ${after} limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit != undefined && after != undefined && before != undefined) {
-
-
+  } else if (limit !== undefined && after !== undefined && before !== undefined) {
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} and mailboxId < ${before} and mailboxId > ${after} limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
-  } else if (limit != undefined && after == undefined && before == undefined) {
-
+  } else if (limit !== undefined && after === undefined && before === undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) {
-        return callback(error, null);
+        callback(error, null); return;
       }
-      let a = result.rows.length;
-      let b = result.rows;
-      return callback(null, {
+      const a = result.rows.length;
+      const b = result.rows;
+      callback(null, {
         a,
-        b
+        b,
       });
     });
   }

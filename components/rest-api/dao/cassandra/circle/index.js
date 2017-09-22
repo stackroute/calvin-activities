@@ -11,19 +11,19 @@ console.log('routesTopic:', config.kafka.routesTopic);
 const uuid = start.uuid;
 
 function createCircle(callback) {
-  mailboxDAO.createMailbox(function(err, newUser){
-    if(err) { return callback(err); }
+  mailboxDAO.createMailbox((err, newUser) => {
+    if (err) { callback(err); return; }
     const newCircle = {
       circleId: uuid().toString(),
       mailboxId: newUser.mailboxId.toString(),
-      createdOn: new Date()
-    }
+      createdOn: new Date(),
+    };
     const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
-    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err, result) => {
-      if (err) { return callback(err, null); }
-      kafkaPipeline.producer.ready(function() {
-        kafkaPipeline.producer.send([{topic: config.kafka.routesTopic, messages: JSON.stringify({circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute'})}]);
-        return callback(null, newCircle);
+    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err2, result) => {
+      if (err2) { callback(err2, null); return; }
+      kafkaPipeline.producer.ready(() => {
+        kafkaPipeline.producer.send([{ topic: config.kafka.routesTopic, messages: JSON.stringify({ circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute' }) }]);
+        callback(null, newCircle);
       });
     });
   });
@@ -38,46 +38,46 @@ function checkIfCircleExists(circleId, callback) {
 }
 
 function deleteCircle(circleId, callback) {
-  client.execute(`SELECT mailboxid from circle where circleId = ${circleId}`, (err, result) => {
-    //TODO pass this circleMailboxId to remove route - result.rows[0].mailboxid.toString()
-      if(err) { return callback(err); }
-      if(result.rowLength == 0) {return callback('Circle not found'); }
-      const query = (`DELETE from circle where circleId =${circleId}`);
-      client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+  client.execute(`SELECT mailboxid from circle where circleId = ${circleId}`, (err, res) => {
+    // TODO pass this circleMailboxId to remove route - result.rows[0].mailboxid.toString()
+    if (err) { callback(err); return; }
+    if (res.rowLength === 0) { callback('Circle not found'); return; }
+    const query = (`DELETE from circle where circleId =${circleId}`);
+    client.execute(query, (error, result) => {
+      if (error) { callback(error, null); return; }
 
-      return callback(null, { id: circleId });
+      callback(null, { id: circleId });
     });
   });
 }
 
 function getAllCircles(limit, callback) {
   if (limit === 0) {
-    return callback('limit is set to 0', null);
+    callback('limit is set to 0', null);
   } else if (limit === -1) {
     const query = ('SELECT * from circle');
     client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+      if (error) { callback(error, null); return; }
       const a = result.rows.length;
       const b = result.rows;
-      return callback(null, { a, b });
+      callback(null, { a, b });
     });
   } else if (limit === undefined) {
     const defaultLimit = config.defaultLimit;
     const query = (`SELECT * from circle limit ${defaultLimit}`);
     client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+      if (error) { callback(error, null); return; }
       const a = result.rows.length;
       const b = result.rows;
-      return callback(null, { a, b });
+      callback(null, { a, b });
     });
   } else {
     const query = (`SELECT * from circle limit ${limit}`);
     client.execute(query, (error, result) => {
-      if (error) { return callback(error, null); }
+      if (error) { callback(error, null); return; }
       const a = result.rows.length;
       const b = result.rows;
-      return callback(null, { a, b });
+      callback(null, { a, b });
     });
   }
 }
@@ -85,6 +85,4 @@ function getAllCircles(limit, callback) {
 module.exports = {
   createCircle, checkIfCircleExists, deleteCircle, getAllCircles,
 };
-
-
 

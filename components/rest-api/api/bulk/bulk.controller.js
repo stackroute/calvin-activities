@@ -16,7 +16,7 @@ function getOpenMailboxes(req, res) {
 function bulkFollow(req, res) {
   const circleId = req.params.circleId;
   const result = req.body.mailboxIds;
-  if(result && result.length > 0){
+  if (result && result.length > 0) {
     circleDAO.checkIfCircleExists(circleId, (err1, doesCircleExists) => {
       if (err1) { res.status(404).json({ message: `${err1}` }); return; }
       if (!doesCircleExists) {
@@ -29,11 +29,11 @@ function bulkFollow(req, res) {
         mailboxDAO.checkIfMailboxExists(mailboxId, (err, doesMailboxExists) => {
           if (err) { res.status(404).json({ message: `${err}` }); return; }
           const isMailboxExists = doesMailboxExists;
-          if(isMailboxExists){
+          if (isMailboxExists) {
             followDAO.checkIfFollowExists({ circleId, mailboxId }, (err2, isExists) => {
               if (err2) { res.status(404).json({ message: `${err2}` }); return; }
               const isFollowExists = isExists;
-              if(!isFollowExists){
+              if (!isFollowExists) {
                 followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
                   if (err3) { throw err3; }
                 });
@@ -49,15 +49,15 @@ function bulkFollow(req, res) {
 
 function getAllCirclesFollowedByMailbox(req, res) {
   const mailboxId = req.params.mailboxId;
-     bulkDAO .getAllCircles(mailboxId, (err, circles) => {
-      if (err) { res.status(404).json({err}); return; }
-      res.status(200).json({ items:circles.a, totalitems:circles.b} );
-    });
+  bulkDAO.getAllCircles(mailboxId, (err, circles) => {
+    if (err) { res.status(404).json({ err }); return; }
+    res.status(200).json({ items: circles.a, totalitems: circles.b });
+  });
 }
 
 
 module.exports = {
   getOpenMailboxes,
   bulkFollow,
-  getAllCirclesFollowedByMailbox
+  getAllCirclesFollowedByMailbox,
 };

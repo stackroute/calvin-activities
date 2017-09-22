@@ -1,4 +1,4 @@
-  const start = require('../../../db');
+const start = require('../../../db');
 
 const mailboxDao = require('../../index').mailbox;
 

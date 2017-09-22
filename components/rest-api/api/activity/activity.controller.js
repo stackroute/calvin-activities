@@ -27,9 +27,9 @@ function createPublishActivityToMailbox(req, res) {
   newActivity.payload.createdAt = new Date();
   mailboxDAO.checkIfMailboxExists(receiver, (data, mailboxExists) => {
     if (!mailboxExists) { res.status(404).send('Mailbox Id does not exists'); return; }
-    activityDao.publishToMailbox(receiver, newActivity, (error, data) => {
+    activityDao.publishToMailbox(receiver, newActivity, (error, result) => {
       if (error) { res.status(404).json({ message: `${error}` }); return; }
-      res.status(201).json(data);
+      res.status(201).json(result);
     });
   });
 }
@@ -41,9 +41,9 @@ function getAllActivities(req, res) {
   const queryObj = req.query;
   activityDao.retriveMessageFromMailbox(mailboxId, { queryObj }, limit, (err, result) => {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
-    const firstActivity =  (result.a !== 0) ? result.b[0] : [];
+    const firstActivity = (result.a !== 0) ? result.b[0] : [];
     const lastActivity = (result.a !== 0) ? result.b[result.b.length - 1] : [];
-    res.status(200).json({totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity});
+    res.status(200).json({ totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity });
   });
 }
 
