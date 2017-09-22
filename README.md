@@ -1,0 +1,1 @@
+> __Note__: Please clone `travis-integration-tests` branch. We are in the process of improving code quality, and our CQ tool is not letting us merge messy code with master.
