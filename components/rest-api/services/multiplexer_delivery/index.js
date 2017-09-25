@@ -1,6 +1,3 @@
-const express = require('express');
-// require('c')
-
 const client = require('../../client/redisclient').client;
 
 function add(mx, payload, callback) {

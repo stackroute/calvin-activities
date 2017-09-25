@@ -1,7 +1,5 @@
 const start = require('../../../db');
 
-const mailboxDao = require('../../index').mailbox;
-
 const config = require('../../../config');
 
 const circles = [];

@@ -18,7 +18,7 @@ function setStartTime(groupId) {
     if (err) { console.log('ERR:', err); return; }
     if (!reply) {
       console.log('Setting Start Time:');
-      redisClient.set(`monitor:${groupId}:startTime`, startTime)((err1, reply1) => {
+      redisClient.set(`monitor:${groupId}:startTime`, startTime)((err1) => {
         if (err1) { console.log('ERR:', err1); return; }
         console.log('Set Start Time');
       });
@@ -34,7 +34,10 @@ function setEndTime(groupId) {
   const endTime = new Date().getTime();
   if (timeout) { clearTimeout(timeout); }
   timeout = setTimeout(() => {
-    redisClient.set(`monitor:${groupId}:endTime`, endTime)((err, reply) => { console.log('End Time Set'); startTime = null; });
+    redisClient.set(`monitor:${groupId}:endTime`, endTime)(() => {
+      console.log('End Time Set');
+      startTime = null;
+    });
   }, 5000);
 }
 
@@ -58,7 +61,7 @@ function registerConsumer(topic, groupId, consumer) {
       monitor.F -= monitorCopy.F;
       monitor.E -= monitorCopy.E;
       monitor.D -= monitorCopy.D;
-      producer.send([{ topic: 'monitor', messages: JSON.stringify(monitorCopy) }], (err, result) => {
+      producer.send([{ topic: 'monitor', messages: JSON.stringify(monitorCopy) }], (err) => {
         if (err) { console.error('ERR:', err); }
       });
     }, 5000);

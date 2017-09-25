@@ -1,4 +1,3 @@
-const client = require('../../../client/kafkaclient').client;
 const eventService = require('../../../services/event');
 const adapterDAO = require('../../../dao/cassandra/adapter');
 

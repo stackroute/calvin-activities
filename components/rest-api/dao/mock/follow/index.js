@@ -1,7 +1,5 @@
 const followapi = [];
 
-const config = require('../../../config');
-
 function addFollow(follower, startedFollowing, callback) {
   const followers = {
     circleId: follower.circleId,
@@ -39,7 +37,6 @@ function getFollowersMailboxesOfACircle(circleId, limit, callback) {
     const b = followapi;
     return callback(null, { a, b });
   } else if (limit === undefined) {
-    const defaultLimit = config.defaultLimit;
     for (let i = 0; i < limit; i+=1) {
       result.push(followapi[i]);
     }

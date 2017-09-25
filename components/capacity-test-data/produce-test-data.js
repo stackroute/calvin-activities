@@ -26,7 +26,7 @@ function addActivity(n, callback) {
   });
 }
 
-addActivity(numberOfMessages, (err, result) => {
+addActivity(numberOfMessages, (err) => {
   if (err) { console.log('error:', err); return; }
   console.log(`PRODUCED ${numberOfMessages} records`);
 });

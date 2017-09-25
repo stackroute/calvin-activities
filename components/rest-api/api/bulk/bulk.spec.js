@@ -30,7 +30,7 @@ describe('/getOpenMailboxes API', () => {
         mailboxIds.push(result.mailboxId);
       });
     }
-    //     console.log(mailboxIds);  
+    //     console.log(mailboxIds);
     //     for (let i = 0; i < 10; i += 1) {
     //         const random = Math.ceil(Math.random() * 9);
     //         sockets[random].emit('authorize', `Bearer ${token}`);

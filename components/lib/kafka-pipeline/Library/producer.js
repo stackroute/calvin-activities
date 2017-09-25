@@ -25,9 +25,10 @@ producer.on('ready', () => {
         ts,
       };
     });
-    producer.send([{ topic: 'monitor', messages: sendMsgs.map(msg => JSON.stringify(msg)) }], (err, reply) => {
-      if (err) { console.error('err:', err); }
-    });
+    producer.send([{ topic: 'monitor', messages: sendMsgs.map(msg => JSON.stringify(msg)) }],
+      (err) => {
+        if (err) { console.error('err:', err); }
+      });
   }, 1000);
 
   let partitionId = 0;
@@ -51,7 +52,7 @@ producer.on('ready', () => {
     });
 
     if (msgsWithPartitionId.length > 0) {
-      producer.send(msgsWithPartitionId, (err) => {
+      producer.send(msgsWithPartitionId, () => {
         msgsWithPartitionId.forEach((payloadItem) => {
           const topic = payloadItem.topic;
           const count = payloadItem.messages.length;

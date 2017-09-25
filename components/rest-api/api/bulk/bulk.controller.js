@@ -34,7 +34,7 @@ function bulkFollow(req, res) {
               if (err2) { res.status(404).json({ message: `${err2}` }); return; }
               const isFollowExists = isExists;
               if (!isFollowExists) {
-                followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3, data) => {
+                followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3) => {
                   if (err3) { throw err3; }
                 });
               }

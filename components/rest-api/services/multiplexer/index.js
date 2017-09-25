@@ -1,7 +1,3 @@
-const express = require('express');
-
-const redis = require('thunk-redis');
-
 const client = require('../../client/redisclient').client;
 
 const namespace = require('../../config').namespacemul;

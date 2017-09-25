@@ -58,12 +58,12 @@ function getAllActivitiesFromGivenTime(circlesMailboxesArray, lastActivityTime, 
 }
 
 function insertActivitiesForMailbox(mailboxId, activities, callback) {
-  const insertQuery = '';
   for (let i = 0; i < activities.length; i += 1) {
     const query = ('INSERT INTO activity (mailboxId,createdat,activityid,payload) values( ?,?,?,? )');
-    client.execute(query, [mailboxId, activities[i].createdat, activities[i].activityid, activities[i].payload], (err, result) => {
-      if (err) { console.log(err); callback(err); }
-    });
+    client.execute(query, [mailboxId, activities[i].createdat, activities[i].activityid, activities[i].payload],
+      (err) => {
+        if (err) { console.log(err); callback(err); }
+      });
   }
 }
 
@@ -95,14 +95,18 @@ function syncMailbox(mailboxId, callback) {
         getLastMessageOfMailbox(mailboxId, (err2, lastSavedActivity) => {
           let getUserActivitiesFrom = lastSavedActivity;
           if (err2) { console.log(err2); callback(err2); return; }
-          if (lastSavedActivity === null || lastSavedActivity === undefined) { getUserActivitiesFrom = '2017-01-01T00:00:00.000Z'; } else {
-            const dateT = `${lastSavedActivity.getFullYear()}-${lastSavedActivity.getMonth()}-${lastSavedActivity.getDate()}T${lastSavedActivity.getHours()}:${lastSavedActivity.getMinutes()}:${lastSavedActivity.getSeconds()}.000Z`;
+          if (lastSavedActivity === null || lastSavedActivity === undefined) {
+            getUserActivitiesFrom = '2017-01-01T00:00:00.000Z';
+          } else {
+            const dateT =
+            `${lastSavedActivity.getFullYear()}-${lastSavedActivity.getMonth()}-${lastSavedActivity.getDate()}\
+            T${lastSavedActivity.getHours()}:${lastSavedActivity.getMinutes()}:${lastSavedActivity.getSeconds()}.000Z`;
             getUserActivitiesFrom = dateT;
           }
           getAllActivitiesFromGivenTime(circlesMailboxes, getUserActivitiesFrom, (err4, activities) => {
             if (err4) { console.log(err4); callback(err4); return; }
             if (activities === null || activities === undefined) { callback(null); return; }
-            insertActivitiesForMailbox(mailboxId, activities, (err5, result) => {
+            insertActivitiesForMailbox(mailboxId, activities, (err5) => {
               if (err5) { console.log(err5); callback(err5); }
             });
           });
@@ -112,4 +116,9 @@ function syncMailbox(mailboxId, callback) {
   });
 }
 
-module.exports = { getCirclesForMailbox, getMailboxIdForCircle, getLastMessageOfMailbox, syncMailbox };
+module.exports = {
+  getCirclesForMailbox,
+  getMailboxIdForCircle,
+  getLastMessageOfMailbox,
+  syncMailbox,
+};

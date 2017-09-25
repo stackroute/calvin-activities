@@ -54,11 +54,11 @@ function getMultiplexer(namespace, circleId, userId, callback) {
     if (res === 1) {
       getRoutesForCircle({ namespace, circleId }, (err1, res1) => {
         if (res1.length === 0) {
-          l1rService.deleteRoute({ circleId, multiplexerId: namespace }, (err2, result1) => {
+          l1rService.deleteRoute({ circleId, multiplexerId: namespace }, (err2) => {
             if (err2) { throw err2; }
           });
         }
-        multiplexerService.deleteMultiplexer(namespace, (err3, result) => {
+        multiplexerService.deleteMultiplexer(namespace, (err3) => {
           if (err3) { throw err3; }
         });
       });

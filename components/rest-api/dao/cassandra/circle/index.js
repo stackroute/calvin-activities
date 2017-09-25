@@ -19,10 +19,16 @@ function createCircle(callback) {
       createdOn: new Date(),
     };
     const query = ('INSERT INTO circle (circleId, mailboxId, createdOn) values( ?, ?, ?)');
-    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err2, result) => {
+    client.execute(query, [newCircle.circleId, newCircle.mailboxId, newCircle.createdOn], (err2) => {
       if (err2) { callback(err2, null); return; }
       kafkaPipeline.producer.ready(() => {
-        kafkaPipeline.producer.send([{ topic: config.kafka.routesTopic, messages: JSON.stringify({ circleId: newCircle.circleId, mailboxId: newCircle.mailboxId, command: 'addRoute' }) }]);
+        kafkaPipeline.producer.send([{
+          topic: config.kafka.routesTopic,
+          messages: JSON.stringify({
+            circleId: newCircle.circleId,
+            mailboxId: newCircle.mailboxId,
+            command: 'addRoute',
+          }) }]);
         callback(null, newCircle);
       });
     });
@@ -43,7 +49,7 @@ function deleteCircle(circleId, callback) {
     if (err) { callback(err); return; }
     if (res.rowLength === 0) { callback('Circle not found'); return; }
     const query = (`DELETE from circle where circleId =${circleId}`);
-    client.execute(query, (error, result) => {
+    client.execute(query, (error) => {
       if (error) { callback(error, null); return; }
 
       callback(null, { id: circleId });

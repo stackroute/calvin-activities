@@ -77,7 +77,7 @@ describe('L1R routes api', function () {
         .expect('Content-Type', /json/)
         .end((error, res) => {
           res.body.should.have.property('message');
-          (res.body.message).should.be.equal(`Route between circle with id ${circleId} and multiplexer with id ${multiplexerId} already exists`);
+          (res.body.message).should.be.equal(`Route between circle and multiplexer already exists`);
           done();
         });
     });

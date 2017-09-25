@@ -11,7 +11,7 @@ function createPublishActivity(req, res) {
   newActivity.payload.createdAt = new Date();
   circleDAO.checkIfCircleExists(receiver, (data, circleExists) => {
     if (!circleExists) { res.status(404).json({ message: 'Circle Id does not exists' }); return; }
-    activityDao.createPublishActivity(receiver, newActivity, (error1, data1) => {
+    activityDao.createPublishActivity(receiver, newActivity, (error1) => {
       if (error1) { res.status(404).json({ message: `${error1}` }); return; }
       res.status(201).json(newActivity);
     });
@@ -43,7 +43,12 @@ function getAllActivities(req, res) {
     if (err) { res.status(500).json({ message: `${err}` }); return; }
     const firstActivity = (result.a !== 0) ? result.b[0] : [];
     const lastActivity = (result.a !== 0) ? result.b[result.b.length - 1] : [];
-    res.status(200).json({ totalItems: result.a, items: result.b, first: firstActivity, last: lastActivity });
+    res.status(200).json({
+      totalItems: result.a,
+      items: result.b,
+      first: firstActivity,
+      last: lastActivity,
+    });
   });
 }
 

@@ -20,12 +20,12 @@ function publishToMailbox(mid, activity, callback) {
 }
 
 function createPublishActivity(mid, activity, callback) {
-  publishToMailbox(mid, activity, (error, result) => {
+  publishToMailbox(mid, activity, () => {
     followDao.splitMailId(mid, (error1, followersMailboxId) => {
       if (!followersMailboxId) { return callback(null, activity); } else {
         for (let i = 0; i < followersMailboxId.length; i += 1) {
           const mailboxId = followersMailboxId[i].mailboxId;
-          publishToMailbox(mailboxId, activity, (err, data) => { if (err) callback(err, null); });
+          publishToMailbox(mailboxId, activity, (err) => { if (err) callback(err, null); });
         }
       }
       return callback(null, activity);

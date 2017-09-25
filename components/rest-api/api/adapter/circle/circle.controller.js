@@ -18,10 +18,9 @@ function deleteDomain(req, res) {
       res.status(404).json({ message: 'Domain does not exist' });
       return;
     }
-    adapterDAO.deleteDomain(req.params.domain, (err, deletedDomain) => {
+    adapterDAO.deleteDomain(req.params.domain, (err) => {
       if (err) { res.status(500).json({ message: `${err}` }); return; }
       res.status(200).json({ domain: req.params.domain });
-      // console.log(deletedDomain.cirleid);
     });
   });
 }

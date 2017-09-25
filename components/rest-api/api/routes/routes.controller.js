@@ -1,8 +1,4 @@
 const routesService = require('../../services/routes');
-const namespace = require('../../config').namespace;
-const multiplexerService = require('../../services/multiplexer');
-const l1rService = require('../../services/l1r');
-const multiplexerRouteService = require('../../services/multiplexer-route');
 
 function createRoute(req, res) {
   routesService.addRoute(req.params.circleId, req.params.userId, (err, result) => {

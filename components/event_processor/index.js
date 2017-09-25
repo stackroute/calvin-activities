@@ -6,13 +6,9 @@ const routesTopic = require('./config').kafka.routesTopic;
 
 const activitiesTopic = require('./config').kafka.activitiesTopic;
 
-const mailboxDao = require('./dao/mailboxDao');
-
 const activityDao = require('./dao/activityDao');
 
 const adapterDao = require('./dao/adapter');
-
-const circleDao = require('./dao/circleDao');
 
 const flwDao = require('./dao/followDao');
 
@@ -62,7 +58,7 @@ kafkaPipeline.producer.ready(() => {
         });
 
         if (status === 'useronline') {
-          followDao.syncMailbox(mailboxId, (err, result) => {
+          followDao.syncMailbox(mailboxId, (err) => {
             if (err) { console.log(err); }
           });
         }
@@ -88,7 +84,7 @@ kafkaPipeline.producer.ready(() => {
       if (domainName !== null && domainName !== undefined) {
         adapterDao.checkIfDomainExists(domainName, (err, circle) => {
           if (circle === 0 || circle === null) {
-            adapterDao.createDomain(domainName, (err1, data) => {
+            adapterDao.createDomain(domainName, (err1) => {
               if (err1) { console.log(err1); }
             });
           }
@@ -109,7 +105,7 @@ kafkaPipeline.producer.ready(() => {
                   if (err1) { console.log(err1); }
                   if (userObj === 0 || userObj === null) {
                     adapterDao.createUserGetMailbox(user, (err2, userMailboxId) => {
-                      flwDao.addFollow({ circleId, userMailboxId }, new Date(), (err3, result) => {
+                      flwDao.addFollow({ circleId, userMailboxId }, new Date(), (err3) => {
                         if (err3) { console.log(err3); }
                       });
                     });
@@ -118,7 +114,7 @@ kafkaPipeline.producer.ready(() => {
                     flwDao.checkIfFollowExists({ circleId, mailboxId }, (err2, flwExists) => {
                       if (err2) { console.log(err2); }
                       if (!flwExists) {
-                        flwDao.addFollow({ circleId, mailboxId }, new Date(), (err3, result) => {
+                        flwDao.addFollow({ circleId, mailboxId }, new Date(), (err3) => {
                           if (err3) { console.log(err3); }
                         });
                       }
@@ -148,7 +144,7 @@ kafkaPipeline.producer.ready(() => {
                     flwDao.checkIfFollowExists({ circleId, mailboxId }, (err2, flwExists) => {
                       if (err2) { console.log(err2); }
                       if (flwExists) {
-                        flwDao.deleteFollow({ circleId, mailboxId }, (err3, result) => {
+                        flwDao.deleteFollow({ circleId, mailboxId }, (err3) => {
                           if (err3) { console.log(err3); }
                         });
                       }
@@ -176,7 +172,7 @@ kafkaPipeline.producer.ready(() => {
                 activity.circleId = domainCircleId;
                 const payloads = [{ topic: activitiesTopic, messages: JSON.stringify(activity) }];
                 kafkaPipeline.producer.send(payloads);
-                activityDao.updateLastPublishedDate(domainCircleId, (err2, res) => {
+                activityDao.updateLastPublishedDate(domainCircleId, (err2) => {
                   if (err2) { console.log(err2); }
                 });
               });

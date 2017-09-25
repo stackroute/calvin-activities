@@ -1,6 +1,6 @@
 const kafka = require('kafka-node');
 
-const { ConsumerGroup, Client, HighLevelProducer } = kafka;
+const { Client, HighLevelProducer } = kafka;
 
 const config =require('./config').redis;
 
@@ -24,8 +24,6 @@ const kafkaPipeline = require('kafka-pipeline');
 
 const activityDAO = require('./dao/activity');
 
-const mailboxDAO = require('./dao/mailbox');
-
 const result = {
   CG: groupName,
   CID: id,
@@ -36,7 +34,7 @@ setInterval(() => {
   const resultCopy = JSON.parse(JSON.stringify(result));
   result.CDR -= resultCopy.CDR;
 
-  producer.send([{ topic: 'monitor', messages: JSON.stringify(resultCopy) }], (err, res) => {
+  producer.send([{ topic: 'monitor', messages: JSON.stringify(resultCopy) }], (err) => {
     if (err) { console.error('ERR:', err); }
   });
 }, 1000);
@@ -51,7 +49,7 @@ kafkaPipeline.registerConsumer(topic, groupName, (message, done) => {
 
   redisPublisher.publish(receiver, JSON.stringify(newActivity));
 
-  activityDAO.publishToMailbox(receiver, newActivity, (error, data) => {
+  activityDAO.publishToMailbox(receiver, newActivity, (error) => {
     result.CDR+=1;
     if (error) { done(error); }
   });

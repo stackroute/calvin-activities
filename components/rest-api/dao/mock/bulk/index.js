@@ -1,6 +1,4 @@
 const activityDAO = require('../../index').activity;
-const followDAO = require('../../index').follow;
-const circleDAO = require('../../index').circle;
 
 function getOpenMailboxes(range, callback) {
   console.log('In mock');
@@ -17,7 +15,6 @@ function getOpenMailboxes(range, callback) {
 
 
 function getAllActivitiesOfACircle(circleId, range, callback) {
-  const before=parseInt(range.before);
   const after=parseInt(range.after);
   const limit= parseInt(range.limit);
   const activityObject = (activityDAO.activities).filter(activity => activity.circleId === circleId);

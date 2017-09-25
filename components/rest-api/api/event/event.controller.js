@@ -1,6 +1,4 @@
-const client = require('../../client/kafkaclient').client;
 const eventService = require('../../services/event');
-
 
 function checkStatusForMailbox(req, res) {
   let eventName = null;

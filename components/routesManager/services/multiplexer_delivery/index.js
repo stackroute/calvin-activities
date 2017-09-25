@@ -1,8 +1,3 @@
-const express = require('express');
-// require('c')
-
-const redis = require('thunk-redis');
-
 const client = require('../../client/redisclient').client;
 
 function add(mx, payload, callback) {
@@ -11,6 +6,5 @@ function add(mx, payload, callback) {
 
 
 module.exports = {
-
   add,
 };

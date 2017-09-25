@@ -1,8 +1,6 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
 
 const client = require('../../client/redisclient').client;
-const multiplexerService = require('../multiplexer');
-const l1rService = require('../l1r');
 
 function checkIfRouteExists(route, callback) {
   const mailboxId = (route.mailboxId).toString();
@@ -49,7 +47,7 @@ function deleteRoute(route, callback) {
 }
 
 function getMultiplexer(namespace, circleId, userId, callback) {
-  client.srem(`${namespace}:${circleId}`, userId)((err, res) => {
+  client.srem(`${namespace}:${circleId}`, userId)((err) => {
     if (err) { callback(err, null); }
   /*    if (res === 1){
        getRoutesForCircle({ namespace: namespace, circleId: circleId }, (err, res) => {

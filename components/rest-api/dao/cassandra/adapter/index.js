@@ -1,17 +1,16 @@
 const start = require('../../../db');
-const config = require('../../../config');
+
 const circleDAO = require('../circle');
+
 const mailboxDAO = require('../mailbox');
 
-
 const client = start.client;
-const uuid = start.uuid;
 
 function createDomain(domain, callback) {
   circleDAO.createCircle((err, newCircle) => {
     if (err) { return err; }
     const query = ('INSERT INTO domain (domain, circleid, mailboxid) values( ?, ?, ?)');
-    client.execute(query, [domain, newCircle.circleId, newCircle.mailboxId], (err1, result) => {
+    client.execute(query, [domain, newCircle.circleId, newCircle.mailboxId], (err1) => {
       if (err1) { return callback(err1, null); }
       return callback(null, domain);
     });
@@ -34,10 +33,10 @@ function checkIfDomainExists(domain, callback) {
 
 function deleteDomain(domain, callback) {
   checkIfDomainExists(domain, (err, domainDetail) => {
-    circleDAO.deleteCircle(domainDetail.circleid, (err1, result) => {
+    circleDAO.deleteCircle(domainDetail.circleid, (err1) => {
       if (err1) { return callback(err1); }
       const query = (`DELETE from domain where domain = '${domain}'`);
-      client.execute(query, (error, data) => {
+      client.execute(query, (error) => {
         if (error) { return callback(error); }
         return callback(null, { message: domainDetail });
       });
@@ -52,7 +51,7 @@ function createUser(user, callback) {
   mailboxDAO.createMailbox((err, newUser) => {
     if (err) { return callback(err); }
     const query = ('INSERT INTO user (user, mailboxid) values( ?, ?)');
-    client.execute(query, [user, newUser.mailboxId], (err1, result) => {
+    client.execute(query, [user, newUser.mailboxId], (err1) => {
       if (err1) { return callback(err1); }
       return callback(null, user);
     });
@@ -76,10 +75,10 @@ function checkIfUserExists(user, callback) {
 
 function deleteUser(user, callback) {
   checkIfUserExists(user, (err, userDetail) => {
-    mailboxDAO.deleteMailbox(userDetail.mailboxid, (err1, result) => {
+    mailboxDAO.deleteMailbox(userDetail.mailboxid, (err1) => {
       if (err1) { return callback(err1); }
       const query = (`DELETE from user where user = '${user}'`);
-      client.execute(query, (error, data) => {
+      client.execute(query, (error) => {
         if (error) { return callback(error); }
         return callback(null, { message: userDetail });
       });

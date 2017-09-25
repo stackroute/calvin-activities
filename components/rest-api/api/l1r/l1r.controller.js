@@ -8,7 +8,9 @@ function addRoute(req, res) {
   l1rService.checkIfRouteExists(newRoute, (err, result1) => {
     if (err) { res.status(500).json({ message: err }); return; }
     if (result1) {
-      res.status(409).json({ message: `Route between circle with id ${newRoute.circleId} and multiplexer with id ${newRoute.multiplexerId} already exists` });
+      res.status(409).json({
+        message: 'Route between circle and multiplexer already exists',
+      });
       return;
     }
     l1rService.addRoute(newRoute, (err1, result) => {
@@ -57,8 +59,7 @@ function deleteRoute(req, res) {
     l1rService.deleteRoute(route, (err1, result) => {
       if (err1) { res.status(404).json({ message: err }); return; }
       if (result) { res.status(200).json({ result }); } else {
-        res.status(404).json({ message: `circle with id ${route.circleId}
-      does not have a route for multiplexer with id ${route.multiplexerId}` });
+        res.status(404).json({ message: 'Route between circle and multiplexer does not exists' });
       }
     });
   });

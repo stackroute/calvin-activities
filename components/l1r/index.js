@@ -12,18 +12,11 @@ let startTimeAlreadySet = false;
 
 function setStartTime() {
   startTimeAlreadySet = true;
-  redis.get('startTime')((err, reply) => {
+  redis.get('startTime')((err) => {
     if (err) { console.log(err); return; }
     redis.set('startTime', (new Date()).getTime());
-  })((err, response) => {
+  })((err) => {
     if (err) { console.log(err); }
-  });
-}
-
-function setEndTime(endTime) {
-  redis.set('endTime', (new Date()).getTime())((err, response) => {
-    if (err) { console.log(err); return; }
-    console.log('EndTime Set');
   });
 }
 
@@ -32,12 +25,10 @@ kafkaPipeline.producer.ready(() => {
     if (!startTimeAlreadySet) {
       setStartTime();
     }
-    redis.incr(`${topic}:count`)(function (err, reply) {
+    redis.incr(`${topic}:count`)((err) => {
       if (err) { done(err); return; }
       const key = `${L1RCacheNamespace}:${JSON.parse(message).circleId}`;
-      redis.smembers(key)(function (error, res) {
-        console.log('keys response');
-        console.log(res);
+      redis.smembers(key)((error, res) => {
         if (error) { done(error); return; }
         const payloads = [];
         res.forEach((element) => {

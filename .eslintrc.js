@@ -12,6 +12,8 @@ module.exports = {
       "no-else-return": 0,
       "prefer-arrow-callback": 1,
       "no-console": 0,
+      "max-len": ["error", 120, 4],
+      "no-unused-vars": 2
     },
     "env" : {
   "node": true,

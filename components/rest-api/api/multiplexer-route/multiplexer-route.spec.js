@@ -34,7 +34,8 @@ describe('multiplexer routes Api', function () {
           if (error) { done(error); return; }
           res.body.should.have.property('result');
           (res.body.result).should.be.equal(1);
-          multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId }, (err1, doesRouteExistAfter) => {
+          multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId },
+          (err1, doesRouteExistAfter) => {
             doesRouteExistAfter.should.be.equal(true);
             done();
           });
@@ -53,7 +54,7 @@ describe('multiplexer routes Api', function () {
         .end((error, res) => {
           if (error) { done(error); return; }
           res.body.should.have.property('message');
-          (res.body.message).should.be.equal(`Route between circle with id ${circleId} and mailbox with id ${mailboxId} already exists`);
+          (res.body.message).should.be.equal(`Route between circle and mailbox already exists`);
           done();
         });
     });
@@ -74,7 +75,8 @@ describe('multiplexer routes Api', function () {
             if (error) { done(error); return; }
             res.body.should.have.property('result');
             (res.body.result).should.be.equal(1);
-            multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId }, (err2, doesRouteExistAfter) => {
+            multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId },
+            (err2, doesRouteExistAfter) => {
               doesRouteExistAfter.should.be.equal(false);
               done();
             });
@@ -91,7 +93,8 @@ describe('multiplexer routes Api', function () {
       multiplexerRouteService.addRoute({ namespace, circleId, mailboxId }, (err1, doesRouteAdded) => {
         if (err1) { throw err1; }
         doesRouteAdded.should.be.equal(1);
-        multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId }, (err2, doesRouteExist) => {
+        multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId },
+        (err2, doesRouteExist) => {
           if (err2) { throw err2; }
           doesRouteExist.should.be.equal(true);
           request(app)
@@ -100,7 +103,7 @@ describe('multiplexer routes Api', function () {
             .expect('Content-Type', /json/)
             .end((error, res) => {
               res.body.should.have.property('message');
-              (res.body.message).should.be.equal(`circle with id ${circleId} does not have a route for mailbox with id ${randomMailboxId}`);
+              (res.body.message).should.be.equal(`Route between circle and mailbox does not exists`);
               done();
             });
         });

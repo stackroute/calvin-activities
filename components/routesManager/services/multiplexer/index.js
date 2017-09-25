@@ -1,7 +1,3 @@
-const express = require('express');
-
-const redis = require('thunk-redis');
-
 const client = require('../../client/redisclient').client;
 
 const namespace = require('../../config').namespacemul;
@@ -33,7 +29,6 @@ function decrementMultiplexerCount(mx, callback) {
 function deleteMultiplexer(mx, callback) {
   client.hdel(`${namespace}`, mx)((err, res) => callback(null, res));
 }
-
 
 module.exports = {
   createMultiplexer,

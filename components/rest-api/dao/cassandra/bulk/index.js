@@ -1,10 +1,8 @@
 const start = require('../../../db');
-const config = require('../../../config');
 
 const client = start.client;
+
 const activityDAO = require('../../index').activity;
-const followDAO = require('../../index').follow;
-const circleDAO = require('../../index').circle;
 
 function getOpenMailboxes(range, callback) {
   const offset = parseInt(range.offset);
@@ -20,7 +18,6 @@ function getOpenMailboxes(range, callback) {
 
 
 function getAllActivitiesOfACircle(circleId, range, callback) {
-  const before=parseInt(range.before);
   const after=parseInt(range.after);
   const limit= parseInt(range.limit);
   const activityObject = (activityDAO.activities).filter(activity => activity.circleId === circleId);

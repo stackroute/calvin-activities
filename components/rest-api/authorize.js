@@ -3,7 +3,11 @@ const jwt = require('jsonwebtoken');
 const config = require('./config');
 
 const generateJWTToken = () => {
-  const token = jwt.sign({ username: 'Mayank Sethi', scopes: ['circle:all', 'mailbox:all', 'follow:all'] },
+  const token = jwt.sign(
+    {
+      username: 'Mayank Sethi',
+      scopes: ['circle:all', 'mailbox:all', 'follow:all'],
+    },
     config.secretKey);
   return token;
 };
@@ -12,7 +16,7 @@ const verifyToken = (req, res, next) => {
   const decodeToken = jwt.decode(token, { complete: true });
   if (!decodeToken.payload.scopes) { return res.status(404).json({ message: 'Invalid Authorization' }); }
   const scopes = decodeToken.payload.scopes;
-  jwt.verify(token, config.secretKey, (err, decoded) => {
+  jwt.verify(token, config.secretKey, (err) => {
     if (err) { return res.status(404).json({ message: 'Invalid Authorization' }); }
     req.claims = scopes;
     next();
