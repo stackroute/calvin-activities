@@ -88,6 +88,7 @@ function getAllCirclesMailboxIds(circleIds, callback) {
 
 function syncMailbox(mailboxId, callback) {
   getCircleIdsForMailbox(mailboxId, (err, data) => {
+    console.log(data);
     if (err) { console.log(err); callback(err); return; }
     if (data && data.length > 0) {
       getAllCirclesMailboxIds(data, (err1, circlesMailboxes) => {
@@ -99,8 +100,7 @@ function syncMailbox(mailboxId, callback) {
             getUserActivitiesFrom = '2017-01-01T00:00:00.000Z';
           } else {
             const dateT =
-            `${lastSavedActivity.getFullYear()}-${lastSavedActivity.getMonth()}-${lastSavedActivity.getDate()}\
-            T${lastSavedActivity.getHours()}:${lastSavedActivity.getMinutes()}:${lastSavedActivity.getSeconds()}.000Z`;
+            `${lastSavedActivity.getFullYear()}-${lastSavedActivity.getMonth()}-${lastSavedActivity.getDate()}T${lastSavedActivity.getHours()}:${lastSavedActivity.getMinutes()}:${lastSavedActivity.getSeconds()}.000Z`;
             getUserActivitiesFrom = dateT;
           }
           getAllActivitiesFromGivenTime(circlesMailboxes, getUserActivitiesFrom, (err4, activities) => {
