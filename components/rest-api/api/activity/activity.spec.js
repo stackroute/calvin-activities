@@ -1,4 +1,4 @@
-/* const app = require('../../app');
+const app = require('../../app');
 
 const expect = require('chai').expect;
 
@@ -14,7 +14,8 @@ const activityDao = require('../../dao').activity;
 
 const authorize = require('../../authorize');
 
-describe('/activity API', () => {
+describe('/activity API', function activityApiTests() {
+  this.timeout(60000);
   let circleId;
   let mailboxId;
   let token;
@@ -22,12 +23,13 @@ describe('/activity API', () => {
   before((done) => {
     token = authorize.generateJWTToken();
     circleDao.createCircle((err, result) => {
-      if (err) { throw err; }
+      if (err) { done(err); return; }
       circleId = result.circleId;
       mailboxDao.createMailbox((error, result1) => {
-        if (error) { throw error; }
+        if (error) { done(error); return; }
         mailboxId = result1.mailboxId;
-        followDAO.addFollow({ circleId, mailboxId }, startedFollowing, (error1, result2) => {
+        followDAO.addFollow({ circleId, mailboxId }, startedFollowing, (error1) => {
+          if (error1) { done(error1); return; }
           setTimeout(() => {
             done();
           }, 1500);
@@ -35,30 +37,25 @@ describe('/activity API', () => {
       });
     });
   });
-  afterEach((done) => {
-    circleDao.deleteCircle(circleId, (err, result) => {
-      if (err) { throw err; }
-    });
-    done();
-  });
 
   it('should publish message to mailbox when we publish activity to mailbox', (done) => {
-    mailboxDao.checkIfMailboxExists(mailboxId, (err1, doesMailboxExists) => {
+    mailboxDao.checkIfMailboxExists(mailboxId, (err) => {
+      if (err) { done(err); return; }
       request(app)
         .post(`/mailbox/${mailboxId}/activitytomailbox`)
         .set('Authorization', `Bearer ${token}`)
         .send({ link: 'www.facebook.com' })
         .expect(201)
         .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) { done(err); return; }
+        .end((error, res) => {
+          if (error) { done(error); return; }
           expect(res.body).to.have.property('payload');
-          activityDao.checkActivityPublished(mailboxId, (error, mailboxActivity) => {
-            if (error) { done(error); return; }
+          activityDao.checkActivityPublished(mailboxId, (error1, mailboxActivity) => {
+            if (error1) { done(error1); return; }
             expect(mailboxActivity).to.have.lengthOf(1);
             const b = (mailboxActivity[0].payload);
             const c = JSON.parse(b);
-            const result = c.payload.link;
+            const result = c.link;
             expect(result).to.equal('www.facebook.com');
             done();
           });
@@ -72,7 +69,7 @@ describe('/activity API', () => {
       if (err) { done(err); return; }
       expect(doesMailboxExists).be.equal(true);
       request(app)
-        .get(`/circle/getallactivities/${mailboxId}`)
+        .get(`/mailbox/getallactivities/${mailboxId}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
@@ -87,12 +84,13 @@ describe('/activity API', () => {
   it('should not retrieve message if mailbox is not-exists', (done) => {
     const mailboxIdd = 'xx3456';
     request(app)
-      .get(`/mailbox/${mailboxIdd}/activity`)
+      .get(`/mailbox/getallactivities/${mailboxIdd}`)
       .set('Authorization', `Bearer ${token}`)
-      .expect(404)
-      .end((err, res) => {
+      .expect(500)
+      .expect('Content-Type', /json/)
+      .end((err) => {
         if (err) { done(err); return; }
         done();
       });
   });
-}); */
+});

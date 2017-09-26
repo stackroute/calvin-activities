@@ -1,8 +1,6 @@
-/* const app = require('../../app');
+const app = require('../../app');
 
 const multiplexerService = require('../../services/multiplexer');
-
-const expect = require('chai').expect;
 
 require('chai').should();
 
@@ -19,7 +17,7 @@ describe('/multiplexer api', () => {
     done();
   });
   after((done) => {
-    client.hdel('multiplexer', mxId)((err, res) => {
+    client.hdel('multiplexer', mxId)(() => {
       done();
     });
   });
@@ -31,7 +29,7 @@ describe('/multiplexer api', () => {
     request(app)
       .post(`/multiplexer/${mxId}`)
       .expect(201)
-      .end((err4, res) => {
+      .end((err4) => {
         if (err4) { done(err4); return; }
         multiplexerService.checkIfMultiplexerExists(mxId, (err, res1) => {
           res1.should.be.equal(1);
@@ -53,4 +51,4 @@ describe('/multiplexer api', () => {
         });
     });
   });
-}); */
+});

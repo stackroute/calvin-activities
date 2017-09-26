@@ -1,5 +1,5 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
-/* const app = require('../../app');
+const app = require('../../app');
 
 const l1rService = require('../../services/l1r');
 
@@ -32,7 +32,7 @@ describe('L1R routes api', function () {
   });
 
   afterEach(function (done) {
-    client.flushall()(function (err, res) {
+    client.flushall()(() => {
       done();
     });
   });
@@ -77,7 +77,7 @@ describe('L1R routes api', function () {
         .expect('Content-Type', /json/)
         .end((error, res) => {
           res.body.should.have.property('message');
-          (res.body.message).should.be.equal(`Route between circle and multiplexer already exists`);
+          (res.body.message).should.be.equal('Route between circle and multiplexer already exists');
           done();
         });
     });
@@ -92,7 +92,7 @@ describe('L1R routes api', function () {
       result.should.be.equal(false);
       if (err) { throw err; }
       if (!result) { return addRoute({ circleId, multiplexerId }); } else { done(); return 0; }
-    })(function (err, result) {
+    })(function (err) {
       if (err) { throw err; }
       request(app)
         .delete(`/l1route/${circleId}/${multiplexerId}`)
@@ -124,8 +124,7 @@ describe('L1R routes api', function () {
         .expect('Content-Type', /json/)
         .end((error, res) => {
           res.body.should.have.property('message');
-          (res.body.message).should.be.equal(`circle with id ${circleId}
-      does not have a route for multiplexer with id ${randomMultiplexerid}`);
+          (res.body.message).should.be.equal('Route between circle and multiplexer does not exists');
           done();
         });
     });
@@ -148,7 +147,7 @@ describe('L1R routes api', function () {
       if (err) { throw err; }
       result.should.be.equal(0);
       if (!result) { return addRoute({ circleId, multiplexerId }); } else { done(); return 0; }
-    })(function (err, result) {
+    })(function (err) {
       if (err) { throw err; }
       request(app)
         .get(`/l1route/${circleId}`)
@@ -178,4 +177,4 @@ describe('L1R routes api', function () {
         });
     });
   });
-}); */
+});

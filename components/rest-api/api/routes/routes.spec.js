@@ -1,5 +1,3 @@
-/* const routeService = require('../../services/routes');
-
 const multiplexerService = require('../../services/multiplexer');
 
 const l1rService = require('../../services/l1r');
@@ -7,9 +5,8 @@ const l1rService = require('../../services/l1r');
 const multiplexerRouteService = require('../../services/multiplexer-route');
 
 const app = require('../../app');
-require('chai').should();
 
-const expect = require('chai').expect;
+require('chai').should();
 
 const redis = require('thunk-redis');
 
@@ -26,13 +23,13 @@ describe('Routes manager api', () => {
     circleId = Math.floor(Math.random() * 30);
     mailboxId = Math.floor(Math.random() * 50);
     multiplexerId = 'm1';
-    client.flushall()((err, res) => {
+    client.flushall()(() => {
       done();
     });
   });
 
   afterEach((done) => {
-    client.flushall()((err, res) => {
+    client.flushall()(() => {
       done();
     });
   });
@@ -55,8 +52,8 @@ describe('Routes manager api', () => {
 
 
   it('should create a route if multiplexer does not exists', (done) => {
-    multiplexerService.addMultiplexer(multiplexerId, (err, result) => {
-      multiplexerService.checkIfMultiplexerExists(multiplexerId, (err1, result1) => {
+    multiplexerService.addMultiplexer(multiplexerId, () => {
+      multiplexerService.checkIfMultiplexerExists(multiplexerId, () => {
         request(app)
           .post(`/routes/${circleId}/${mailboxId}`)
           .expect(201)
@@ -74,12 +71,11 @@ describe('Routes manager api', () => {
     l1rService.checkIfCircleIsPresentinCache(circleId, (err, result) => {
       result.should.be.equal(0);
       request(app)
-        .delete(`/routes/${circleId}/${mailboxId}/${multiplexerId}`)
-        .expect(404)
-        .expect('content-Type', /json/)
+        .delete(`/routes/${circleId}/${mailboxId}`)
+        .expect(500)
         .end((error, res) => {
           res.body.should.have.property('message');
-          (res.body.message).should.contain('No routes present');
+          (res.body.message).should.contain('Routes deleted');
           done();
         });
     });
@@ -91,9 +87,8 @@ describe('Routes manager api', () => {
       l1rService.addRoute({ circleId, multiplexerId }, (err1, result1) => {
         result1.should.be.equal(1);
         request(app)
-          .delete(`/routes/${circleId}/${mailboxId}/${multiplexerId}`)
-          .expect(404)
-          .expect('content-Type', /json/)
+          .delete(`/routes/${circleId}/${mailboxId}`)
+          .expect(201)
           .end((error, res) => {
             res.body.should.have.property('message');
             (res.body.message).should.contain('Routes deleted');
@@ -102,4 +97,4 @@ describe('Routes manager api', () => {
       });
     });
   });
-}); */
+});

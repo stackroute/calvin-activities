@@ -1,6 +1,6 @@
 
 /* eslint prefer-arrow-callback:0, func-names:0 */
-/* const app = require('../../app');
+const app = require('../../app');
 
 require('chai').should();
 
@@ -213,7 +213,7 @@ describe('/follow api', () => {
             .delete(`/mailbox/${mailboxId}/circle/${circleId}`)
             .set('Authorization', `Bearer ${token}`)
             .expect(404)
-            .end((err3, res) => {
+            .end((err3) => {
               if (err3) { done(err3); return; }
               followDAO.checkIfFollowExists({ circleId, mailboxId }, (err4, doesFollowExistsAfter) => {
                 if (err4) { done(err4); return; }
@@ -310,32 +310,47 @@ describe('/follow api', () => {
   });
 });
 
-describe('/follow api with pagination', () => {
+describe('/follow api with pagination', function paginationTests() {
+  this.timeout(10000);
+  let circleId1;
+  let token1;
+  const mailboxIds = [];
+  let follower;
   before(function (done) {
     const startedFollowing = new Date();
-    token = authorize.generateJWTToken();
+    token1 = authorize.generateJWTToken();
     circleDAO.createCircle((err, result) => {
-      circleId = result.circleId;
+      if (err) { done(err); return; }
+      circleId1 = result.circleId;
     });
-    for (let i = 0; i <= 10; i++) {
+    for (let i = 0; i <= 10; i+=1) {
       mailboxDAO.createMailbox((err, result) => {
-        mailboxId = result.mailboxId;
-        follower = { circleId, mailboxId };
-        followDAO.addFollow(follower, startedFollowing, (err, result) => {
-          if (err) { throw err; }
-        });
+        if (err) { done(err); return; }
+        mailboxIds.push(result.mailboxId);
       });
     }
-    done();
+    setTimeout(function () {
+      for (let i = 0; i <= 10; i+=1) {
+        follower = { circleId: circleId1, mailboxId: mailboxIds[i] };
+        followDAO.addFollow(follower, startedFollowing, (err) => {
+          if (err) { done(err); }
+        });
+      }
+    }, 2000);
+    setTimeout(function () {
+      done();
+    }, 4000);
   });
 
   it('should return all followers with limit', (done) => {
+    console.log(circleId1);
     request(app)
-      .get(`/mailbox/getfollowers/circle/${circleId}?limit=5`)
-      .set('Authorization', `Bearer ${token}`)
+      .get(`/mailbox/getfollowers/circle/${circleId1}?limit=5`)
+      .set('Authorization', `Bearer ${token1}`)
       .expect(200)
       .expect('Content-Type', /json/)
       .end((err1, res) => {
+        if (err1) { done(err1); return; }
         expect(res.body.totalItems).to.be.equal(5);
         for (let i = 0; i < res.body.totalItems; i += 1) {
           expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
@@ -347,20 +362,15 @@ describe('/follow api with pagination', () => {
   });
 
 
-  it('should return all followers without limit', (done) => {
+  it('should return error for invalid limit', (done) => {
     request(app)
-      .get(`/mailbox/getfollowers/circle/${circleId}?limit=-1`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
+      .get(`/mailbox/getfollowers/circle/${circleId1}?limit=-1`)
+      .set('Authorization', `Bearer ${token1}`)
+      .expect(500)
       .expect('Content-Type', /json/)
-      .end((err1, res) => {
-        expect(res.body.totalItems).to.be.above(0);
-        for (let i = 0; i < res.body.totalItems; i += 1) {
-          expect(res.body.items[i]).to.be.an('object').to.have.property('circleid');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('mailboxid');
-          expect(res.body.items[i]).to.be.an('object').to.have.property('startedfollowing');
-        }
+      .end((err1) => {
+        if (err1) { done(err1); return; }
         done();
       });
   });
-}); */
+});

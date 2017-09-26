@@ -138,6 +138,7 @@ function getFollowersMailboxesOfACircle(circleId, limit, before, after, callback
       });
     });
   } else if (limit !== undefined && after === undefined && before === undefined) {
+    console.log('executing this');
     const query = (`SELECT * from mailboxesFollowingCircle where circleId = ${circleId} limit ${limit}`);
     client.execute(query, (error, result) => {
       if (error) {

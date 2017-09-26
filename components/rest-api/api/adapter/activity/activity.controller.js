@@ -67,7 +67,7 @@ function getAllActivitiesForUser(req, res) {
       }
       const firstActivity = (result.a !== 0) ? activities[0] : [];
       const lastActivity = (result.a !== 0) ? activities[activities.length - 1] : [];
-      res.status(201).json({
+      res.status(200).json({
         totalItems: result.a,
         items: activities,
         first: firstActivity,
@@ -101,7 +101,7 @@ function getAllActivitiesForDomain(req, res) {
 
       const firstActivity = (result.a !== 0) ? activities[0] : [];
       const lastActivity = (result.a !== 0) ? activities[activities.length - 1] : [];
-      res.status(201).json({
+      res.status(200).json({
         totalItems: result.a,
         items: activities,
         first: firstActivity,

@@ -1,5 +1,5 @@
 /* eslint prefer-arrow-callback:0, func-names:0 */
-/* const app = require('../../app');
+const app = require('../../app');
 
 const multiplexerRouteService = require('../../services/multiplexer-route');
 
@@ -35,10 +35,10 @@ describe('multiplexer routes Api', function () {
           res.body.should.have.property('result');
           (res.body.result).should.be.equal(1);
           multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId },
-          (err1, doesRouteExistAfter) => {
-            doesRouteExistAfter.should.be.equal(true);
-            done();
-          });
+            (err1, doesRouteExistAfter) => {
+              doesRouteExistAfter.should.be.equal(true);
+              done();
+            });
         });
     });
   });
@@ -54,7 +54,7 @@ describe('multiplexer routes Api', function () {
         .end((error, res) => {
           if (error) { done(error); return; }
           res.body.should.have.property('message');
-          (res.body.message).should.be.equal(`Route between circle and mailbox already exists`);
+          (res.body.message).should.be.equal('Route between circle and mailbox already exists');
           done();
         });
     });
@@ -76,10 +76,10 @@ describe('multiplexer routes Api', function () {
             res.body.should.have.property('result');
             (res.body.result).should.be.equal(1);
             multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId },
-            (err2, doesRouteExistAfter) => {
-              doesRouteExistAfter.should.be.equal(false);
-              done();
-            });
+              (err2, doesRouteExistAfter) => {
+                doesRouteExistAfter.should.be.equal(false);
+                done();
+              });
           });
       });
     });
@@ -94,19 +94,19 @@ describe('multiplexer routes Api', function () {
         if (err1) { throw err1; }
         doesRouteAdded.should.be.equal(1);
         multiplexerRouteService.checkIfRouteExists({ namespace, circleId, mailboxId },
-        (err2, doesRouteExist) => {
-          if (err2) { throw err2; }
-          doesRouteExist.should.be.equal(true);
-          request(app)
-            .delete(`/multiplexerRoute/${namespace}/${circleId}/${randomMailboxId}`)
-            .expect(404)
-            .expect('Content-Type', /json/)
-            .end((error, res) => {
-              res.body.should.have.property('message');
-              (res.body.message).should.be.equal(`Route between circle and mailbox does not exists`);
-              done();
-            });
-        });
+          (err2, doesRouteExist) => {
+            if (err2) { throw err2; }
+            doesRouteExist.should.be.equal(true);
+            request(app)
+              .delete(`/multiplexerRoute/${namespace}/${circleId}/${randomMailboxId}`)
+              .expect(404)
+              .expect('Content-Type', /json/)
+              .end((error, res) => {
+                res.body.should.have.property('message');
+                (res.body.message).should.be.equal('Route between circle and mailbox does not exists');
+                done();
+              });
+          });
       });
     });
   });
@@ -161,5 +161,5 @@ describe('multiplexer routes Api', function () {
         });
     });
   });
-}); */
+});
 

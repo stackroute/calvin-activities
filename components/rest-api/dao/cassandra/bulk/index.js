@@ -33,11 +33,10 @@ function getAllActivitiesOfACircle(circleId, range, callback) {
 }
 function getAllCircles(mailboxId, callback) {
   const query = (`SELECT * from circlesfollowedbymailbox where mailboxId = ${mailboxId}`);
-  client.execute(query, (error, result) => {
+  client.execute(query, [], (error, result) => {
     if (error) {
       return callback(error, null);
     }
-
     const a = result.rows.length;
     const b = result.rows;
     return callback(null, { a, b });

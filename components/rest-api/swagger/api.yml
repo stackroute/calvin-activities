@@ -289,19 +289,21 @@
           description: "get followers appearing before the given mailboxId in the sorted list of followers in database"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
+          example: e444b065-0cb7-49ad-93c1-cde8095bda70
         - name: "after"
           in: "query"
           description: "get followers appearing after the given mailboxId in the sorted list of followers in database"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
+          example: e444b065-0cb7-49ad-93c1-cde8095bda70
         - name: "limit"
           in: "query"
           description: "count of followers to be returned"
           required: false
           type: "string"
-          format: "int64"                     
+          format: "int64"                   
         responses:
           200:
             description: OK
@@ -436,18 +438,20 @@
           description: "count of activities to be returned"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
         - name: "before"
           in: "query"
           description: "get activities which were added before the given date"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
+          example: 2017-09-26T09:43:13.624Z 
         - name: "after"
           in: "query"
           description: "get activities which were added after the given date"
           required: false
           type: "string"
+          example: 2017-09-26T09:43:13.624Z
         responses:
           201: 
             description: OK
@@ -1316,18 +1320,20 @@
           description: "count of activities to be returned"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
         - name: "before"
           in: "query"
           description: "get activities which were added before the given date"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
+          example: 2017-09-26T09:43:13.624Z
         - name: "after"
           in: "query"
           description: "get activities which were added after the given date"
           required: false
           type: "string"
+          example: 2017-09-26T09:43:13.624Z
         responses:
           201:
             description: OK
@@ -1362,18 +1368,20 @@
           description: "count of activities to be returned"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
         - name: "before"
           in: "query"
           description: "get activities which were added before the given date"
           required: false
           type: "string"
-          format: "int64" 
+          format: "int64"
+          example: 2017-09-26T09:43:13.624Z
         - name: "after"
           in: "query"
           description: "get activities which were added after the given date"
           required: false
           type: "string"
+          example: 2017-09-26T09:43:13.624Z
         responses:
           201: 
             description: OK

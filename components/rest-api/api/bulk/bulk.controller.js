@@ -35,15 +35,17 @@ function bulkFollow(req, res) {
               const isFollowExists = isExists;
               if (!isFollowExists) {
                 followDAO.addFollow({ circleId, mailboxId }, startFollowing, (err3) => {
-                  if (err3) { throw err3; }
+                  if (err3) { res.status(500).json({ message: `${err3}` }); }
                 });
               }
             });
           }
         });
       }
-      res.status(200).json({ message: 'Added followers' });
+      res.status(201).json({ message: 'Added followers' });
     });
+  } else {
+    res.status(404).json({ message: 'No mailboxes found to add to circle' });
   }
 }
 
@@ -51,7 +53,7 @@ function getAllCirclesFollowedByMailbox(req, res) {
   const mailboxId = req.params.mailboxId;
   bulkDAO.getAllCircles(mailboxId, (err, circles) => {
     if (err) { res.status(404).json({ err }); return; }
-    res.status(200).json({ items: circles.a, totalitems: circles.b });
+    res.status(200).json({ items: circles.b, totalitems: circles.a });
   });
 }
 

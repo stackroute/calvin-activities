@@ -1,5 +1,5 @@
 /* eslint prefer-arrow-callback:0, func-names:0, no-loop-func:0 */
-/* const app = require('../../app');
+const app = require('../../app');
 
 const expect = require('chai').expect;
 
@@ -66,7 +66,7 @@ describe('/mailbox api', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(404)
         .expect('Content-Type', /json/)
-        .end((err1, res) => {
+        .end((err1) => {
           if (err1) { done(err1); } else {
             mailboxDao.checkIfMailboxExists(mailboxId, (error, mailboxExists) => {
               if (error) { done(error); return; }
@@ -80,15 +80,9 @@ describe('/mailbox api', () => {
 });
 
 describe('/mailbox api', () => {
-  let mailboxId;
   let token;
   before(function (done) {
     token = authorize.generateJWTToken();
-    for (let i= 0; i<=10; i +=1) {
-      mailboxDao.createMailbox((err, result) => {
-        mailboxId = result.mailboxId;
-      });
-    }
     done();
   });
 
@@ -120,5 +114,5 @@ describe('/mailbox api', () => {
         done();
       });
   });
-}); */
+});
 

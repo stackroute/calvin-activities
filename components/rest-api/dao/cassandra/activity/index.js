@@ -4,8 +4,6 @@ const start = require('../../../db');
 
 const config = require('../../../config');
 
-const _ = require('lodash');
-
 const redis = require('redis');
 
 const redisPublisher = redis.createClient({ host: config.redis.host, port: config.redis.port });
@@ -66,103 +64,45 @@ function checkIfMailboxExists(mid, callback) {
   });
 }
 
-function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
-  const beforeTime = queryObj.before_time;
-  const afterTime = queryObj.after_time;
-  let beforeId;
-  let afterId;
-  if (beforeTime !== undefined) {
-    afterId = queryObj.after_id;
-  } else {
-    beforeId = queryObj.before_id;
-  }
-  checkIfMailboxExists(mid, (err, MailIdExists) => {
+function retriveMessageFromMailbox(mid, beforeTime, afterTime, limit, callback) {
+  let sendReverseList = false;
+  let fetchCount = limit;
+
+  checkIfMailboxExists(mid, (err, mailIdExists) => {
     if (err) { callback(err, null); return; }
-    if (!MailIdExists) { callback(null, { a: 0, b: [] }); } else {
+    if (!mailIdExists) { callback(null, { a: 0, b: [] }); } else {
       let query;
       if (limit === 0) {
         callback('Limit is zero'); return;
-      } else if (limit === '-1') {
-        if (beforeTime !== undefined) {
-          if (afterId !== undefined) {
-            query =
-            `SELECT * from activity where mailboxId =${mid} and createdAt<'${beforeTime}' and activityId>${afterId}`;
-          } else {
-            query =
-            `SELECT * from activity where mailboxId=${mid} and createdAt<='${beforeTime}'`;
-          }
-        } else if (afterTime !== undefined) {
-          if (beforeId !== undefined) {
-            query =
-            `SELECT * from activity where mailboxId=${mid} and createdAt>'${afterTime}' and activityId<${beforeId}`;
-          } else {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt>='${afterTime}'`);
-          }
-        } else {
-          query = (`SELECT * from activity where mailboxId=${mid}`);
-        }
-      } else if (limit !== undefined) {
-        if (beforeTime !== undefined) {
-          if (afterId !== undefined) {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt<'${beforeTime}' \
-              and activityId>${afterId}  limit ${limit}`);
-          } else {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt<='${beforeTime}' \
-              limit ${limit}`);
-          }
-        } else if (afterTime !== undefined) {
-          if (beforeId !== undefined) {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt>'${afterTime}' \
-              and activityId<${beforeId} limit ${limit}`);
-          } else {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt>='${afterTime}' \
-              limit ${limit}`);
-          }
-        } else {
-          query = (`SELECT * from activity where mailboxId=${mid} limit ${limit}`);
-        }
       } else {
-        const defaultLimit = config.defaultLimit;
+        if (fetchCount === undefined) {
+          fetchCount = config.defaultLimit;
+        }
         if (beforeTime !== undefined) {
-          if (afterId !== undefined) {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt<'${beforeTime}' \
-              and activityId>${afterId}  limit ${defaultLimit}`);
-          } else {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt<='${beforeTime}' \
-              limit ${defaultLimit}`);
-          }
+          query = (`SELECT * from activity where mailboxId = ${mid} and createdAt < '${beforeTime}' limit ${fetchCount}`);
         } else if (afterTime !== undefined) {
-          if (beforeId !== undefined) {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt>'${afterTime}' \
-              and activityId<${beforeId} limit ${defaultLimit}`);
-          } else {
-            query = (`SELECT * from activity where mailboxId=${mid} and createdAt>='${afterTime}' \
-              limit ${defaultLimit}`);
-          }
+          query = (`SELECT * from activity where mailboxId = ${mid} and createdAt > '${afterTime}' order by createdAt limit ${fetchCount}`);
+          sendReverseList = true;
         } else {
-          query = (`SELECT * from activity where mailboxId=${mid} limit ${defaultLimit}`);
+          query = (`SELECT * from activity where mailboxId = ${mid} limit ${fetchCount}`);
         }
       }
 
       const options = { fetchSize: 100 };
-      const activities = [];
+      let activities = [];
       let activitiesResult = [];
       client.eachRow(query, [], options, (n, row) => {
         activities.push(row);
       }, (err1, result) => {
-        if (afterId || beforeId) {
-          const filteredActivities = _.filter(activities,
-            a => (afterId ? (a.activityid > afterId) : (a.activityid < beforeId)));
-          activitiesResult = activitiesResult.concat(filteredActivities);
-        } else {
-          activitiesResult = activitiesResult.concat(activities);
-        }
-
-        if (result.nextPage && activitiesResult.length < limit) {
-          activitiesResult = [];
+        if (err1) { callback(err1); return; }
+        activitiesResult = activitiesResult.concat(activities);
+        if (result.nextPage && activitiesResult.length < fetchCount) {
+          activities = [];
           result.nextPage();
-        } else {
+        } else if (!sendReverseList) {
           callback(null, { a: activitiesResult.length, b: activitiesResult });
+        } else {
+          callback(null, { a: activitiesResult.length, b: activitiesResult.reverse() });
         }
       });
     }
