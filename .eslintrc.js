@@ -13,7 +13,9 @@ module.exports = {
       "prefer-arrow-callback": 1,
       "no-console": 0,
       "max-len": ["error", 120, 4, {"ignoreStrings": true, "ignoreTemplateLiterals": true}],
-      "no-unused-vars": 2
+      "no-unused-vars": 2,
+      "function-paren-newline": [0, "never"],
+      "prefer-destructuring": [0, {"object": true, "array": true}]
     },
     "env" : {
   "node": true,

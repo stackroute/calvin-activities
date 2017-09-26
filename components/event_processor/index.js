@@ -56,9 +56,7 @@ kafkaPipeline.producer.ready(() => {
             kafkaPipeline.producer.send(payloads);
           });
         });
-        console.log(status);
         if (status === 'useronline') {
-          console.log('sync' + mailboxId);
           followDao.syncMailbox(mailboxId, (err) => {
             if (err) { console.log(err); }
           });
