@@ -433,7 +433,7 @@ describe('Messages posted to circle', function socketMessagesTest() {
         pushActivitiesToCircles([c1, c2, c3, c4, c5], 1000, (err) => {
           if (err) { done(err); }
         });
-      }, 3000);
+      }, 8000);
 
       setTimeout(() => {
         getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err) => {
@@ -473,7 +473,7 @@ describe('Messages posted to circle', function socketMessagesTest() {
         pushActivitiesToCircles([c1, c2, c3, c4, c5], 1000, (err) => {
           if (err) { done(err); }
         });
-      }, 3000);
+      }, 8000);
 
       setTimeout(() => {
         getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err) => {
@@ -518,7 +518,7 @@ describe('Messages posted to circle', function socketMessagesTest() {
         pushActivitiesToCircles([c1, c2, c3, c4, c5], 1000, (err) => {
           if (err) { done(err); }
         });
-      }, 3000);
+      }, 8000);
 
       setTimeout(() => {
         getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err) => {
@@ -566,7 +566,7 @@ describe('Messages posted to circle', function socketMessagesTest() {
         pushActivitiesToCircles([c1, c2, c3, c4, c5], 1000, (err) => {
           if (err) { done(err); }
         });
-      }, 3000);
+      }, 8000);
 
       setTimeout(() => {
         getActivitiesOfMailboxes([m1, m2, m3, m4, m5, m6, m7, m8, m9], (err) => {
