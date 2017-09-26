@@ -1,4 +1,5 @@
-FROM mhart/alpine-node-auto
+FROM mhart/alpine-node-auto:8.5
+MAINTAINER himanisingla8708@gmail.com
 
 RUN mkdir -p /app/routes-manager
 RUN mkdir -p /app/lib
