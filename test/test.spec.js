@@ -19,245 +19,244 @@ let allMailboxes = [];
 let allMailboxesWithCircleMailboxes = [];
 let allActivities = [];
 let allSockets = [];
-let c1,
-  c2,
-  c3,
-  c4,
-  c5,
-  m1,
-  m2,
-  m3,
-  m4,
-  m5,
-  m6,
-  m7,
-  m8,
-  m9;
+let c1;
+let c2;
+let c3;
+let c4;
+let c5;
+let m1;
+let m2;
+let m3;
+let m4;
+let m5;
+let m6;
+let m7;
+let m8;
+let m9;
 
 const host = 'http://localhost:4000';
-const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiY2lyY2xlczphb\
-GwiLCJmb2xsb3dzOmFsbCIsIm1haWxib3g6YWxsIl0sImlhdCI6MTUwMDU3MDYyMX0.YqHdtxTPeq5UoT9yUhQw9gziURvdHAfaiALOwlhGCTg';
-
-function createCircles(circleCount, callback) {
- 	const tasks = [];
- 	for (let i = 0; i < circleCount; i += 1) {
- 		tasks.push(createOneCircle);
- 	}
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { callback(error); } else { callback(null, result); }
- 		},
- 		);
-}
+const token = 'Bearer xyz';
 
 function createOneCircle(callback) {
- 	chai.request(host)
- 	.post('/circle')
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(null, res.body); }
- 	});
+  chai.request(host)
+    .post('/circle')
+    .set('Authorization', token)
+    .end((err, res) => {
+      if (err) { callback(err); } else { callback(null, res.body); }
+    });
 }
 
-function deleteCircles(circles, callback) {
- 	const tasks = [];
- 	_.each(circles, (circle, index) => {
- 		tasks.push(deleteOneCircle.bind(null, circle));
- 	});
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { callback(error); } else { callback(); }
- 		},
- 		);
+function createCircles(circleCount, callback) {
+  const tasks = [];
+  for (let i = 0; i < circleCount; i += 1) {
+    tasks.push(createOneCircle);
+  }
+  async.parallel(
+    tasks,
+    (error, result) => {
+      if (error) { callback(error); } else { callback(null, result); }
+    },
+  );
 }
 
 function deleteOneCircle(circleId, callback) {
- 	chai.request(host)
- 	.del(`/circle/${circleId}`)
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(); }
- 	});
+  chai.request(host)
+    .del(`/circle/${circleId}`)
+    .set('Authorization', token)
+    .end((err) => {
+      if (err) { callback(err); } else { callback(); }
+    });
 }
 
-function createMailboxes(mailboxCount, callback) {
- 	const tasks = [];
- 	for (let i = 0; i < mailboxCount; i += 1) {
- 		tasks.push(createOneMailbox);
- 	}
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { return callback(error); } else { return callback(null, result); }
- 		},
- 		);
+function deleteCircles(circles, callback) {
+  const tasks = [];
+  _.each(circles, (circle) => {
+    tasks.push(deleteOneCircle.bind(null, circle));
+  });
+  async.parallel(
+    tasks,
+    (error) => {
+      if (error) { callback(error); } else { callback(); }
+    },
+  );
 }
 
 function createOneMailbox(callback) {
- 	chai.request(host)
- 	.post('/mailbox')
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(null, res.body); }
- 	});
+  chai.request(host)
+    .post('/mailbox')
+    .set('Authorization', token)
+    .end((err, res) => {
+      if (err) { callback(err); } else { callback(null, res.body); }
+    });
 }
 
-function deleteMailboxes(mailboxes, callback) {
- 	const tasks = [];
- 	_.each(mailboxes, (mailbox, index) => {
- 		tasks.push(deleteOneMailbox.bind(null, mailbox));
- 	});
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { callback(error); } else { callback(); }
- 		},
- 		);
+function createMailboxes(mailboxCount, callback) {
+  const tasks = [];
+  for (let i = 0; i < mailboxCount; i += 1) {
+    tasks.push(createOneMailbox);
+  }
+  async.parallel(
+    tasks,
+    (error, result) => {
+      if (error) { return callback(error); } else { return callback(null, result); }
+    },
+  );
 }
 
 function deleteOneMailbox(mailboxId, callback) {
- 	chai.request(host)
- 	.del(`/mailbox/${mailboxId}`)
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(); }
- 	});
+  chai.request(host)
+    .del(`/mailbox/${mailboxId}`)
+    .set('Authorization', token)
+    .end((err) => {
+      if (err) { callback(err); } else { callback(); }
+    });
 }
 
-function pushActivitiesToCircles(circles, activityCount, callback) {
- 	const tasks = [];
- 	_.each(circles, (circle, index) => {
- 		for (let i = 0; i < activityCount; i += 1) {
- 			tasks.push(pushOneActivityToCircle.bind(null, circle, i));
- 		}
- 	});
- 	async.series(
- 		tasks,
- 		(error, result) => {
- 			if (error) { return callback(error); } else { return callback(); }
- 		},
- 		);
+function deleteMailboxes(mailboxes, callback) {
+  const tasks = [];
+  _.each(mailboxes, (mailbox) => {
+    tasks.push(deleteOneMailbox.bind(null, mailbox));
+  });
+  async.parallel(
+    tasks,
+    (error) => {
+      if (error) { callback(error); } else { callback(); }
+    },
+  );
 }
 
 function pushOneActivityToCircle(circleId, msgNumber, callback) {
- 	chai.request(host)
- 	.post(`/circle/${circleId}/activity`)
- 	.set('Authorization', token)
- 	.send({ msgNum: msgNumber, circleId })
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(); }
- 	});
+  chai.request(host)
+    .post(`/circle/${circleId}/activity`)
+    .set('Authorization', token)
+    .send({ msgNum: msgNumber, circleId })
+    .end((err) => {
+      if (err) { callback(err); } else { callback(); }
+    });
 }
 
-function getActivitiesOfMailboxes(mailboxes, callback) {
- 	const tasks = [];
- 	_.each(mailboxes, (mailbox, index) => {
- 		tasks.push(getActivitiesOfOneMailbox.bind(null, mailbox));
- 	});
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { return callback(error); } else { return callback(); }
- 		},
- 		);
+function pushActivitiesToCircles(circles, activityCount, callback) {
+  const tasks = [];
+  _.each(circles, (circle) => {
+    for (let i = 0; i < activityCount; i += 1) {
+      tasks.push(pushOneActivityToCircle.bind(null, circle, i));
+    }
+  });
+  async.series(
+    tasks,
+    (error) => {
+      if (error) { return callback(error); } else { return callback(); }
+    },
+  );
 }
 
 function getActivitiesOfOneMailbox(mailboxId, callback) {
- 	chai.request(host)
- 	.get(`/mailbox/getallactivities/${mailboxId}?limit=1000000`)
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else {
- 			if (res && res.body && res.body.totalItems > 0) {
- 				console.log(`${mailboxId} : ${res.body.totalItems}`);
- 				const mailbox = _.filter(allActivities, { mailboxId });
- 				if (!mailbox || mailbox.length == 0) {
- 					allActivities.push({ mailboxId, activities: [] });
- 				}
- 				let thisMailboxActivities = _.filter(allActivities, { mailboxId })[0].activities;
- 				thisMailboxActivities = thisMailboxActivities.concat(res.body.items);
- 				_.filter(allActivities, { mailboxId })[0].activities = thisMailboxActivities;
- 			}
- 			callback();
- 		}
- 	});
+  chai.request(host)
+    .get(`/mailbox/getallactivities/${mailboxId}?limit=1000000`)
+    .set('Authorization', token)
+    .end((err, res) => {
+      if (err) { callback(err); } else {
+        if (res && res.body && res.body.totalItems > 0) {
+          console.log(`${mailboxId} : ${res.body.totalItems}`);
+          const mailbox = _.filter(allActivities, { mailboxId });
+          if (!mailbox || mailbox.length === 0) {
+            allActivities.push({ mailboxId, activities: [] });
+          }
+          let thisMailboxActivities = _.filter(allActivities, { mailboxId })[0].activities;
+          thisMailboxActivities = thisMailboxActivities.concat(res.body.items);
+          _.filter(allActivities, { mailboxId })[0].activities = thisMailboxActivities;
+        }
+        callback();
+      }
+    });
 }
 
-function followCircles(circles, mailboxes, callback) {
- 	const tasks = [];
- 	_.each(circles, (circle, index) => {
- 		_.each(mailboxes, (mailbox, index) => {
- 			tasks.push(oneFollow.bind(null, circle, mailbox));
- 		});
- 	});
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { return callback(error); } else { return callback(); }
- 		},
- 		);
+function getActivitiesOfMailboxes(mailboxes, callback) {
+  const tasks = [];
+  _.each(mailboxes, (mailbox) => {
+    tasks.push(getActivitiesOfOneMailbox.bind(null, mailbox));
+  });
+  async.parallel(
+    tasks,
+    (error) => {
+      if (error) { return callback(error); } else { return callback(); }
+    },
+  );
 }
 
 function oneFollow(circleId, mailboxId, callback) {
- 	chai.request(host)
- 	.post(`/mailbox/${mailboxId}/circle/${circleId}`)
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(); }
- 	});
+  chai.request(host)
+    .post(`/mailbox/${mailboxId}/circle/${circleId}`)
+    .set('Authorization', token)
+    .end((err) => {
+      if (err) { callback(err); } else { callback(); }
+    });
 }
 
-function unfollowCircles(circles, mailboxes, callback) {
- 	const tasks = [];
- 	_.each(circles, (circle, index) => {
- 		_.each(mailboxes, (mailbox, index) => {
- 			tasks.push(oneUnfollow.bind(null, circle, mailbox));
- 		});
- 	});
- 	async.parallel(
- 		tasks,
- 		(error, result) => {
- 			if (error) { return callback(error); } else { return callback(); }
- 		},
- 		);
+function followCircles(circles, mailboxes, callback) {
+  const tasks = [];
+  _.each(circles, (circle) => {
+    _.each(mailboxes, (mailbox) => {
+      tasks.push(oneFollow.bind(null, circle, mailbox));
+    });
+  });
+  async.parallel(
+    tasks,
+    (error) => {
+      if (error) { return callback(error); } else { return callback(); }
+    },
+  );
 }
 
 function oneUnfollow(circleId, mailboxId, callback) {
- 	chai.request(host)
- 	.del(`/mailbox/${mailboxId}/circle/${circleId}`)
- 	.set('Authorization', token)
- 	.end((err, res) => {
- 		if (err) { callback(err); } else { callback(); }
- 	});
+  chai.request(host)
+    .del(`/mailbox/${mailboxId}/circle/${circleId}`)
+    .set('Authorization', token)
+    .end((err) => {
+      if (err) { callback(err); } else { callback(); }
+    });
 }
 
-function setMailboxesOnline(mailboxes, callback) {
- 	_.each(mailboxes, (mailbox, index) => {
- 		const socket = socketClient(host);
- 		socket.on('connect', () => {
- 			allSockets.push({ mailboxId: mailbox, socket, activities: [] });
- 		});
- 		socket.emit('authorize', token);
- 		socket.emit('startListeningToMailbox', { mid: mailbox });
- 		socket.on('newActivity', (activity) => {
- 			_.filter(allSockets, { mailboxId: mailbox })[0].activities.push(activity);
- 		});
- 	});
+function unfollowCircles(circles, mailboxes, callback) {
+  const tasks = [];
+  _.each(circles, (circle) => {
+    _.each(mailboxes, (mailbox) => {
+      tasks.push(oneUnfollow.bind(null, circle, mailbox));
+    });
+  });
+  async.parallel(
+    tasks,
+    (error) => {
+      if (error) { return callback(error); } else { return callback(); }
+    },
+  );
 }
 
-function setMailboxesOffline(mailboxes, callback) {
- 	_.each(allSockets, (conn, index) => {
- 		if (mailboxes.indexOf(conn.mailboxId) > -1) {
- 			conn.socket.emit('stopListeningToMailbox', { mid: conn.mailboxId });
- 			conn.socket.removeAllListeners();
- 			conn.socket.disconnect();
- 		}
- 	});
+function setMailboxesOnline(mailboxes) {
+  _.each(mailboxes, (mailbox) => {
+    const socket = socketClient(host);
+    socket.on('connect', () => {
+      allSockets.push({ mailboxId: mailbox, socket, activities: [] });
+    });
+    socket.emit('authorize', token);
+    socket.emit('startListeningToMailbox', { mid: mailbox });
+    socket.on('newActivity', (activity) => {
+      _.filter(allSockets, { mailboxId: mailbox })[0].activities.push(activity);
+    });
+  });
 }
 
-describe('Messages posted to circle', function () {
+function setMailboxesOffline(mailboxes) {
+  _.each(allSockets, (conn) => {
+    if (mailboxes.indexOf(conn.mailboxId) > -1) {
+      conn.socket.emit('stopListeningToMailbox', { mid: conn.mailboxId });
+      conn.socket.removeAllListeners();
+      conn.socket.disconnect();
+    }
+  });
+}
+
+describe('Messages posted to circle', function circleMessageTest() {
   this.timeout(20000);
   it('gets delivered to circle mailbox immediately', (done) => {
     chai.request(host)
@@ -340,7 +339,7 @@ describe('Messages posted to mailbox', () => {
   });
 });
 
-describe('Messages posted to circle', function () {
+describe('Messages posted to circle', function socketMessagesTest() {
   this.timeout(120000);
   allSockets = [];
   before((done) => {
@@ -377,9 +376,9 @@ describe('Messages posted to circle', function () {
 
   beforeEach((done) => {
     allActivities = [];
-    _.each(allSockets, (conn) => {
-      conn.activities = [];
-    });
+    for (let i=0; i<allSockets.length; i+=1) {
+      allSockets[i].activities = [];
+    }
     done();
   });
 
@@ -621,7 +620,7 @@ describe('Messages posted to circle', function () {
   });
 });
 
-describe('Multiple connections by same user', function () {
+describe('Multiple connections by same user', function multipleConnectionsTest() {
   this.timeout(10000);
   let mailboxId;
   let circleId;
