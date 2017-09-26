@@ -21,11 +21,13 @@ function createCircle(callback) {
       if (err1) { console.log('ERR:', err1); callback(err1, null); return; }
       console.log('Executed Query Successfully');
       kafkaPipeline.producer.ready(() => {
-        kafkaPipeline.producer.send([{ topic: config.kafka.routesTopic,
+        kafkaPipeline.producer.send([{
+          topic: config.kafka.routesTopic,
           messages: JSON.stringify({
             circleId: newCircle.circleId,
             mailboxId: newCircle.mailboxId,
-            command: 'addRoute' }) }]);
+            command: 'addRoute' })
+        }]);
         callback(err, newCircle);
       });
     });

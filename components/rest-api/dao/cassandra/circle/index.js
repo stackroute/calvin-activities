@@ -28,7 +28,8 @@ function createCircle(callback) {
             circleId: newCircle.circleId,
             mailboxId: newCircle.mailboxId,
             command: 'addRoute',
-          }) }]);
+          })
+        }]);
         callback(null, newCircle);
       });
     });

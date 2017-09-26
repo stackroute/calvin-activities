@@ -147,7 +147,6 @@ function retriveMessageFromMailbox(mid, queryObj, limit, callback) {
       const options = { fetchSize: 100 };
       const activities = [];
       let activitiesResult = [];
-
       client.eachRow(query, [], options, (n, row) => {
         activities.push(row);
       }, (err1, result) => {

@@ -54,7 +54,8 @@ function deleteFollow(follower, callback) {
             circleId: follower.circleId,
             mailboxId: follower.mailboxId,
             command: 'removeRoute',
-          }) }]);
+          })
+        }]);
         return callback(null, follower);
       });
     });
