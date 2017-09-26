@@ -26,7 +26,8 @@ function createCircle(callback) {
           messages: JSON.stringify({
             circleId: newCircle.circleId,
             mailboxId: newCircle.mailboxId,
-            command: 'addRoute' })
+            command: 'addRoute',
+          })
         }]);
         callback(err, newCircle);
       });
