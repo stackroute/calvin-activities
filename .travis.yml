@@ -1,3 +1,15 @@
 language: node_js
 node_js:
   - 8.0.0
+sudo: required
+services:
+  - docker
+before_install:
+  - docker-compose -f components/services.yml up --build -d
+  - sleep 100
+  - ./components/seed-data.sh
+  - ver=1 docker-compose -f components/docker-compose-local-travis.yml up --build -d
+  - sleep 100
+script:
+  - ./components/create-multiplexer.sh
+  - npm test

@@ -1,0 +1,1657 @@
+---
+  swagger: "2.0"
+  tags:
+    - name: "Circle API"
+      description: "API to create a circle ,delete a circle, get list of all circles"
+    - name : "Mailbox API"
+      description: "API to create and delete mailbox"
+    - name: "Follow API"
+      description: "API to unfollow and follow circles" 
+    - name: "Publish Activity API"
+      description: "API to Publish Activity" 
+    - name: "Bulk API"
+      description: "API to receive the notification"
+    - name: "L1R routes API"
+      description: "API to add,remove,list routes"
+    - name: "Multiplexer API"
+      description: "API to create,delete,list all multiplexers"
+    - name: "Multiplexer routes API"
+      description: "API to add,remove,list routes"
+    - name: "Routes API"
+      description: "API to create and delete routes"
+    - name: "Adapter Domain API"
+      description: "API to create and delete domain"
+    - name: "Adapter User API"
+      description: "API to create and delete User"
+    - name: "Adapter Follow API"
+      description: "API to add and remove follow"
+    - name: "Adapter Activity API"
+      description: "API to publish and get activities"
+    - name: "Adapter Events API"
+      description: "API to publish events of user being online/offline and circle being added/deleted"
+  info: 
+    title: "Calvin - Activity Streams"
+    version: "v1"
+    category: "Circle"
+  paths: 
+    /circle:
+      post:
+        tags:
+          - "Circle API"
+        summary: "Create Circle"
+        produces: 
+          - "application/json"
+        parameters:
+          - name: "Authorization"
+            in: "header"
+            description: "authorization key"
+            required: false
+            type: "string"
+        responses: 
+          201: 
+            description: OK
+            schema : { $ref : "#/definitions/createCircleResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /circle/{circleId}:
+      delete:
+        tags:
+          - "Circle API"
+        summary: "Delete Circle"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "circleId"
+          in: "path"
+          description: "circleId of the circle to delete"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: OK
+            schema :
+              type: object
+              properties:
+                id:
+                  type: "string"
+                  description: "circleId of the circle which got deleted"
+                  example: "3483b89e-0faf-4b56-979d-758f43d35a9a"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /circle/getallcircles:
+      get:
+        tags:
+          - "Circle API"
+        summary: "Gets the list of  Circles available"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "limit"
+          in: "query"
+          description: "count of circles to be returned"
+          required: false
+          type: "integer"
+          format: "int64"
+        responses:
+          200:
+            description: OK
+            schema: { $ref: "#/definitions/circleResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }         
+    /mailbox:
+      post:
+        tags:
+          - "Mailbox API"
+        summary: "Create Mailbox"
+        produces: 
+          - "application/json"
+        parameters:
+          - name: "Authorization"
+            in: "header"
+            description: "authorization key"
+            required: false
+            type: "string"
+        responses: 
+          201: 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                mailboxId:
+                  type: "string"
+                  description: "mailboxId of the mailbox created"
+                  example: "090d3ec9-27a4-4aaf-88e0-9746b0efe684"
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /mailbox/{mailboxId}:
+      delete:
+        tags:
+          - "Mailbox API"
+        summary: "Delete Mailbox"
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailboxId of the mailbox to delete"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                mailboxId:
+                  type: "string"
+                  description: "mailboxId of the mailbox deleted"
+                  example: "090d3ec9-27a4-4aaf-88e0-9746b0efe684"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }  
+    /mailbox/{mailboxId}/circle/{circleId}:
+      post:
+        tags:
+          - "Follow API"
+        summary: "Follow a circle"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailboxId of the mailbox who should follow"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "circleId  of the circle to follow"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle to follow"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
+                mailboxId:
+                  type: "string"
+                  description: "mailboxId of the mailbox who should follow"
+                  example: "0a35c3a5-6bc7-440a-932c-2db0f7b85af9"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }  
+      delete:
+        tags:
+          - "Follow API"
+        summary: "Unfollow a circle"
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string" 
+        - name: "mailboxId"
+          in: "path"
+          description: "mailboxId of the mailbox who should unfollow"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "circleId of circle to unfollow"
+          required: true
+          type: "string"
+          format: "int64" 
+        responses:
+          200:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of circle to unfollow"
+                  example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
+                mailboxId:
+                  type: "string"
+                  description: "mailboxId of the mailbox who should unfollow"
+                  example: "0a35c3a5-6bc7-440a-932c-2db0f7b85af9"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }  
+    /mailbox/getfollowers/circle/{circleId}:
+      get:
+        tags:
+          - "Follow API"
+        summary: "List of all followers of a circle"
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string" 
+        - name: "circleId"
+          in: "path"
+          description: "circleId of the circle to get the followers list"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "before"
+          in: "query"
+          description: "get followers appearing before the given mailboxId in the sorted list of followers in database"
+          required: false
+          type: "string"
+          format: "int64"
+          example: e444b065-0cb7-49ad-93c1-cde8095bda70
+        - name: "after"
+          in: "query"
+          description: "get followers appearing after the given mailboxId in the sorted list of followers in database"
+          required: false
+          type: "string"
+          format: "int64"
+          example: e444b065-0cb7-49ad-93c1-cde8095bda70
+        - name: "limit"
+          in: "query"
+          description: "count of followers to be returned"
+          required: false
+          type: "string"
+          format: "int64"                   
+        responses:
+          200:
+            description: OK
+            schema: { $ref : "#/definitions/followersResponse"}
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /circle/{circleId}/activity:
+      post:
+        tags:
+          - "Publish Activity API"
+        summary: "Publish activity to all mailboxes of the given circle"
+        produces: 
+          - "application/json"
+          - "application/xml"
+        consumes: 
+          - "application/json"
+          - "application/xml"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "circleId"
+          in: "path"
+          description: "circleId of the circle to publish an activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "activity payload"
+          required: "true"
+          paramType: "body"
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: string
+                example: "Sallie uploaded a new document"
+                required: false
+              activityType:
+                type: string
+                example: "Create"
+                required: false
+        responses: 
+          201: 
+            description: OK
+            schema: { $ref : "#/definitions/createActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" } 
+    /mailbox/{mailboxId}/activitytomailbox:
+       post:
+        tags:
+          - "Publish Activity API"
+        summary: "Publish activity to individual mailbox"
+        produces: 
+          - "application/json"
+          - "application/xml"
+        consumes: 
+          - "application/json"
+          - "application/xml"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Authentication key"
+          required: false
+          type: "string"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailboxId of the mailbox to publish an activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "activity payload"
+          required: "true"
+          paramType: "body"
+          type: "string"
+          format: "int64"
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "James replied on your post"
+                required: false
+              activityType:
+                type: string
+                example: "Add"
+                required: false
+        responses: 
+          201: 
+            description: OK
+            schema: { $ref : "#/definitions/createMailboxActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" } 
+    /mailbox/getallactivities/{mailboxId}:
+      get:
+        tags:
+          - "Publish Activity API"
+        summary: "Get Activities of a given mailbox"
+        produces:
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailboxId of the mailbox to get activities of"
+          required: true
+          type: "string"
+          format: "int64" 
+        - name: "limit"
+          in: "query"
+          description: "count of activities to be returned"
+          required: false
+          type: "string"
+          format: "int64"
+        - name: "before"
+          in: "query"
+          description: "get activities which were added before the given date"
+          required: false
+          type: "string"
+          format: "int64"
+          example: 2017-09-26T09:43:13.624Z 
+        - name: "after"
+          in: "query"
+          description: "get activities which were added after the given date"
+          required: false
+          type: "string"
+          example: 2017-09-26T09:43:13.624Z
+        responses:
+          201: 
+            description: OK
+            schema: { $ref : "#/definitions/getActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" } 
+    /mailbox/bulk/{circleId}:
+      post:
+        tags:
+          - "Bulk API"
+        summary: "API to add multiple mailboxes as followers for a circle"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
+        - name: "circleId"
+          in: "path"
+          description: "circleId of the circle to add followers to"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "list of mailboxIds of mailboxes to make followers of the circle"
+          required: "true"
+          paramType: "body"
+          type: "object"
+          schema:
+            type: "object"
+            properties:
+              mailboxIds:
+                type: "array"
+                items:
+                  type: "string"
+                  description: "mailboxId of the mailbox"
+                  example: "ef985349-29ba-408e-90d5-a2bca0352123"
+        responses: 
+          201: 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "response message from server"
+                  example: "Added followers"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" } 
+    /l1route/{circleId}/{multiplexerId}:
+      post:
+        tags:
+          - "L1R routes API"
+        summary: "API to add route"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string" 
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to add route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "multiplexerId"
+          in: "path"
+          description: "multiplexer Id to add route"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "circleId of circle to route"
+                  example: "1"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
+      delete:
+        tags:
+          - "L1R routes API"
+        summary: "API to delete route"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "multiplexerId"
+          in: "path"
+          description: "multiplexer Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.  
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "circleId of circle to route"
+                  example: "1"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
+    /l1route/{circleId}:
+      get:
+        tags:
+          - "L1R routes API"
+        summary: "Get routes for circle"
+        produces:
+          - "application/json"
+        parameters:
+        - name: "circleId"
+          in: "path"
+          description: "circleId to get routes"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200: 
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "circleId which is routed"
+                  example: ["M","M7"]  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
+    /l1route:
+      get:
+        tags:
+          - "L1R routes API"
+        summary: "Get list of routes"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "Get list of the routes"
+                  example: ["L1R:fcb9bab3-14f8-407c-ba20-5fdcb4241299","L1R:2018d90f-0289-4fe6-886b-77bb67018d30",]  
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
+    /multiplexer/{mx}:
+      post:
+        tags:
+          - "Multiplexer API"
+        summary: "API to create multiplexer"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
+        - name: "mx"
+          in: "path"
+          description: "creates a multiplexer"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "create a multiplexer"
+                  example:   "Multiplexer M3 created"
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
+      delete:
+        tags:
+          - "Multiplexer API"
+        summary: "API to delete multiplexer"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "mx"
+          in: "path"
+          description: "delete a multiplexer"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK. 
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "Delete the multiplexer"
+                  example:   "Multiplexer M8 deleted"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }    
+    /multiplexer:
+      get:
+        tags:
+          - "Multiplexer API"
+        summary: "Get list of multiplexers"
+        produces:
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        responses:
+          200:
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "Get list of the routes"
+                  example: {"M4":"0","M3":"1"}
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }       
+    /multiplexerRoute/{namespace}/{circleId}/{mailboxId}:
+      post:
+        tags:
+          - "Multiplexer routes API"
+        summary: "API to add route"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "namespace"
+          in: "path"
+          description: "multiplexer Id to add route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to add route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailbox Id to add route"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "add the route using multiplexer"
+                  example: "1"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
+      delete:
+        tags:
+          - "Multiplexer routes API"
+        summary: "API to delete route"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "namespace"
+          in: "path"
+          description: "multiplexer Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "mailboxId"
+          in: "path"
+          description: "mailbox Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK. 
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "add the route using multiplexer"
+                  example: "1"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
+    /multiplexerRoute/{namespace}/{circleId}:
+      get:
+        tags:
+          - "Multiplexer routes API"
+        summary: "Get routes for circle"
+        produces:
+          - "application/json"
+       
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "namespace"
+          in: "path"
+          description: "multiplexerId to get routes"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "circleId"
+          in: "path"
+          description: "circleId to get routes"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "add the route using multiplexer"
+                  example: ["e3557579-31b1-4ddb-9eb8-e523db9eb60f"]
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }           
+    /multiplexerRoute/{namespace}:
+      get:
+        tags:
+          - "Multiplexer routes API"
+        summary: "Get list of routes"
+        produces:
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "namespace"
+          in: "path"
+          description: "multiplexerId to get routes"
+          required: true
+          type: "string"
+          format: "int64"
+        responses:
+          200:
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                result:
+                  type: "string"
+                  description: "add the route using multiplexer"
+                  example: ["M2":"e3557579-31b1-4ddb-9eb8-e523db9eb60f"]
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
+    /routes/{circleId}/{userId}:
+      post:
+        tags:
+          - "Routes API"
+        summary: "API to create route"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to create route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "userId"
+          in: "path"
+          description: "user Id to create route"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "add route to user"
+                  example: "Routes added"  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
+      delete:
+        tags:
+          - "Routes API"
+        summary: "API to delete route"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "circleId"
+          in: "path"
+          description: "circle Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "userId"
+          in: "path"
+          description: "userID Id to delete route"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK. 
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "Routes to be delete"
+                  example: "Routes deleted" 
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
+    /adapter/domain/{domain}:
+      post:
+        tags:
+          - "Adapter Domain API"
+        summary: "API to create a domain"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "domain"
+          in: "path"
+          description: "Name to create domain"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK. 
+            schema:
+              type: "object"
+              properties:
+                domain:
+                  type: "string"
+                  description: "Domain name to add"
+                  example: "engineer" 
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }         
+      delete:
+        tags:
+          - "Adapter Domain API"
+        summary: "API to delete a domain"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "domain"
+          in: "path"
+          description: "Name to delete domain"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK. 
+            schema:
+              type: "object"
+              properties:
+                domain:
+                  type: "string"
+                  description: "Domain name to delete"
+                  example: "engineer"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
+    /adapter/user/{user}:
+      post:
+        tags:
+          - "Adapter User API"
+        summary: "API to create a user"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "user"
+          in: "path"
+          description: "Name to create user"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.   
+            schema:
+              type: "object"
+              properties:
+                user:
+                  type: "string"
+                  description: "Give name to add user"
+                  example: "U1"
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }    
+      delete:
+        tags:
+          - "Adapter User API"
+        summary: "API to delete a user"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
+        - name: "user"
+          in: "path"
+          description: "Name to delete user"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.  
+            schema:
+              type: "object"
+              properties:
+                user:
+                  type: "string"
+                  description: "Give name to add user"
+                  example: "U1"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }          
+        
+    /adapter/user/{user}/domain/{domain}:
+      post:
+        tags:
+          - "Adapter Follow API"
+        summary: "API to add follow"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "user"
+          in: "path"
+          description: "user name to follow a domain"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "domain"
+          in: "path"
+          description: "domain name to add follow"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.
+            schema:
+              type: "object"
+              properties:
+                domain:
+                  type: "string"
+                  description: "Give domain name to follow by user"
+                  example: "engineer"
+                user:
+                  type: "string"
+                  description: "Give user name to follow the domain"
+                  example: "user1"  
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }           
+      delete:
+        tags:
+          - "Adapter Follow API"
+        summary: "API to delete follow"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "user"
+          in: "path"
+          description: "user name to remove a follow"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "domain"
+          in: "path"
+          description: "domain name to remove follow"
+          required: true
+          type: "string"
+          format: "int64"
+        responses: 
+          201: 
+            description: OK.   
+            schema:
+              type: "object"
+              properties:
+                message:
+                  type: "string"
+                  description: "delete the follower"
+                  example: "follow deleted"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }          
+    /adapter/domain/{domain}/activity:
+      post:
+        tags:
+          - "Adapter Activity API"
+        summary: "API to post activity to domain"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "domain"
+          in: "path"
+          description: "domain name to post activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "activity payload"
+          required: "true"
+          paramType: "body"
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: string
+                example: "Sallie uploaded a new document"
+                required: false
+              activityType:
+                type: string
+                example: "Create"
+                required: false
+        responses: 
+          201: 
+            description: OK
+            schema: { $ref : "#/definitions/createMailboxActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }      
+    /adapter/user/{user}/activity:
+      post:
+        tags:
+          - "Adapter Activity API"
+        summary: "API to post activity to user"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "user"
+          in: "path"
+          description: "user name to publish activity"
+          required: true
+          type: "string"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "activity payload"
+          required: "true"
+          paramType: "body"
+          type: "string"
+          format: "int64"
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "James replied on your post"
+                required: false
+              activityType:
+                type: string
+                example: "Add"
+                required: false
+        responses: 
+          201: 
+            description: OK
+            schema: { $ref : "#/definitions/createMailboxActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }        
+    /adapter/getallactivities/user/{user}:
+      get:
+        tags:
+          - "Adapter Activity API"
+        summary: "Gets the list of  activites for particular user"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"    
+        - name: "user"
+          in: "path"
+          description: "user name to get activities of"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "count of activities to be returned"
+          required: false
+          type: "string"
+          format: "int64"
+        - name: "before"
+          in: "query"
+          description: "get activities which were added before the given date"
+          required: false
+          type: "string"
+          format: "int64"
+          example: 2017-09-26T09:43:13.624Z
+        - name: "after"
+          in: "query"
+          description: "get activities which were added after the given date"
+          required: false
+          type: "string"
+          example: 2017-09-26T09:43:13.624Z
+        responses:
+          201:
+            description: OK
+            schema: { $ref : "#/definitions/getActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /adapter/getallactivities/domain/{domain}:
+      get:
+        tags:
+          - "Adapter Activity API"
+        summary: "Gets the list of  activites for particular domain"        
+        produces:
+          -"application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "domain"
+          in: "path"
+          description: "domain name to get activities of"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "limit"
+          in: "query"
+          description: "count of activities to be returned"
+          required: false
+          type: "string"
+          format: "int64"
+        - name: "before"
+          in: "query"
+          description: "get activities which were added before the given date"
+          required: false
+          type: "string"
+          format: "int64"
+          example: 2017-09-26T09:43:13.624Z
+        - name: "after"
+          in: "query"
+          description: "get activities which were added after the given date"
+          required: false
+          type: "string"
+          example: 2017-09-26T09:43:13.624Z
+        responses:
+          201: 
+            description: OK
+            schema: { $ref : "#/definitions/getActivityResponse" }
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /adapter/user/{user}/status/{status}:
+      post:
+        tags:
+          - "Adapter Events API"
+        summary: "API to set user status"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"  
+        - name: "user"
+          in: "path"
+          description: "user name of user to set status of"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "status"
+          in: "path"
+          description: "status whether user is online or offline"
+          required: true
+          type: "string"
+          enum: [ online, offline ]
+        responses: 
+          201:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                mailboxId:
+                  type: "string"
+                  description: "mailboxId of the user"
+                  example: "377300ab-401c-4e0d-9f56-bf1cc920ad16"
+                event:
+                  type: "string"
+                  description: "status of the user"
+                  example: "useronline"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }
+    /adapter/domain/{domain}/status/{status}:
+      post:
+        tags:
+          - "Adapter Events API"
+        summary: "API to check status"
+        produces: 
+          - "application/json"
+        parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "authorization key"
+          required: false
+          type: "string"
+        - name: "domain"
+          in: "path"
+          description: "name of the domain"
+          required: true
+          type: "string"
+          format: "int64"
+        - name: "status"
+          in: "path"
+          description: "status whether domain is added or removed"
+          required: true
+          type: "string"
+          enum: [ add, remove ]
+        responses: 
+          201:
+            description: OK
+            schema:
+              type: "object"
+              properties:
+                circleId:
+                  type: "string"
+                  description: "circleId of the domain"
+                  example: "377300ab-401c-4e0d-9f56-bf1cc920ad16"
+                event:
+                  type: "string"
+                  description: "status of the domain"
+                  example: "addcircle"
+          404:
+            description: Not found
+            schema: { $ref : "#/definitions/notFoundErrorResponse" }
+          500:
+            description: Internal server error
+            schema: { $ref : "#/definitions/internalServerErrorResponse" }     
+  definitions:
+    createCircleResponse:
+      type: "object"
+      properties:
+        circleId:
+          type: "string"
+          description: "circleId of the created circle"
+          example: "3483b89e-0faf-4b56-979d-758f43d35a9a" 
+        mailboxId:
+          type: "string"
+          description: "mailboxId of the created circle"
+          example: "1a2bbc10-a1a0-434c-ade2-16c46aec9354"
+        createdOn:
+          type: "string"
+          format: "date-time"
+          description: "time at which circle was created"
+          example: "2017-07-24T08:21:29.484Z"
+    notFoundErrorResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          description: "information on the not found error"
+          example: "This entity was not found"
+    internalServerErrorResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          description: "information on the internal server error"
+          example: "Error connecting to the remote host x.x.x.x"
+    circleResponse:
+      type: "object"
+      properties:
+        totalItems:
+          type: "integer"
+          description: "Count of circles returned"
+          example: 1
+        items:
+          type: "array"
+          items: 
+            type: "object"
+            properties:
+              circleid:
+                type: "string"
+                description: "circleId of the created circle"
+                example: "3483b89e-0faf-4b56-979d-758f43d35a9a" 
+              createdon:
+                type: "string"
+                format: "date-time"
+                description: "time at which circle was created"
+                example: "2017-07-24T08:21:29.484Z"
+              lastpublishedactivity:
+                type: "string"
+                format: "date-time"
+                description: "time at which any activity was last published for this circle"
+                example: "2017-07-24T10:19:25.697Z"
+              mailboxid:
+                type: "string"
+                description: "mailboxId of the created circle"
+                example: "1a2bbc10-a1a0-434c-ade2-16c46aec9354"
+    followersResponse:
+      type: "object"
+      properties:
+        totalItems:
+          type: "integer"
+          description: "Count of followers returned"
+          example: 1
+        items:
+          type: "array"
+          items: 
+            type: "object"
+            properties:
+              circleid:
+                type: "string"
+                description: "circleId of the circle"
+                example: "3483b89e-0faf-4b56-979d-758f43d35a9a" 
+              mailboxid:
+                type: "string"
+                description: "mailboxId of the following mailboxes"
+                example: "1a2bbc10-a1a0-434c-ade2-16c46aec9354"
+              startedfollowing:
+                type: "string"
+                format: "date-time"
+                description: "time at which mailbox started following a circle"
+                example: "2017-07-24T08:21:29.484Z"
+    createActivityResponse:
+      type: "object"
+      properties:
+        payload:
+          type: "object"
+          examples:
+            application/json: { "foo" : "bar", "requestedAt": "2017-07-24T12:01:23.876Z" }
+        timestamp:
+          type: "string"
+          format: "date-time"
+          description: "time at which activity was saved"
+          example: "2017-07-24T12:01:23.876Z"
+        circleId:
+          type: "string"
+          description: "circleId of circle to which activity was published"
+          example: "664d96f8-eb33-47b6-8066-3ec2302855ea"
+    createMailboxActivityResponse:
+      type: "object"
+      properties:
+        payload:
+          type: "object"
+          examples:
+            application/json: { "foo" : "bar", "requestedAt": "2017-07-24T12:01:23.876Z" }
+        timestamp:
+          type: "string"
+          format: "date-time"
+          description: "time at which activity was saved"
+          example: "2017-07-24T12:01:23.876Z"
+    getActivityResponse:
+      type: "object"
+      properties:
+        totalItems:
+          type: "integer"
+          description: "Count of activities returned"
+          example: 1
+        items:
+          type: "array"
+          items: 
+            type: "object"
+            properties:
+              mailboxid:
+                type: "string"
+                description: "mailboxId of the mailbox having activity"
+                example: "1a2bbc10-a1a0-434c-ade2-16c46aec9354"
+              createdat:
+                type: "string"
+                format: "date-time"
+                description: "time at which activity was created"
+                example: "2017-07-24T08:21:29.484Z"
+              payload:
+                type: "object"
+                description: "activity payload"
+                example: { "name": "Sallie uploaded a new document", "timestamp" : "2017-07-24T08:21:29.484Z"}
+        first:
+          type: "object"
+          description: "first activity object returned in the sorted list"
+          properties:
+              mailboxid:
+                type: "string"
+                description: "mailboxId of the mailbox having activity"
+                example: "1a2bbc10-a1a0-434c-ade2-16c46aec9354"
+              createdat:
+                type: "string"
+                format: "date-time"
+                description: "time at which activity was created"
+                example: "2017-07-24T08:21:29.484Z"
+              payload:
+                type: "object"
+                description: "activity payload"
+                example: { "name": "Sallie uploaded a new document", "timestamp" : "2017-07-24T08:21:29.484Z"}
+        last:
+          type: "object"
+          description: "last activity object returned in the sorted list"
+          properties:
+              mailboxid:
+                type: "string"
+                description: "mailboxId of the mailbox having activity"
+                example: "1a2bbc10-a1a0-434c-ade2-16c46aec9354"
+              createdat:
+                type: "string"
+                format: "date-time"
+                description: "time at which activity was created"
+                example: "2017-07-24T08:21:29.484Z"
+              payload:
+                type: "object"
+                description: "activity payload"
+                example: { "name": "Sallie uploaded a new document", "timestamp" : "2017-07-24T08:21:29.484Z"}

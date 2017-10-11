@@ -1,0 +1,22 @@
+{
+  "name": "capacity-test-data",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node produce-test-data"
+  },
+  "author": "Sagar Patke <sagarpatke@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "kafka-node": "^2.0.0",
+    "kafka-pipeline": "file:../lib/kafka-pipeline"
+  },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-mocha": "^4.9.0"
+  }
+}

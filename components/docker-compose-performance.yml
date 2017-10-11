@@ -1,0 +1,124 @@
+version: "3"
+services:
+  rest-api:
+    image: 172.23.238.180:5000/rest-api:${ver}
+    ports:
+      - 4000:4000
+    environment:
+      REDIS_HOST: 172.23.238.205
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.23.238.205
+      ZOOKEEPER_PORT: 2181
+      ACTIVITIES_TOPIC: as_demo_activities
+      ROUTES_TOPIC: as_demo_routes
+      EVENTS_TOPIC: as_demo_events
+      DSE_HOST: 172.23.238.205
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      DEFAULT_CIRCLE: 10
+      PARTITION_COUNT: 5
+  multiplexer-m1:
+    image: 172.23.238.180:5000/multiplexer:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205 
+      CONSUMER_GROUP: m1
+      PARTITION_COUNT: 5
+  multiplexer-m2:
+    image: 172.23.238.180:5000/multiplexer:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205 
+      CONSUMER_GROUP: m2
+      PARTITION_COUNT: 5
+  multiplexer-m3:
+    image: 172.23.238.180:5000/multiplexer:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205 
+      CONSUMER_GROUP: m3
+      PARTITION_COUNT: 5
+  multiplexer-delivery-m1:
+    image: 172.23.238.180:5000/multiplexer-delivery:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205
+      DSE_HOST: 172.23.238.205
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: m1D
+      PARTITION_COUNT: 5
+  multiplexer-delivery-m2:
+    image: 172.23.238.180:5000/multiplexer-delivery:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205
+      DSE_HOST: 172.23.238.205
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: m2D
+      PARTITION_COUNT: 5
+  multiplexer-delivery-m3:
+    image: 172.23.238.180:5000/multiplexer-delivery:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205
+      DSE_HOST: 172.23.238.205
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: m3D
+      PARTITION_COUNT: 5
+  l1r:
+    image: 172.23.238.180:5000/l1r:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      ZOOKEEPER_HOST: 172.23.238.205 
+      CONSUMER_GROUP: as_demo_activities
+      PARTITION_COUNT: 5
+  event-processor:
+    image: 172.23.238.180:5000/event-processor:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      REDIS_PORT: 6379
+      ZOOKEEPER_HOST: 172.23.238.205
+      ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: as_demo_events
+      ROUTES_TOPIC: as_demo_routes
+      ACTIVITIES_TOPIC: as_demo_activities
+      DSE_HOST: 172.23.238.205
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      CONSUMER_GROUP: dev_events
+      PARTITION_COUNT: 5
+  routes-manager:
+    image: 172.23.238.180:5000/routes-manager:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.23.238.205
+      ZOOKEEPER_PORT: 2181
+      ROUTES_TOPIC: as_demo_routes
+      DSE_HOST: 172.23.238.205
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      CONSUMER_GROUP: dev_routes
+      PARTITION_COUNT: 5
+  event-adapter:
+    image: 172.23.238.180:5000/event-adapter:${ver}
+    environment:
+      REDIS_HOST: 172.23.238.205
+      COMMUNITY_ZOOKEEPER_HOST: 172.23.238.141
+      COMMUNITY_ZOOKEEPER_PORT: 2181
+      COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycleEvents
+      COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvents
+      ACTIVITY_ZOOKEEPER_HOST: 172.23.238.205
+      ACTIVITY_ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: as_demo_events
+      CONSUMER_GROUP: community
+      PARTITION_COUNT: 5

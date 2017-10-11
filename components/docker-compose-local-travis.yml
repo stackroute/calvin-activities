@@ -1,0 +1,105 @@
+version: "2"
+services:
+  rest-api:
+    image: 172.23.238.180:5000/rest-api:${ver}
+    build: 
+      context: .
+      dockerfile: rest-api/Dockerfile
+    ports:
+      - 4000:4000
+    environment:
+      REDIS_HOST: 172.17.0.1
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.17.0.1
+      ZOOKEEPER_PORT: 2181
+      ACTIVITIES_TOPIC: dev_activities
+      ROUTES_TOPIC: dev_routes
+      EVENTS_TOPIC: dev_events
+      DSE_HOST: 172.17.0.1
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      DEFAULT_CIRCLE: 10
+  multiplexer:
+    image: 172.23.238.180:5000/multiplexer:${ver}
+    build: 
+      context: .
+      dockerfile: multiplexer/Dockerfile
+    environment:
+      REDIS_HOST: 172.17.0.1
+      ZOOKEEPER_HOST: 172.17.0.1 
+      CONSUMER_GROUP: dev_m1
+  multiplexer-delivery:
+    image: 172.23.238.180:5000/multiplexer-delivery:${ver}
+    build:
+      context: .
+      dockerfile: multiplexer-delivery/Dockerfile
+    environment:
+      REDIS_HOST: 172.17.0.1
+      ZOOKEEPER_HOST: 172.17.0.1
+      DSE_HOST: 172.17.0.1
+      DSE_KEYSPACE: testdb
+      CONSUMER_GROUP: dev_m1D
+  l1r:
+    image: 172.23.238.180:5000/l1r:${ver}
+    build:
+      context: .
+      dockerfile: l1r/Dockerfile
+    environment:
+      REDIS_HOST: 172.17.0.1
+      ZOOKEEPER_HOST: 172.17.0.1
+      CONSUMER_GROUP: dev_activities
+  event-processor:
+    image: 172.23.238.180:5000/event-processor:${ver}
+    build: 
+      context: .
+      dockerfile: event_processor/Dockerfile
+    environment:
+      REDIS_HOST: 172.17.0.1
+      REDIS_PORT: 6379
+      ZOOKEEPER_HOST: 172.17.0.1
+      ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: dev_events
+      ROUTES_TOPIC: dev_routes
+      ACTIVITIES_TOPIC: dev_activities
+      DSE_HOST: 172.17.0.1
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      CONSUMER_GROUP: dev_events
+  routes-manager:
+    image: 172.23.238.180:5000/routes-manager:${ver}
+    build: 
+      context: .
+      dockerfile: routesManager/Dockerfile
+    environment:
+      REDIS_HOST: 172.17.0.1
+      REDIS_PORT: 6379
+      NAMESPACE_ROUTESMANAGER: routesmanager
+      NAMESPACE_L1R: L1R
+      NAMESPACE_MULTIPLEXER: multiplexer
+      ZOOKEEPER_HOST: 172.17.0.1
+      ZOOKEEPER_PORT: 2181
+      ROUTES_TOPIC: dev_routes
+      DSE_HOST: 172.17.0.1
+      DSE_PORT: 9042
+      DSE_KEYSPACE: testdb
+      DAO: cassandra
+      CONSUMER_GROUP: dev_routes
+  event-adapter:
+    image: 172.23.238.180:5000/event-adapter:${ver}
+    build:
+      context: .
+      dockerfile: events-adapter/Dockerfile
+    environment:
+      COMMUNITY_ZOOKEEPER_HOST: 172.23.238.193
+      COMMUNITY_ZOOKEEPER_PORT: 2181
+      COMMUNITY_LIFECYCLE_TOPIC: CommunityLifecycleEvents
+      COMMUNITY_ACTIVITY_TOPIC: CommunityActivityEvents
+      ACTIVITY_ZOOKEEPER_HOST: 172.17.0.1
+      ACTIVITY_ZOOKEEPER_PORT: 2181
+      EVENTS_TOPIC: dev_events
+      CONSUMER_GROUP: community
